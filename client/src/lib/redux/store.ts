@@ -1,14 +1,18 @@
 import {
-    TypedUseSelectorHook,
-    useDispatch,
-    useSelector,
-    useStore,
+  TypedUseSelectorHook,
+  useDispatch,
+  useSelector,
+  useStore,
 } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
+import testReducer from "./features/test/testSlice";
+
 export const makeStore = () => {
   return configureStore({
-    reducer: {},
+    reducer: {
+      test: testReducer,
+    },
   });
 };
 
