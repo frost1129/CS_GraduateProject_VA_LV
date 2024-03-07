@@ -6,12 +6,12 @@ import {
 } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
-import testReducer from "./features/test/testSlice";
+import authReducer from "../features/auth/authSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      test: testReducer,
+      auth: authReducer,
     },
   });
 };
