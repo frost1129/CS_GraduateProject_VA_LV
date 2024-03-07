@@ -4,23 +4,23 @@ import {
   IUserRegister,
   IUserUpdateProfile,
 } from "@/lib/types/backend";
-import AxiosClient from "../../AxiosClient";
+import axiosAuthentication from "../../apis/axiosAuthentication";
 
 const authApi = {
   signin: (payload: IUserLogin) =>
-    AxiosClient.post("/auth/signin", { ...payload }),
+    axiosAuthentication.post("/auth/signin", { ...payload }),
     
   signup: (payload: IUserRegister) =>
-    AxiosClient.post("/auth/signup", { ...payload }),
+    axiosAuthentication.post("/auth/signup", { ...payload }),
 
   refreshToken: (refreshToken: string) =>
-    AxiosClient.post("/auth/refreshToken", { refreshToken }),
+    axiosAuthentication.post("/auth/refreshToken", { refreshToken }),
 
   updateProfile: (payload: IUserUpdateProfile) =>
-    AxiosClient.patch("/auth/update", { ...payload }),
+    axiosAuthentication.patch("/auth/update", { ...payload }),
 
   updatePassword: (payload: IUserChangePassword) =>
-    AxiosClient.post("/auth/password", { ...payload }),
+    axiosAuthentication.post("/auth/password", { ...payload }),
 };
 
 export default authApi;

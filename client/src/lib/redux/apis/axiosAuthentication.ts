@@ -2,16 +2,16 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 
-import AuthApi from "./features/auth/authApi";
+import AuthApi from "../features/auth/authApi";
 
-const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_HOST,
+const axiosAuthentication = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_HOST_AUTHENTICATION,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-axiosClient.interceptors.request.use(
+axiosAuthentication.interceptors.request.use(
   (config) => {
     const token = Cookies.get("token");
     config.headers.Authorization = `Bearer ${token || ""}`;
@@ -20,7 +20,7 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-axiosClient.interceptors.response.use(
+axiosAuthentication.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -35,10 +35,10 @@ axiosClient.interceptors.response.use(
         Cookies.set("refreshToken", res.data.refreshToken);
 
         originalRequest.headers["Authorization"] = `Bearer ${res.data.token}`;
-        return axiosClient(originalRequest);
+        return axiosAuthentication(originalRequest);
       }
     } else if (error.response?.status === 418) {
-      // Case: both token and refresh token is expired
+      // Case: both token and refresh token are expired
       Cookies.remove("refreshToken");
       Cookies.remove("token");
       window.location.reload();
@@ -48,4 +48,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-export default axiosClient;
+export default axiosAuthentication;
