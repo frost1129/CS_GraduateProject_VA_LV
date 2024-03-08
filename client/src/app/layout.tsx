@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import StoreProvider from "../lib/redux/store/StoreProvider";
+import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
-const inter = Inter({ subsets: ["latin"] });
+import StoreProvider from "../lib/redux/store/StoreProvider";
+import theme from "@/lib/theme";
+import "./globals.scss";
+import "./App.scss";
 
 export const metadata: Metadata = {
   title: "OU Graduation",
@@ -17,8 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <StoreProvider>{children}</StoreProvider>
+      <body>
+        <StoreProvider>
+          <AppRouterCacheProvider>
+            <CssVarsProvider theme={theme}>{children}</CssVarsProvider>
+          </AppRouterCacheProvider>
+        </StoreProvider>
       </body>
     </html>
   );
