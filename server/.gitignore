@@ -5,6 +5,7 @@ target/
 
 ### Keycloak service
 /keycloak-auth-service
+/auth-service
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
