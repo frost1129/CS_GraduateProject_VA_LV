@@ -761,7 +761,7 @@ CREATE TABLE `CREDENTIAL` (
 
 LOCK TABLES `CREDENTIAL` WRITE;
 /*!40000 ALTER TABLE `CREDENTIAL` DISABLE KEYS */;
-INSERT INTO `CREDENTIAL` VALUES ('2c619a52-b597-4773-aa28-f8bc1bcd68c3',NULL,'password','b31d1b22-a569-4bc0-94cd-ef1229bb70c9',1711619732654,NULL,'{\"value\":\"WI9j38gd/NQWKuJVO5kHRAoNZw9LC2D1QkGHxmMRtfORyC2/Y2mbatJckdFv96+YG0avAHGikkghGKXqtH/+zg==\",\"salt\":\"N22uV+Tes0CeS8+CH9rwmA==\",\"additionalParameters\":{}}','{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}',10);
+INSERT INTO `CREDENTIAL` VALUES ('2c619a52-b597-4773-aa28-f8bc1bcd68c3',NULL,'password','b31d1b22-a569-4bc0-94cd-ef1229bb70c9',1711619732654,NULL,'{\"value\":\"WI9j38gd/NQWKuJVO5kHRAoNZw9LC2D1QkGHxmMRtfORyC2/Y2mbatJckdFv96+YG0avAHGikkghGKXqtH/+zg==\",\"salt\":\"N22uV+Tes0CeS8+CH9rwmA==\",\"additionalParameters\":{}}','{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}',10),('8bdf60f8-c36b-43f5-9755-7e8cbb3f58f2',NULL,'password','bf506d11-1ec5-4512-bb86-c17ba2eaf215',1711682419984,'My password','{\"value\":\"SWbdW2HHz/69+izk4tBxQtmZ7RjlxI+uTdFNN1aHf368FYRKq1CSETiF82a+kCeVvnz9QtV/DcMK/QCLC1aJIQ==\",\"salt\":\"PSp18mimSFePA7V24QAZ/A==\",\"additionalParameters\":{}}','{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}',10),('db29b379-0941-4464-9a25-ca4f97e9f1ee',NULL,'password','7e80c447-3fed-47c4-873c-0c786126560d',1711682436223,'My password','{\"value\":\"L8Y95xUaEhVJyeuyWMbMSTIq7GPO5+7ZF5KJZYAbd4yLDOwGI4mFxvu893ms+Qm0E2sHb0Su7zEyB2KpHkJsOg==\",\"salt\":\"KaZhuyqrHzWSM0Ffa5UGVA==\",\"additionalParameters\":{}}','{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}',10),('eb6bd675-7723-4710-9274-7f80912ea98a',NULL,'password','5b04765f-464a-455e-9adf-202cb9f272f0',1711682400619,'My password','{\"value\":\"g8GVN63xfBWQ45LpCCCy6AHwj7iuHi21h02rweAkNe7V7MvAcTuoj/3sAOLuND40kW2ZCtZj2c0l7COM7FJaJg==\",\"salt\":\"p58hWv7ptNXuCzwGIRWbGQ==\",\"additionalParameters\":{}}','{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}',10);
 /*!40000 ALTER TABLE `CREDENTIAL` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2688,4 +2688,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-28 17:51:07
+-- Dump completed on 2024-03-29 10:21:06
