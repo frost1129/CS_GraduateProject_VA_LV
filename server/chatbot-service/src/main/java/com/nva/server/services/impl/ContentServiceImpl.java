@@ -1,6 +1,7 @@
 package com.nva.server.services.impl;
 
 import com.nva.server.dtos.*;
+import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
 import com.nva.server.repositories.CategoryRepository;
 import com.nva.server.repositories.ContentRepository;
@@ -26,7 +27,11 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public ContentResponse save(ContentRequest contentRequest) {
-        return mapToContentResponse(contentRepository.save(mapToContent(contentRequest)));
+        try {
+            return mapToContentResponse(contentRepository.save(mapToContent(contentRequest)));
+        } catch (Exception e) {
+            throw new SaveDataException("Lưu thất bại");
+        }
     }
 
     private Content mapToContent(ContentRequest contentRequest) {
