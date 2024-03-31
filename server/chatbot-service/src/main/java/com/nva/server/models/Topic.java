@@ -31,6 +31,10 @@ public class Topic {
     @Lob
     private String note;
 
+    public Topic(Long id) {
+        this.id = id;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = System.currentTimeMillis();

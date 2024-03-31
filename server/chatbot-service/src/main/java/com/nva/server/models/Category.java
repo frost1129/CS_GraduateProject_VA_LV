@@ -31,6 +31,10 @@ public class Category {
     @Lob
     private String note;
 
+    public Category(Long id) {
+        this.id = id;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = System.currentTimeMillis();

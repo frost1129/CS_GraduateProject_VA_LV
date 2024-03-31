@@ -33,6 +33,10 @@ public class SchoolYear {
     @Lob
     private String note;
 
+    public SchoolYear(Long id) {
+        this.id = id;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = System.currentTimeMillis();
