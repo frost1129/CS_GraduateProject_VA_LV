@@ -1,0 +1,84 @@
+[
+  {
+    "contentLevel": 1,
+    "schoolYear": {
+      "id": 1
+    },
+    "category": {
+      "id": 1
+    },
+    "topic": {
+      "id": 1
+    },
+    "title": "Title 1",
+    "text": "Text 1"
+  },
+  {
+    "parentContent": {
+      "id": 1
+    },
+    "contentLevel": 2,
+    "schoolYear": {
+      "id": 1
+    },
+    "category": {
+      "id": 2
+    },
+    "topic": {
+      "id": 1
+    },
+    "title": "Title 2",
+    "text": "Text 2"
+  },
+  {
+    "parentContent": {
+      "id": 1
+    },
+    "contentLevel": 2,
+    "schoolYear": {
+      "id": 1
+    },
+    "category": {
+      "id": 2
+    },
+    "topic": {
+      "id": 2
+    },
+    "title": "Title 3",
+    "text": "Text 3"
+  },
+  {
+    "parentContent": {
+      "id": 2
+    },
+    "contentLevel": 3,
+    "schoolYear": {
+      "id": 2
+    },
+    "category": {
+      "id": 3
+    },
+    "topic": {
+      "id": 2
+    },
+    "title": "Title 4",
+    "text": "Text 4"
+  },
+  {
+    "parentContent": {
+      "id": 2
+    },
+    "contentLevel": 3,
+    "schoolYear": {
+      "id": 3
+    },
+    "category": {
+      "id": 2
+    },
+    "topic": {
+      "id": 2
+    },
+    "title": "Title 5",
+    "text": "Text 5"
+  }
+]
