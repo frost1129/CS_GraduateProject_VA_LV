@@ -1,35 +1,17 @@
 services:
-  mysql-keycloak:
+  mysql:
     image: mysql:8.0.36
     ports:
       - 3307:3306
     restart: unless-stopped
-    container_name: mysql-keycloak-auth-service
+    container_name: mysql
     environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_DATABASE: keycloak_auth_service_db
       MYSQL_ROOT_PASSWORD: admin
     volumes:
-      - keycloak-and-mysql-volume:/var/lib/mysql
+      - mysql-volume:/var/lib/mysql
+      - ./current_db:/docker-entrypoint-initdb.d
     networks:
       - keycloak-and-mysql-network
-
-  mysql-chat-bot-service:
-    image: mysql:8.0.36
-    ports:
-      - 3308:3306
-    restart: unless-stopped
-    container_name: mysql-chat-bot-service
-    environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_DATABASE: chat_bot_service_db
-      MYSQL_ROOT_PASSWORD: admin
-    volumes:
-      - chat-bot-service-volume:/var/lib/mysql
-#    networks:
-#      - keycloak-and-mysql-network
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.2
@@ -37,31 +19,22 @@ services:
     restart: unless-stopped
     container_name: keycloak-auth-service
     ports:
-      - "8181:8080"
+      - 8181:8080
     expose:
-      - "8181"
+      - 8181
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      # - KEYCLOAK_USER=user
-      # - KEYCLOAK_PASSWORD=user
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB=mysql
-      - KC_DB_URL=jdbc:mysql://mysql-keycloak-auth-service:3306/keycloak_auth_service_db
+      - KC_DB_URL=jdbc:mysql://mysql:3306/keycloak_auth_service_db
       - KC_DB_USERNAME=root
       - KC_DB_PASSWORD=admin
-      # - KC_DB_ROOT_PASSWORD=admin
       - KC_Hostname=localhost
       - KC_TRANSACTION_XA_ENABLED=true
       - QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY=true
-      # - DB_VENDOR=MYSQL
-      # - DB_ADDR=mysql-kc
-      # - DB_PORT=3306
-      # - DB_USER=user
-      # - DB_PASSWORD=admin
-      # - DB_DATABASE=keycloak
     depends_on:
-      - mysql-keycloak
+      - mysql
     networks:
       - keycloak-and-mysql-network
 
@@ -73,24 +46,24 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-#    networks:
-#      - keycloak-and-mysql-network
+    networks:
+      - keycloak-and-mysql-network
 
   api-gateway:
     image: workanhnguyen/api-gateway:latest
     container_name: api-gateway
     pull_policy: always
     ports:
-      - "8080:8080"
+      - 8080:8080
     expose:
-      - "8080"
+      - 8080
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=TRACE
     depends_on:
       - discovery-server
-#    networks:
-#      - keycloak-and-mysql-network
+    networks:
+      - keycloak-and-mysql-network
 
   chat-bot-service:
     image: workanhnguyen/chatbot-service:latest
@@ -99,20 +72,16 @@ services:
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-chat-bot-service:3306/chat_bot_service_db
-      - KEYCLOAK_URI=http://keycloak-auth-service:8181/auth
-      - REALM=ou-graduation-realm
     depends_on:
-      - mysql-chat-bot-service
+      - mysql
       - discovery-server
       - api-gateway
       - keycloak
-#    networks:
-#      - keycloak-and-mysql-network
+    networks:
+      - keycloak-and-mysql-network
 
 networks:
   keycloak-and-mysql-network:
 
 volumes:
-  keycloak-and-mysql-volume:
-  chat-bot-service-volume:
+  mysql-volume:
