@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     volumes:
       - mysql-volume:/var/lib/mysql
-      - ./current_db:/docker-entrypoint-initdb.d
+      - ./database/current_db:/docker-entrypoint-initdb.d
     networks:
       - keycloak-and-mysql-network
 
