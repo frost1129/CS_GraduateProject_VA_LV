@@ -1,0 +1,87 @@
+services:
+  mysql:
+    image: mysql:8.0.36
+    ports:
+      - 3307:3306
+    restart: unless-stopped
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - mysql-volume:/var/lib/mysql
+      - ./database/current_db:/docker-entrypoint-initdb.d
+    networks:
+      - keycloak-and-mysql-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    command: start-dev
+    restart: unless-stopped
+    container_name: keycloak-auth-service
+    ports:
+      - 8181:8080
+    expose:
+      - 8181
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=mysql
+      - KC_DB_URL=jdbc:mysql://mysql:3306/keycloak_auth_service_db
+      - KC_DB_USERNAME=root
+      - KC_DB_PASSWORD=admin
+      - KC_Hostname=localhost
+      - KC_TRANSACTION_XA_ENABLED=true
+      - QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY=true
+    depends_on:
+      - mysql
+    networks:
+      - keycloak-and-mysql-network
+
+  discovery-server:
+    image: workanhnguyen/discovery-server:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - keycloak-and-mysql-network
+
+  api-gateway:
+    image: workanhnguyen/api-gateway:latest
+    container_name: api-gateway
+    pull_policy: always
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=TRACE
+    depends_on:
+      - discovery-server
+    networks:
+      - keycloak-and-mysql-network
+
+  chat-bot-service:
+    image: workanhnguyen/chatbot-service:latest
+    container_name: chat-bot-service
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql
+      - discovery-server
+      - api-gateway
+      - keycloak
+    networks:
+      - keycloak-and-mysql-network
+
+networks:
+  keycloak-and-mysql-network:
+
+volumes:
+  mysql-volume:
