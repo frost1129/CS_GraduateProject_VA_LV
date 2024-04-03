@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SchoolYearResponseV2 {
+    private Long id;
     private String year;
     private String courseName;
 }

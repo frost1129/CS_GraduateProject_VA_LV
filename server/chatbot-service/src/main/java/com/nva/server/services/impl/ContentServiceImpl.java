@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional
 public class ContentServiceImpl implements ContentService {
     private final ContentRepository contentRepository;
@@ -55,14 +54,18 @@ public class ContentServiceImpl implements ContentService {
 
     private ContentResponse mapToContentResponse(Content content) {
         ContentResponse contentResponse = new ContentResponse();
+        contentResponse.setId(content.getId());
         contentResponse.setContentLevel(content.getContentLevel());
         contentResponse.setSchoolYear(SchoolYearResponseV2.builder()
+                .id(content.getSchoolYear().getId())
                 .year(content.getSchoolYear().getYear())
                 .courseName(content.getSchoolYear().getCourseName())
                 .build());
         contentResponse.setTopic(TopicResponseV2.builder()
+                .id(content.getTopic().getId())
                 .name(content.getTopic().getName())
                 .category(CategoryResponseV2.builder()
+                        .id(content.getTopic().getCategory().getId())
                         .name(content.getTopic().getCategory().getName())
                         .build())
                 .build());

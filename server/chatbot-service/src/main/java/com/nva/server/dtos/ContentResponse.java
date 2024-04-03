@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentResponse {
+    private Long id;
     private Long parentContentId;
     private Integer contentLevel;
     private SchoolYearResponseV2 schoolYear;
