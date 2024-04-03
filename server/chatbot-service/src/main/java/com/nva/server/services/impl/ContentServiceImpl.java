@@ -8,11 +8,12 @@ import com.nva.server.repositories.SchoolYearRepository;
 import com.nva.server.repositories.TopicRepository;
 import com.nva.server.services.ContentService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +24,47 @@ public class ContentServiceImpl implements ContentService {
     private final TopicRepository topicRepository;
 
     @Override
-    public ContentResponse save(ContentRequest contentRequest) {
+    public List<ContentResponse> findAll() {
+        return contentRepository.findAll().stream().map(this::mapToContentResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public ContentResponse addOrUpdate(Long contentId, ContentRequest contentRequest) {
         try {
-            return mapToContentResponse(contentRepository.save(mapToContent(contentRequest)));
+
+            // CASE: Save new content
+            if (contentId == null)
+                return mapToContentResponse(contentRepository.save(mapToContent(contentRequest)));
+
+            // CASE: Update existing content
+            Optional<Content> existingContent = contentRepository.findById(contentId);
+            if (existingContent.isPresent()) {
+                // TODO: Handle update attributes of current content
+                existingContent.get().setTitle(contentRequest.getTitle());
+                existingContent.get().setText(contentRequest.getText());
+                existingContent.get().setNote(contentRequest.getNote());
+                existingContent.get().setLastModifiedDate(System.currentTimeMillis());
+
+                // CASE: Content is super parent
+                if (existingContent.get().getParentContent() == null) {
+                    existingContent.get().setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+
+                    // TODO: Handle update topic of children content of current content
+                    List<Content> childContents = existingContent.get().getChildContents();
+                    childContents.forEach(content -> content.setTopic(topicRepository.findById(existingContent.get().getTopic().getId()).get()));
+                }
+
+                return mapToContentResponse(existingContent.get());
+            }
+            throw new SaveDataException("ID không tồn tại");
         } catch (Exception e) {
-            throw new SaveDataException("Lưu thất bại");
+            throw new SaveDataException(e.getMessage());
         }
     }
 
-    private Content mapToContent(ContentRequest contentRequest) {
+    private Content mapToContent(ContentRequest contentRequest) throws Exception {
         Content content = new Content();
         content.setSchoolYear(schoolYearRepository.findById(contentRequest.getSchoolYearId()).get());
-        content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
         content.setNote(contentRequest.getNote());
         content.setTitle(contentRequest.getTitle());
         content.setText(contentRequest.getText());
@@ -44,10 +74,12 @@ public class ContentServiceImpl implements ContentService {
             if (parentContent.isPresent()) {
                 content.setParentContent(parentContent.get());
                 content.setContentLevel(parentContent.get().getContentLevel() + 1);
-            } else
-                content.setParentContent(null);
-        } else
+                content.setTopic(parentContent.get().getTopic());
+            } else throw new Exception();
+        } else {
             content.setContentLevel(1);
+            content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+        }
 
         return content;
     }
