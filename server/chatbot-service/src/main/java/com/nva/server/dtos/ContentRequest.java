@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ContentRequest {
     private Long parentContentId;
     private Long schoolYearId;
-    private Long categoryId;
     private Long topicId;
     private String title;
     private String text;

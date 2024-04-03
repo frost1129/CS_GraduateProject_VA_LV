@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TopicOfContentResponse {
+public class TopicResponseV2 {
+    private Long id;
     private String name;
+    private CategoryResponseV2 category;
 }

@@ -21,6 +21,10 @@ public class Topic {
     @Lob
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @CreatedDate
     @Column(nullable = false)
     private Long createdDate;
@@ -30,10 +34,6 @@ public class Topic {
 
     @Lob
     private String note;
-
-    public Topic(Long id) {
-        this.id = id;
-    }
 
     @PrePersist
     protected void onCreate() {

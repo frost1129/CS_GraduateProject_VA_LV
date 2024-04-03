@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.List;
+
 @Entity
 @Table(name = "contents")
 @Data
@@ -21,16 +23,15 @@ public class Content {
     @JoinColumn(name = "parent_content_id")
     private Content parentContent;
 
+    @OneToMany(mappedBy = "parentContent", cascade = CascadeType.ALL)
+    private List<Content> childContents;
+
     @Column(nullable = false)
-    private Short contentLevel;
+    private Integer contentLevel;
 
     @ManyToOne
     @JoinColumn(name = "school_year_id", nullable = false)
     private SchoolYear schoolYear;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)

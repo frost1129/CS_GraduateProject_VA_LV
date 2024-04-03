@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Data
@@ -21,6 +23,9 @@ public class Category {
     @Lob
     private String name;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Topic> topics;
+
     @CreatedDate
     @Column(nullable = false)
     private Long createdDate;
@@ -30,10 +35,6 @@ public class Category {
 
     @Lob
     private String note;
-
-    public Category(Long id) {
-        this.id = id;
-    }
 
     @PrePersist
     protected void onCreate() {

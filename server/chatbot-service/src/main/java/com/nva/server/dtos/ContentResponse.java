@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentResponse {
+    private Long id;
     private Long parentContentId;
-    private Short contentLevel;
-    private SchoolYearOfContentResponse schoolYear;
-    private CategoryOfContentResponse category;
-    private TopicOfContentResponse topic;
+    private Integer contentLevel;
+    private SchoolYearResponseV2 schoolYear;
+    private TopicResponseV2 topic;
     private String title;
     private String text;
     private String note;
