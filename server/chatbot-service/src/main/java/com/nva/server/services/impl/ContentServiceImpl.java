@@ -1,12 +1,8 @@
 package com.nva.server.services.impl;
 
-import com.nva.server.dtos.ContentRequest;
-import com.nva.server.dtos.ContentResponse;
-import com.nva.server.dtos.SchoolYearResponseV2;
-import com.nva.server.dtos.TopicResponseV2;
+import com.nva.server.dtos.*;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
-import com.nva.server.repositories.CategoryRepository;
 import com.nva.server.repositories.ContentRepository;
 import com.nva.server.repositories.SchoolYearRepository;
 import com.nva.server.repositories.TopicRepository;
@@ -25,7 +21,6 @@ import java.util.Optional;
 public class ContentServiceImpl implements ContentService {
     private final ContentRepository contentRepository;
     private final SchoolYearRepository schoolYearRepository;
-    private final CategoryRepository categoryRepository;
     private final TopicRepository topicRepository;
 
     @Override
@@ -67,6 +62,9 @@ public class ContentServiceImpl implements ContentService {
                 .build());
         contentResponse.setTopic(TopicResponseV2.builder()
                 .name(content.getTopic().getName())
+                .category(CategoryResponseV2.builder()
+                        .name(content.getTopic().getCategory().getName())
+                        .build())
                 .build());
         contentResponse.setTitle(content.getTitle());
         contentResponse.setText(content.getText());

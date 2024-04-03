@@ -11,7 +11,6 @@ public class ContentResponse {
     private Long parentContentId;
     private Integer contentLevel;
     private SchoolYearResponseV2 schoolYear;
-    private CategoryResponseV2 category;
     private TopicResponseV2 topic;
     private String title;
     private String text;

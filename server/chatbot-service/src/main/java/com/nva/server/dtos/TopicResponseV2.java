@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TopicResponseV2 {
     private String name;
+    private CategoryResponseV2 category;
 }
