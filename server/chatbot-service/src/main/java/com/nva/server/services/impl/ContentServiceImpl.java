@@ -2,8 +2,8 @@ package com.nva.server.services.impl;
 
 import com.nva.server.dtos.ContentRequest;
 import com.nva.server.dtos.ContentResponse;
-import com.nva.server.dtos.SchoolYearOfContentResponse;
-import com.nva.server.dtos.TopicOfContentResponse;
+import com.nva.server.dtos.SchoolYearResponseV2;
+import com.nva.server.dtos.TopicResponseV2;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
 import com.nva.server.repositories.CategoryRepository;
@@ -61,11 +61,11 @@ public class ContentServiceImpl implements ContentService {
     private ContentResponse mapToContentResponse(Content content) {
         ContentResponse contentResponse = new ContentResponse();
         contentResponse.setContentLevel(content.getContentLevel());
-        contentResponse.setSchoolYear(SchoolYearOfContentResponse.builder()
+        contentResponse.setSchoolYear(SchoolYearResponseV2.builder()
                 .year(content.getSchoolYear().getYear())
                 .courseName(content.getSchoolYear().getCourseName())
                 .build());
-        contentResponse.setTopic(TopicOfContentResponse.builder()
+        contentResponse.setTopic(TopicResponseV2.builder()
                 .name(content.getTopic().getName())
                 .build());
         contentResponse.setTitle(content.getTitle());

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryOfContentResponse {
+public class CategoryResponseV2 {
     private String name;
 }

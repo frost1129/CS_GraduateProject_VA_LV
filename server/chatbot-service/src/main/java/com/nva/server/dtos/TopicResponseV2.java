@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TopicOfContentResponse {
+public class TopicResponseV2 {
     private String name;
 }

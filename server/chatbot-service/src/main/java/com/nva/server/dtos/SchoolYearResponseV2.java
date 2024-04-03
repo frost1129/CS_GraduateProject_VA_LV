@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SchoolYearOfContentResponse {
+public class SchoolYearResponseV2 {
     private String year;
     private String courseName;
 }

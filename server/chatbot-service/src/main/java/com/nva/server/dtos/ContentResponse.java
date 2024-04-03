@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class ContentResponse {
     private Long parentContentId;
     private Integer contentLevel;
-    private SchoolYearOfContentResponse schoolYear;
-    private CategoryOfContentResponse category;
-    private TopicOfContentResponse topic;
+    private SchoolYearResponseV2 schoolYear;
+    private CategoryResponseV2 category;
+    private TopicResponseV2 topic;
     private String title;
     private String text;
     private String note;
