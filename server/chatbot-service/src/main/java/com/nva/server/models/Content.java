@@ -22,15 +22,11 @@ public class Content {
     private Content parentContent;
 
     @Column(nullable = false)
-    private Short contentLevel;
+    private Integer contentLevel;
 
     @ManyToOne
     @JoinColumn(name = "school_year_id", nullable = false)
     private SchoolYear schoolYear;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)

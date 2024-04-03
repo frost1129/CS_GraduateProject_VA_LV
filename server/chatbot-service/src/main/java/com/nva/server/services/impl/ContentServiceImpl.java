@@ -1,6 +1,9 @@
 package com.nva.server.services.impl;
 
-import com.nva.server.dtos.*;
+import com.nva.server.dtos.ContentRequest;
+import com.nva.server.dtos.ContentResponse;
+import com.nva.server.dtos.SchoolYearOfContentResponse;
+import com.nva.server.dtos.TopicOfContentResponse;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
 import com.nva.server.repositories.CategoryRepository;
@@ -37,7 +40,6 @@ public class ContentServiceImpl implements ContentService {
     private Content mapToContent(ContentRequest contentRequest) {
         Content content = new Content();
         content.setSchoolYear(schoolYearRepository.findById(contentRequest.getSchoolYearId()).get());
-        content.setCategory(categoryRepository.findById(contentRequest.getCategoryId()).get());
         content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
         content.setNote(contentRequest.getNote());
         content.setTitle(contentRequest.getTitle());
@@ -47,12 +49,11 @@ public class ContentServiceImpl implements ContentService {
             Optional<Content> parentContent = contentRepository.findById(contentRequest.getParentContentId());
             if (parentContent.isPresent()) {
                 content.setParentContent(parentContent.get());
-                content.setContentLevel((short) (parentContent.get().getContentLevel() + 1));
-            }
-            else
+                content.setContentLevel(parentContent.get().getContentLevel() + 1);
+            } else
                 content.setParentContent(null);
         } else
-            content.setContentLevel((short) 1);
+            content.setContentLevel(1);
 
         return content;
     }
@@ -63,9 +64,6 @@ public class ContentServiceImpl implements ContentService {
         contentResponse.setSchoolYear(SchoolYearOfContentResponse.builder()
                 .year(content.getSchoolYear().getYear())
                 .courseName(content.getSchoolYear().getCourseName())
-                .build());
-        contentResponse.setCategory(CategoryOfContentResponse.builder()
-                .name(content.getCategory().getName())
                 .build());
         contentResponse.setTopic(TopicOfContentResponse.builder()
                 .name(content.getTopic().getName())

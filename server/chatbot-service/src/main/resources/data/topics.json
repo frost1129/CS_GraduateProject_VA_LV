@@ -1,11 +1,56 @@
 [
   {
-    "name": "Topic 1"
+    "name": "Topic 1",
+    "category": {
+      "id": 1
+    }
   },
   {
-    "name": "Topic 2"
+    "name": "Topic 2",
+    "category": {
+      "id": 1
+    }
   },
   {
-    "name": "Topic 3"
+    "name": "Topic 3",
+    "category": {
+      "id": 1
+    }
+  },
+  {
+    "name": "Topic 4",
+    "category": {
+      "id": 2
+    }
+  },
+  {
+    "name": "Topic 5",
+    "category": {
+      "id": 2
+    }
+  },
+  {
+    "name": "Topic 6",
+    "category": {
+      "id": 2
+    }
+  },
+  {
+    "name": "Topic 7",
+    "category": {
+      "id": 3
+    }
+  },
+  {
+    "name": "Topic 8",
+    "category": {
+      "id": 3
+    }
+  },
+  {
+    "name": "Topic 9",
+    "category": {
+      "id": 3
+    }
   }
 ]
