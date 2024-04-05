@@ -39,7 +39,7 @@ services:
       - keycloak-and-mysql-network
 
   discovery-server:
-    image: workanhnguyen/discovery-server:latest
+    image: ougraduation/discovery-server:latest
     container_name: discovery-server
     pull_policy: always
     ports:
@@ -50,7 +50,7 @@ services:
       - keycloak-and-mysql-network
 
   api-gateway:
-    image: workanhnguyen/api-gateway:latest
+    image: ougraduation/api-gateway:latest
     container_name: api-gateway
     pull_policy: always
     ports:
@@ -66,7 +66,7 @@ services:
       - keycloak-and-mysql-network
 
   chat-bot-service:
-    image: workanhnguyen/chatbot-service:latest
+    image: ougraduation/chatbot-service:latest
     container_name: chat-bot-service
     restart: unless-stopped
     pull_policy: always
