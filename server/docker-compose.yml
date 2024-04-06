@@ -17,11 +17,11 @@ services:
     image: quay.io/keycloak/keycloak:24.0.2
     command: start-dev
     restart: unless-stopped
-    container_name: keycloak-auth-service
+    container_name: keycloak
     ports:
-      - 8181:8080
+      - 8080:8080
     expose:
-      - 8181
+      - 8080
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYCLOAK_ADMIN=admin
@@ -30,9 +30,13 @@ services:
       - KC_DB_URL=jdbc:mysql://mysql:3306/keycloak_auth_service_db
       - KC_DB_USERNAME=root
       - KC_DB_PASSWORD=admin
-      - KC_Hostname=localhost
       - KC_TRANSACTION_XA_ENABLED=true
       - QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY=true
+      - KC_HOSTNAME_URL=http://localhost:8080
+      - KC_HOSTNAME_ADMIN_URL=http://localhost:8080
+      - KC_PROXY=edge
+      - KC_LOG_LEVEL=debug
+      - KC_HOSTNAME_STRICT_BACKCHANNEL=true
     depends_on:
       - mysql
     networks:
@@ -43,7 +47,7 @@ services:
     container_name: discovery-server
     pull_policy: always
     ports:
-      - "8761:8761"
+      - 8761:8761
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -54,9 +58,9 @@ services:
     container_name: api-gateway
     pull_policy: always
     ports:
-      - 8080:8080
+      - 8181:8080
     expose:
-      - 8080
+      - 8181
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=TRACE
