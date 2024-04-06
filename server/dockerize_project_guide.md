@@ -2,7 +2,7 @@
 - Username: ougraduation
 - Password: 123456789
 
-## 1. STEPS TO DOCKERIZE PROJECTS (Only Van Anh can do this)
+## 1. STEPS TO DOCKERIZE PROJECTS
 - Step 1: Ensure logout docker from terminal: `docker logout`
 - Step 1: Login docker in terminal: `docker login`
 - Step 2: Type `username` and `password` with the account above

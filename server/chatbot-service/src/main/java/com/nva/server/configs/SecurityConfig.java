@@ -1,6 +1,7 @@
 package com.nva.server.configs;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,6 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwkSetUri;
 
     @Bean
     public SecurityFilterChain filter(HttpSecurity http) throws Exception {
@@ -52,5 +58,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+                .jwsAlgorithm(SignatureAlgorithm.RS256).build();
     }
 }
