@@ -1,17 +1,17 @@
-name: Dockerize Product Service
+name: Dockerize Auth Service
 
 on:
   push:
     branchs: [main]
     paths:
-      - server/product-service/**  # Only trigger on changes within product-service
+      - server/auth-service/**  # Only trigger on changes within auth-service
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server/product-service
+        working-directory: ./server/auth-service
     steps:
       - uses: actions/checkout@v3
 

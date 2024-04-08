@@ -4,14 +4,14 @@ on:
   push:
     branchs: [main]
     paths:
-      - server/product-service/**  # Only trigger on changes within product-service
+      - server/discovery-server/**  # Only trigger on changes within discovery-server
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server/product-service
+        working-directory: ./server/discovery-server
     steps:
       - uses: actions/checkout@v3
 

@@ -1,17 +1,17 @@
-name: Dockerize Product Service
+name: Dockerize API Gateway
 
 on:
   push:
     branchs: [main]
     paths:
-      - server/product-service/**  # Only trigger on changes within product-service
+      - server/api-gateway/**  # Only trigger on changes within api-gateway
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server/product-service
+        working-directory: ./server/api-gateway
     steps:
       - uses: actions/checkout@v3
 

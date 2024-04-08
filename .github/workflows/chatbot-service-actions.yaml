@@ -1,17 +1,17 @@
-name: Dockerize Product Service
+name: Dockerize Chatbot Service
 
 on:
   push:
     branchs: [main]
     paths:
-      - server/product-service/**  # Only trigger on changes within product-service
+      - server/chatbot-service/**  # Only trigger on changes within chatbot-service
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server/product-service
+        working-directory: ./server/chatbot-service
     steps:
       - uses: actions/checkout@v3
 
