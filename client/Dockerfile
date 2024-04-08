@@ -2,12 +2,12 @@ FROM node:21.7.1
 
 WORKDIR /app
 
-COPY package.json .
+COPY package*.json .
 
-RUN yarn
+RUN yarn install
 
 COPY . .
 
-RUN yarn build
+EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "dev" ]
