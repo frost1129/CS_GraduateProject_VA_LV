@@ -69,16 +69,20 @@ public class ContentServiceImpl implements ContentService {
         content.setTitle(contentRequest.getTitle());
         content.setText(contentRequest.getText());
 
+        // CASE: Is child content
         if (contentRequest.getParentContentId() != null) {
             Optional<Content> parentContent = contentRepository.findById(contentRequest.getParentContentId());
             if (parentContent.isPresent()) {
                 content.setParentContent(parentContent.get());
                 content.setContentLevel(parentContent.get().getContentLevel() + 1);
                 content.setTopic(parentContent.get().getTopic());
+                content.setIntentCode(parentContent.get().getIntentCode() + "." + contentRequest.getIntentCode());
             } else throw new Exception();
         } else {
+            // CASE: Is parent content
             content.setContentLevel(1);
             content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+            content.setIntentCode(contentRequest.getIntentCode());
         }
 
         return content;
@@ -95,12 +99,15 @@ public class ContentServiceImpl implements ContentService {
                 .build());
         contentResponse.setTopic(TopicResponseV2.builder()
                 .id(content.getTopic().getId())
-                .name(content.getTopic().getName())
+                .intentCode(content.getTopic().getIntentCode())
+                .description(content.getTopic().getDescription())
                 .category(CategoryResponseV2.builder()
                         .id(content.getTopic().getCategory().getId())
-                        .name(content.getTopic().getCategory().getName())
+                        .intentCode(content.getTopic().getCategory().getIntentCode())
+                        .description(content.getTopic().getCategory().getDescription())
                         .build())
                 .build());
+        contentResponse.setIntentCode(content.getIntentCode());
         contentResponse.setTitle(content.getTitle());
         contentResponse.setText(content.getText());
         contentResponse.setNote(content.getNote());

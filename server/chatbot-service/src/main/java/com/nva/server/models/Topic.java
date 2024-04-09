@@ -18,8 +18,11 @@ public class Topic {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String intentCode;
+
+    @Column(nullable = false)
     @Lob
-    private String name;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

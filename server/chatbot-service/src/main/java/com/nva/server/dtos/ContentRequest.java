@@ -11,6 +11,7 @@ public class ContentRequest {
     private Long parentContentId;
     private Long schoolYearId;
     private Long topicId;
+    private String intentCode;
     private String title;
     private String text;
     private String note;

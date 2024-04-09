@@ -1,54 +1,63 @@
 [
   {
-    "name": "Topic 1",
+    "intentCode": "topic-1",
+    "description": "Topic Description 1",
     "category": {
       "id": 1
     }
   },
   {
-    "name": "Topic 2",
+    "intentCode": "topic-2",
+    "description": "Topic Description 2",
     "category": {
       "id": 1
     }
   },
   {
-    "name": "Topic 3",
+    "intentCode": "topic-3",
+    "description": "Topic Description 3",
     "category": {
       "id": 1
     }
   },
   {
-    "name": "Topic 4",
+    "intentCode": "topic-4",
+    "description": "Topic Description 4",
     "category": {
       "id": 2
     }
   },
   {
-    "name": "Topic 5",
+    "intentCode": "topic-5",
+    "description": "Topic Description 5",
     "category": {
       "id": 2
     }
   },
   {
-    "name": "Topic 6",
+    "intentCode": "topic-6",
+    "description": "Topic Description 6",
     "category": {
       "id": 2
     }
   },
   {
-    "name": "Topic 7",
+    "intentCode": "topic-7",
+    "description": "Topic Description 7",
     "category": {
       "id": 3
     }
   },
   {
-    "name": "Topic 8",
+    "intentCode": "topic-8",
+    "description": "Topic Description 8",
     "category": {
       "id": 3
     }
   },
   {
-    "name": "Topic 9",
+    "intentCode": "topic-9",
+    "description": "Topic Description 9",
     "category": {
       "id": 3
     }

@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CategoryResponseV2 {
     private Long id;
-    private String name;
+    private String intentCode;
+    private String description;
 }

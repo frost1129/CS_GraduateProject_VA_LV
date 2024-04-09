@@ -1,11 +1,14 @@
 [
   {
-    "name": "Category 1"
+    "intentCode": "category-1",
+    "description": "Category Description 1"
   },
   {
-    "name": "Category 2"
+    "intentCode": "category-2",
+    "description": "Category Description 2"
   },
   {
-    "name": "Category 3"
+    "intentCode": "category-3",
+    "description": "Category Description 3"
   }
 ]
