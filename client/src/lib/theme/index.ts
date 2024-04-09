@@ -125,6 +125,7 @@ const theme = extendTheme({
               "&:hover": {
                 backgroundColor: "var(--primary)",
                 color: "var(--white)",
+                borderColor: "var(--primary)",
               },
               "&:active": {
                 backgroundColor: "var(--primary)",
@@ -172,6 +173,7 @@ const theme = extendTheme({
               },
               "&:active": {
                 color: "var(--text-primary)",
+                textDecoration: "none"
               },
             }),
         }),
