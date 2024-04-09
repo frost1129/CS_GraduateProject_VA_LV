@@ -12,8 +12,8 @@ const inter = Inter({
 
 const sizeButton = {
   small: "6px 12px",
-  medium: "8px 16px",
-  large: "12px 32px",
+  medium: "6px 16px",
+  large: "6px 24px",
 };
 
 const theme = extendTheme({
@@ -90,19 +90,19 @@ const theme = extendTheme({
                 backgroundColor: "var(--turquoise-60)",
               },
             }),
-          ...(ownerState.variant === "contained" &&
-            ownerState.color === "tertiary" && {
-              color: "var(--text-primary) ",
-              backgroundColor: "var(--grey-primary-60)",
-              "&:hover": {
-                backgroundColor: "var(--grey-primary-80)",
-                boxShadow: "none",
-              },
-              "&:active": {
-                color: "var(--white) ",
-                backgroundColor: "var(--primary)",
-              },
-            }),
+          // ...(ownerState.variant === "contained" &&
+          //   ownerState.color === "tertiary" && {
+          //     color: "var(--text-primary) ",
+          //     backgroundColor: "var(--grey-primary-60)",
+          //     "&:hover": {
+          //       backgroundColor: "var(--grey-primary-80)",
+          //       boxShadow: "none",
+          //     },
+          //     "&:active": {
+          //       color: "var(--white) ",
+          //       backgroundColor: "var(--primary)",
+          //     },
+          //   }),
           ...(ownerState.variant === "contained" &&
             ownerState.color === "info" && {
               color: "var(--white) ",
@@ -148,21 +148,21 @@ const theme = extendTheme({
                 borderColor: "var(--primary)",
               },
             }),
-          ...(ownerState.variant === "outlined" &&
-            ownerState.color === "tertiary" && {
-              color: "var(--text-primary)",
-              borderWidth: 1,
-              borderColor: "transparent",
+          // ...(ownerState.variant === "outlined" &&
+          //   ownerState.color === "tertiary" && {
+          //     color: "var(--text-primary)",
+          //     borderWidth: 1,
+          //     borderColor: "transparent",
 
-              "&:hover": {
-                backgroundColor: "var(--grey-primary-60)",
-              },
-              "&:active": {
-                color: "var(--primary)",
-                borderWidth: 1,
-                borderColor: "transparent",
-              },
-            }),
+          //     "&:hover": {
+          //       backgroundColor: "var(--grey-primary-60)",
+          //     },
+          //     "&:active": {
+          //       color: "var(--primary)",
+          //       borderWidth: 1,
+          //       borderColor: "transparent",
+          //     },
+          //   }),
 
           ...(ownerState.variant === "text" &&
             ownerState.color === "primary" && {
@@ -173,7 +173,7 @@ const theme = extendTheme({
               },
               "&:active": {
                 color: "var(--text-primary)",
-                textDecoration: "none"
+                textDecoration: "none",
               },
             }),
         }),
@@ -227,6 +227,55 @@ const theme = extendTheme({
           "&.MuiInputBase-root": {
             height: "40px",
             borderRadius: "6px",
+          },
+        }),
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          width: 38,
+          height: 22,
+          padding: 0,
+          "& .MuiSwitch-switchBase": {
+            padding: 0,
+            margin: 2,
+            transitionDuration: "300ms",
+            "&.Mui-checked": {
+              transform: "translateX(16px)",
+              color: "#fff",
+              "& + .MuiSwitch-track": {
+                backgroundColor: "var(--primary)",
+                opacity: 1,
+                border: 0,
+              },
+              "&.Mui-disabled + .MuiSwitch-track": {
+                opacity: 0.5,
+              },
+            },
+            "&.Mui-focusVisible .MuiSwitch-thumb": {
+              color: "#33cf4d",
+              border: "6px solid #fff",
+            },
+            "&.Mui-disabled .MuiSwitch-thumb": {
+              color: "white",
+            },
+            "&.Mui-disabled + .MuiSwitch-track": {
+              opacity: 0.7,
+            },
+          },
+          "& .MuiSwitch-thumb": {
+            boxSizing: "border-box",
+            width: 18,
+            height: 18,
+          },
+          "& .MuiSwitch-track": {
+            borderRadius: 22 / 2,
+            backgroundColor: "#E9E9EA",
+            opacity: 1,
+            transition: theme.transitions.create(["background-color"], {
+              duration: 500,
+            }),
           },
         }),
       },
@@ -545,7 +594,7 @@ const theme = extendTheme({
       fontWeight: 400,
     },
   },
-  
+
   breakpoints: {
     values: {
       mobile: 0,

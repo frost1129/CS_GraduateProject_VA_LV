@@ -3,15 +3,16 @@ import "@mui/material/Button";
 
 declare module "@mui/material/styles/createPalette" {
   interface PaletteOptions {
-    tertiary: {
-      main: string;
-    };
+    // tertiary: {
+    //   main: string;
+    // };
   }
 }
 
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
-    tertiary: true;
+    // tertiary: true;
+    success: false;
   }
 }
 
