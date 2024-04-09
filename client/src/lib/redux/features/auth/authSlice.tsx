@@ -1,17 +1,30 @@
 import { AuthState } from "@/lib/types/redux";
 import { createSlice } from "@reduxjs/toolkit";
-import { signinThunk } from "./authActions";
+import { getProfileThunk, handleAddOrUpdateUserToLocalStorage, signinThunk } from "./authActions";
 
 const initialState: AuthState = {
   signInLoading: false,
   signInSuccess: false,
   signInError: null,
+  
+  getProfileLoading: false,
+  userProfile: null,
+  getProfileError: null
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    resetSigninStatus: (state) => {
+      return {
+        ...state,
+        signInLoading: false,
+        signInSuccess: false,
+        signInError: null,
+      };
+    },
+  },
   extraReducers: (builder) => {
     // Action: Sign in
     builder.addCase(signinThunk.pending, (state) => {
@@ -29,7 +42,27 @@ const authSlice = createSlice({
       state.signInSuccess = false;
       state.signInError = action.payload !== undefined ? action.payload : null;
     });
+
+    // Action: Get Profile
+    builder.addCase(getProfileThunk.pending, (state) => {
+      state.getProfileLoading = true;
+      state.userProfile = null;
+      state.signInError = null;
+    });
+    builder.addCase(getProfileThunk.fulfilled, (state, action) => {
+      state.getProfileLoading = false;
+      state.userProfile = action.payload;
+      state.signInError = null;
+
+      handleAddOrUpdateUserToLocalStorage(action.payload);
+    });
+    builder.addCase(getProfileThunk.rejected, (state, action) => {
+      state.getProfileLoading = false;
+      state.userProfile = null;
+      state.signInError = action.payload !== undefined ? action.payload : null;
+    });
   },
 });
 
+export const { resetSigninStatus } = authSlice.actions;
 export default authSlice.reducer;
