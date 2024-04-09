@@ -14,4 +14,5 @@ public class TopicResponseV2 {
     private String intentCode;
     private String description;
     private CategoryResponseV2 category;
+    private String note;
 }
