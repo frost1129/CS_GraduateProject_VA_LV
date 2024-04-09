@@ -10,6 +10,7 @@
     "topic": {
       "id": 1
     },
+    "intentCode": "content-1",
     "title": "Title 1",
     "text": "Text 1"
   },
@@ -27,6 +28,7 @@
     "topic": {
       "id": 1
     },
+    "intentCode": "content-1.content-2",
     "title": "Title 2",
     "text": "Text 2"
   },
@@ -44,6 +46,7 @@
     "topic": {
       "id": 2
     },
+    "intentCode": "content-1.content-3",
     "title": "Title 3",
     "text": "Text 3"
   },
@@ -61,6 +64,7 @@
     "topic": {
       "id": 2
     },
+    "intentCode": "content-2.content-4",
     "title": "Title 4",
     "text": "Text 4"
   },
@@ -78,6 +82,7 @@
     "topic": {
       "id": 2
     },
+    "intentCode": "content-2.content-5",
     "title": "Title 5",
     "text": "Text 5"
   }

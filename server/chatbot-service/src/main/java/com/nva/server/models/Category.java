@@ -20,8 +20,11 @@ public class Category {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String intentCode;
+
+    @Column(nullable = false)
     @Lob
-    private String name;
+    private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Topic> topics;

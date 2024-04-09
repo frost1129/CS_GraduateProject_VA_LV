@@ -13,6 +13,7 @@ public class ContentResponse {
     private Integer contentLevel;
     private SchoolYearResponseV2 schoolYear;
     private TopicResponseV2 topic;
+    private String intentCode;
     private String title;
     private String text;
     private String note;
