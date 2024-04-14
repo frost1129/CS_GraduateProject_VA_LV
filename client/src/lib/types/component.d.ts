@@ -37,3 +37,7 @@ export interface CustomAvatarProps {
   sx?: SxProps<Theme>
   className?: string;
 }
+
+export interface AdminHeaderProps {
+  setDrawerOpen: any;
+}

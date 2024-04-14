@@ -5,15 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 
-import { Box, Stack, useMediaQuery } from "@mui/material";
+import { MenuItem, Stack, SxProps, Theme } from "@mui/material";
+import { List } from "@phosphor-icons/react";
 
-import { AppDispatch } from "@/lib/redux/store";
 import { getUserProfileFromLocalStorage } from "@/lib/redux/features/auth/authSlice";
 import { images } from "@/lib/assets/img";
+import { AppDispatch } from "@/lib/redux/store";
+import { AdminHeaderProps } from "@/lib/types/component";
 import NavbarAndProfile from "./NavbarAndProfile";
+import Profile from "./Profile";
 import "./style.scss";
 
-const CustomHeader = () => {
+export const ClientHeader = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -47,4 +50,37 @@ const CustomHeader = () => {
   );
 };
 
-export default CustomHeader;
+export const AdminHeader = (props: AdminHeaderProps) => {
+  const { setDrawerOpen } = props;
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleToggleOpenDrawer = () => {
+    setDrawerOpen((prev: boolean) => !prev);
+  };
+
+  useEffect(() => {
+    dispatch(getUserProfileFromLocalStorage());
+  }, []);
+
+  return (
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      sx={adminHeaderStyles}
+    >
+      <MenuItem
+        onClick={handleToggleOpenDrawer}
+        sx={{ backgroundColor: "var(--grey-primary-40)" }}
+      >
+        <List size={32} />
+      </MenuItem>
+      <Profile />
+    </Stack>
+  );
+};
+
+const adminHeaderStyles: SxProps<Theme> = {
+  paddingY: 2,
+};

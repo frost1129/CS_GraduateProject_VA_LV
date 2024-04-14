@@ -14,9 +14,12 @@ import {
 } from "@mui/material";
 import { SignOut, UserCircle } from "@phosphor-icons/react";
 
+import { useAppSelector } from "@/lib/redux/store";
 import CustomAvatar from "../../custom-avatar";
 
 const Profile = () => {
+  const { userProfile } = useAppSelector((state) => state.auth);
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,12 +45,21 @@ const Profile = () => {
         onClick={handleClick}
         className="reset-btn-style"
       >
-        <CustomAvatar
-          width={42}
-          height={42}
-          alt="user-avatar"
-          sx={{ cursor: "pointer" }}
-        />
+        <Stack direction="row" alignItems="center" gap={1.5}>
+          <Stack direction="column" gap={0.5} alignItems="flex-end">
+            <Typography variant="label2">{userProfile?.name}</Typography>
+            <Typography variant="body3">{userProfile?.email}</Typography>
+          </Stack>
+          <Stack>
+            <CustomAvatar
+              width={45}
+              height={45}
+              alt="user-avatar"
+              sx={{ cursor: "pointer" }}
+              className="avatar-ring"
+            />
+          </Stack>
+        </Stack>
       </Box>
       <Popover
         id={id}
@@ -74,11 +86,7 @@ const Profile = () => {
         </Link>
         <Link href="/auth/login">
           <MenuItem onClick={handleLogout} sx={logoutBtnStyles}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap={1}
-            >
+            <Stack direction="row" alignItems="center" gap={1}>
               <SignOut size={24} />
               <Typography variant="body2">Đăng xuất</Typography>
             </Stack>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { images } from "@/lib/assets/img";
 import { CustomAvatarProps } from "@/lib/types/component";
@@ -26,6 +26,7 @@ const CustomAvatar = (props: CustomAvatarProps) => {
           className={`custom-avatar-container ${className}`}
           width={width}
           height={height}
+          priority
         />
       )}
     </Stack>

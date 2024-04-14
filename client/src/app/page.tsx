@@ -2,20 +2,18 @@
 
 import { Box, Typography } from "@mui/material";
 
-import CustomLayout from "@/lib/components/layouts";
 import { useAppSelector } from "@/lib/redux/store";
+import { ClientLayout } from "@/lib/components/layouts";
 
 const HomePage = () => {
   const { userProfile } = useAppSelector((state) => state.auth);
-  
+
   return (
-    <CustomLayout>
+    <ClientLayout>
       <Box height={"10000px"}>
-        <Typography>
-          {userProfile?.name}
-        </Typography>
+        <Typography>{userProfile?.name}</Typography>
       </Box>
-    </CustomLayout>
+    </ClientLayout>
   );
 };
 

@@ -1,11 +1,14 @@
 "use client";
 
-import { Box, SxProps, Theme, useMediaQuery } from "@mui/material";
+import { useState } from "react";
+
+import { Box, Grid, Stack, SxProps, Theme, useMediaQuery } from "@mui/material";
 
 import theme from "@/lib/theme";
-import CustomHeader from "./header";
+import { AdminHeader, ClientHeader } from "./header";
+import CustomDrawer from "./drawer";
 
-const CustomLayout = ({ children }: { children: React.ReactNode }) => {
+export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -20,16 +23,49 @@ const CustomLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Box component="main" paddingX={responsivePadding} sx={layoutStyles}>
-      <CustomHeader />
+      <ClientHeader />
       <Box marginTop={2}>{children}</Box>
     </Box>
   );
 };
 
-export default CustomLayout;
+export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
+  const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
+  const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+
+  const [openDrawer, setOpenDrawer] = useState(true);
+
+  const responsivePadding = isOversize
+    ? "160px"
+    : isDesktop
+    ? "64px"
+    : isTablet
+    ? "32px"
+    : "16px";
+
+  return (
+    <Stack
+      direction="row"
+      component="main"
+      paddingX={responsivePadding}
+      sx={layoutStyles}
+    >
+      <Grid container columnSpacing={3}>
+        {isDesktop && openDrawer && (
+          <Grid item oversize={3} desktop={3}>
+            <CustomDrawer />
+          </Grid>
+        )}
+        <Grid item flex={1}>
+          <AdminHeader setDrawerOpen={setOpenDrawer} />
+          {children}
+        </Grid>
+      </Grid>
+    </Stack>
+  );
+};
 
 const layoutStyles: SxProps<Theme> = {
   position: "relative",
-  maxWidth: "1920px",
-  margin: "auto",
 };
