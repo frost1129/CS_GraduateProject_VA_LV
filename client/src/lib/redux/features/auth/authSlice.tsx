@@ -24,6 +24,10 @@ const authSlice = createSlice({
         signInError: null,
       };
     },
+    getUserProfileFromLocalStorage: (state) => {
+      const userProfileString = localStorage.getItem("userProfile");
+      if (userProfileString) state.userProfile = JSON.parse(userProfileString);
+    },
   },
   extraReducers: (builder) => {
     // Action: Sign in
@@ -64,5 +68,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetSigninStatus } = authSlice.actions;
+export const { resetSigninStatus, getUserProfileFromLocalStorage } = authSlice.actions;
 export default authSlice.reducer;
