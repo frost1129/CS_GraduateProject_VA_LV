@@ -28,3 +28,12 @@ export interface CustomLoadingButtonProps {
     | "secondary";
   sx?: SxProps<Theme>;
 }
+
+export interface CustomAvatarProps {
+  width?: number;
+  height?: number;
+  src?: string;
+  alt?: string;
+  sx?: SxProps<Theme>
+  className?: string;
+}

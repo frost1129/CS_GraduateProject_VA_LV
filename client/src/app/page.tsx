@@ -1,14 +1,22 @@
 "use client";
 
+import { Box, Typography } from "@mui/material";
+
+import CustomLayout from "@/lib/components/layouts";
 import { useAppSelector } from "@/lib/redux/store";
-import { Typography } from "@mui/material"
 
 const HomePage = () => {
-  const { userProfile } = useAppSelector(state => state.auth);
-  console.log(userProfile)
+  const { userProfile } = useAppSelector((state) => state.auth);
+  
   return (
-    <Typography>{userProfile?.name}hhh</Typography>
-  )
-}
+    <CustomLayout>
+      <Box height={"10000px"}>
+        <Typography>
+          {userProfile?.name}
+        </Typography>
+      </Box>
+    </CustomLayout>
+  );
+};
 
-export default HomePage
+export default HomePage;
