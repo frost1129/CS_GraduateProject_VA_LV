@@ -2,8 +2,8 @@ import Image from "next/image";
 
 import { Stack } from "@mui/material";
 
-import { images } from "@/lib/assets/img";
 import { CustomAvatarProps } from "@/lib/types/component";
+import { images } from "@/lib/assets/img";
 import "./style.scss";
 
 const CustomAvatar = (props: CustomAvatarProps) => {
@@ -21,7 +21,7 @@ const CustomAvatar = (props: CustomAvatarProps) => {
         />
       ) : (
         <Image
-          src={images.defaultAvatar}
+          src={images.defaultAvt}
           alt={alt}
           className={`custom-avatar-container ${className}`}
           width={width}

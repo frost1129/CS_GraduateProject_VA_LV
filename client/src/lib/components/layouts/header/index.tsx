@@ -9,11 +9,11 @@ import { MenuItem, Stack, SxProps, Theme } from "@mui/material";
 import { List } from "@phosphor-icons/react";
 
 import { getUserProfileFromLocalStorage } from "@/lib/redux/features/auth/authSlice";
-import { images } from "@/lib/assets/img";
 import { AppDispatch } from "@/lib/redux/store";
 import { AdminHeaderProps } from "@/lib/types/component";
 import NavbarAndProfile from "./NavbarAndProfile";
 import Profile from "./Profile";
+import { images } from "@/lib/assets/img";
 import "./style.scss";
 
 export const ClientHeader = () => {
