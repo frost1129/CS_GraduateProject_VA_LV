@@ -1,11 +1,6 @@
 import logoOU from "./logo-ou.webp";
-import defaultCover from './default-cover.jpg'
-import defaultAvatar from './default-avatar.png'
-import robotAvatar from './bot.png';
+import defaultAvt from "./default-avt.png";
+import robotAvt from "./bot.png";
+import defaultCover from "./default-cover.jpg";
 
-export const images = {
-  logoOU,
-  defaultCover,
-  defaultAvatar,
-  robotAvatar
-};
+export const images = { logoOU, robotAvt, defaultAvt, defaultCover };
