@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 
-import { Box, Grid, Stack, SxProps, Theme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  ClickAwayListener,
+  Collapse,
+  Grid,
+  Stack,
+  SxProps,
+  Theme,
+  useMediaQuery,
+} from "@mui/material";
 
 import theme from "@/lib/theme";
 import { AdminHeader, ClientHeader } from "./header";
@@ -57,6 +66,13 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <CustomDrawer />
           </Grid>
         )}
+        {!isDesktop && !openDrawer && (
+          <ClickAwayListener onClickAway={() => setOpenDrawer((prev) => !prev)}>
+            <Stack sx={absoluteDrawerStyles}>
+              <CustomDrawer />
+            </Stack>
+          </ClickAwayListener>
+        )}
         <Grid item flex={1}>
           <AdminHeader setDrawerOpen={setOpenDrawer} />
           {children}
@@ -68,4 +84,14 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
 const layoutStyles: SxProps<Theme> = {
   position: "relative",
+  height: "100vh",
+};
+
+const absoluteDrawerStyles: SxProps<Theme> = {
+  position: "absolute",
+  zIndex: 9999,
+  width: "280px",
+  backgroundColor: "var(--white)",
+  height: "100%",
+  paddingLeft: "8px",
 };
