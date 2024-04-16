@@ -73,7 +73,13 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             </Stack>
           </ClickAwayListener>
         )}
-        <Grid item flex={1}>
+        <Grid
+          item
+          oversize={isDesktop && openDrawer ? 9 : 12}
+          desktop={isDesktop && openDrawer ? 9 : 12}
+          tablet={12}
+          mobile={12}
+        >
           <AdminHeader setDrawerOpen={setOpenDrawer} />
           {children}
         </Grid>

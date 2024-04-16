@@ -7,11 +7,13 @@ import {
 import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "../features/auth/authSlice";
+import contentReducer from "../features/chat-bot/content/contentSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
+      content: contentReducer
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

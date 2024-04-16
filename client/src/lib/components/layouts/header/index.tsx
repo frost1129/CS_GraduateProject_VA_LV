@@ -82,5 +82,5 @@ export const AdminHeader = (props: AdminHeaderProps) => {
 };
 
 const adminHeaderStyles: SxProps<Theme> = {
-  paddingY: 2,
+  height: 'var(--height-header)'
 };

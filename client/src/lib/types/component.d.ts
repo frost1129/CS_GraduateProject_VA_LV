@@ -1,4 +1,5 @@
 import { AlertProps } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
 
 export interface ToastInformation {
   severity: AlertProps["severity"];
@@ -40,4 +41,9 @@ export interface CustomAvatarProps {
 
 export interface AdminHeaderProps {
   setDrawerOpen: any;
+}
+
+export interface CustomDataGridProps {
+  rows: any;
+  colums: GridColDef<any>[]
 }

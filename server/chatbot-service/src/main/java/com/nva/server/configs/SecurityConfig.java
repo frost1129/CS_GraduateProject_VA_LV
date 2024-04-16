@@ -1,10 +1,11 @@
 package com.nva.server.configs;
 
+import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filter(HttpSecurity http) throws Exception {
         return http
-                .cors(Customizer.withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(config -> config.jwtAuthenticationConverter(jwtAuthConverter)))
@@ -42,18 +43,31 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("*"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOriginPatterns(ImmutableList.of("http://localhost:3000"));
+//        configuration.setAllowedMethods(ImmutableList.of("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setAllowedHeaders(ImmutableList.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CACHE_CONTROL, HttpHeaders.CONTENT_TYPE));
+////        configuration.setExposedHeaders(List.of("*"));
+//
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOrigin("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.setAllowCredentials(true);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
