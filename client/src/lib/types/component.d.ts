@@ -1,3 +1,4 @@
+import { CategoryResponse } from './backend.d';
 import { AlertProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
@@ -45,5 +46,14 @@ export interface AdminHeaderProps {
 
 export interface CustomDataGridProps {
   rows: any;
-  colums: GridColDef<any>[]
+  columns: GridColDef<any>[]
+}
+
+export interface CategoryRenderTableProps {
+  rows: CategoryResponse[];
+  columns: GridColDef<any>[]
+}
+
+export interface CategoryActionsProps {
+  value: CategoryResponse;
 }

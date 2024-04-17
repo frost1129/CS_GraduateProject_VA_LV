@@ -1,6 +1,6 @@
 package com.nva.server.controllers;
 
-import com.nva.server.dtos.CategoryResponseV2;
+import com.nva.server.dtos.CategoryResponse;
 import com.nva.server.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class CategoryRestController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponseV2>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(categoryService.findAll());
     }
 }

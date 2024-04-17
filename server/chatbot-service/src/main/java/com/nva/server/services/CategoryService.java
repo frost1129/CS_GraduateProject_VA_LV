@@ -1,9 +1,9 @@
 package com.nva.server.services;
 
-import com.nva.server.dtos.CategoryResponseV2;
+import com.nva.server.dtos.CategoryResponse;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryResponseV2> findAll();
+    List<CategoryResponse> findAll();
 }
