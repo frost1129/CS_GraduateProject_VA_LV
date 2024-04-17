@@ -35,3 +35,12 @@ export interface User {
   family_name: string;
   email: string;
 }
+
+export interface ICategoryResponse {
+  id: number;
+  intentCode: string;
+  description: string;
+  createdDate: number | null;
+  lastModifiedDate: number | null;
+  note: string | null;
+}

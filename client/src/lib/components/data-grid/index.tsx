@@ -1,29 +1,26 @@
 "use client";
 
-import React, { useEffect } from "react";
-
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { CustomDataGridProps } from "@/lib/types/component";
 
 const CustomDataGrid = (props: CustomDataGridProps) => {
-  const { rows, colums } = props;
-
+  const { rows, columns } = props;
 
   return (
     <DataGrid
       rows={rows || defaultRows}
-      columns={colums || defaultColumns}
+      columns={columns || defaultColumns}
       disableColumnFilter
       disableColumnMenu
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 5,
+            pageSize: 10,
           },
         },
       }}
-      pageSizeOptions={[5]}
+      pageSizeOptions={[10]}
       autoHeight
     />
   );
