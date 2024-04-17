@@ -11,8 +11,7 @@ const axiosAuthentication = axios.create({
 
 axiosAuthentication.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token");
-    config.headers.Authorization = `Bearer ${token || ""}`;
+    config.headers.Authorization = `Bearer ${Cookies.get("token") || ""}`;
     return config;
   },
   (error) => Promise.reject(error)

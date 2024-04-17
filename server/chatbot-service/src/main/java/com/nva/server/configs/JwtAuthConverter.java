@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-@Slf4j
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 

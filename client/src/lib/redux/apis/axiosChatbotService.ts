@@ -2,16 +2,14 @@ import axios from "axios";
 // @ts-ignore
 import Cookies from "js-cookie";
 
-const clientAxiosChatbotService = axios.create({
+const axiosChatbotService = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_HOST_CHAT_BOT_SERVICE,
   headers: {
-    // "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   },
-  // withCredentials: true,
 });
 
-clientAxiosChatbotService.interceptors.request.use(
+axiosChatbotService.interceptors.request.use(
   (config) => {
     config.headers.Authorization = `Bearer ${Cookies.get("token") || ""}`;
     return config;
@@ -19,7 +17,7 @@ clientAxiosChatbotService.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-clientAxiosChatbotService.interceptors.response.use(
+axiosChatbotService.interceptors.response.use(
   (response) => response,
   async (error) => {
     // const originalRequest = error.config;
@@ -47,4 +45,4 @@ clientAxiosChatbotService.interceptors.response.use(
   }
 );
 
-export default clientAxiosChatbotService;
+export default axiosChatbotService;

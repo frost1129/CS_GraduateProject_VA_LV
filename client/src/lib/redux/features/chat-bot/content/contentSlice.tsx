@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { getAllContentThunk } from "./contentActions";
-// import { getAllContentThunk } from "./contentActions";
 
 const initialState: any = {
   contents: [],
@@ -11,7 +11,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getAllContentThunk.pending, (state, action) => {
+    builder.addCase(getAllContentThunk.pending, (state) => {
       state.contents = [];
     });
     builder.addCase(getAllContentThunk.fulfilled, (state, action) => {

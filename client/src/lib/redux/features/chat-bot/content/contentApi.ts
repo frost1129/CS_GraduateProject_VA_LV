@@ -1,9 +1,7 @@
-import clientAxiosChatbotService from "@/lib/redux/apis/clientAxiosChatbotService";
-// import serverAxiosChatbotService from "@/lib/redux/apis/serverAxiosChatbotService";
+import axiosChatbotService from "@/lib/redux/apis/axiosChatbotService";
 
 const contentApi = {
-  // getAllContents: () => serverAxiosChatbotService.get("/contents"),
-  getAllContentsV2: () => clientAxiosChatbotService.post("/contents"),
+  getAllContents: () => axiosChatbotService.get("/contents"),
 };
 
 export default contentApi;

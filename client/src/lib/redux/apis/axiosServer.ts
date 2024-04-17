@@ -1,5 +1,5 @@
-import axios from "axios";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 const axiosServer = axios.create({
   headers: {

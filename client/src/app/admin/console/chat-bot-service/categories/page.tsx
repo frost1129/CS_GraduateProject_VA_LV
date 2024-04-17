@@ -20,7 +20,7 @@ const fetchData = async () => {
 const CategoryManagementPage = async () => {
   return (
     <Stack direction="column" sx={pageContainerStyles}>
-      <DataShower data={await fetchData()} />
+      <DataShower data={(await fetchData())} />
       <Box sx={{ marginBottom: 2 }}>
         <Typography variant="h4">Categories</Typography>
       </Box>
