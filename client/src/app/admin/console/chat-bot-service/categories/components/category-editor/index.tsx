@@ -48,6 +48,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   };
   const handleClose = () => {
     setOpenEditDialog(false);
+    reset({ ...value });
   };
 
   useEffect(() => {
@@ -68,7 +69,6 @@ const CategoryEditor = (props: CategoryEditorProps) => {
       </Stack>
       <Dialog
         open={openEditDialog}
-        onClose={handleClose}
         aria-labelledby="category-edit-dialog-title"
         aria-describedby="category-edit-dialog-description"
         maxWidth={"tablet"}

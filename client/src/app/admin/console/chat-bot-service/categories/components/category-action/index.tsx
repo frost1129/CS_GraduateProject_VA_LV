@@ -14,6 +14,7 @@ import {
 
 import { CategoryActionsProps } from "@/lib/types/component";
 import CategoryEditor from "../category-editor";
+import CategoryDeleteConfirm from "../category-delete";
 
 const CategoryActions = (props: CategoryActionsProps) => {
   const { value } = props;
@@ -61,11 +62,8 @@ const CategoryActions = (props: CategoryActionsProps) => {
         <MenuItem sx={{ padding: 0 }}>
           <CategoryEditor value={value} />
         </MenuItem>
-        <MenuItem sx={deleteBtnStyles} onClick={handleCloseActionMenu}>
-          <Stack direction="row" alignItems="center" gap={1}>
-            <Trash size={24} />
-            <Typography variant="body2">Delete</Typography>
-          </Stack>
+        <MenuItem sx={{ padding: 0 }}>
+          <CategoryDeleteConfirm />
         </MenuItem>
       </Popover>
     </>
@@ -92,13 +90,5 @@ const popoverStyles: SxProps<Theme> = {
     padding: 1,
     marginTop: "12px",
     boxShadow: "0px 2px 4px 0px rgba(30, 32, 32, 0.4)",
-  },
-};
-
-const deleteBtnStyles: SxProps<Theme> = {
-  color: "var(--alert)",
-  ":hover": {
-    backgroundColor: "var(--alert)",
-    color: "var(--white)",
   },
 };

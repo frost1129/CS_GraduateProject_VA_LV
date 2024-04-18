@@ -61,3 +61,12 @@ export interface CategoryActionsProps {
 export interface CategoryEditorProps {
   value: ICategoryResponse
 }
+
+export interface ConfirmDeleteDialogProps {
+  open: boolean;
+  setOpen: any;
+  title: string;
+  content: string;
+  deleteFunc: any;
+  loading: boolean;
+}
