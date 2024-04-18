@@ -1,9 +1,10 @@
 "use client";
 
 import { Stack, Typography, useMediaQuery } from "@mui/material";
+
+import theme from "@/lib/theme";
 import CategoryCreator from "../category-creator";
 import CategoryFilter from "../category-filter";
-import theme from "@/lib/theme";
 
 const CategoryHeader = () => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
