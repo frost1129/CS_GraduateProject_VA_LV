@@ -370,6 +370,9 @@ const theme = extendTheme({
               color: "var(--text-disable)",
             },
           },
+          "& .MuiInputBase-inputMultiline": {
+            fontSize: 16,
+          },
         }),
       },
     },

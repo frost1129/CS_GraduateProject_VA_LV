@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -124,7 +125,10 @@ const CategoryEditor = (props: CategoryEditorProps) => {
 
             {/* Description field */}
             <Stack direction="column" gap={1}>
-              <Typography variant="label3">Description</Typography>
+              <Stack direction="row" gap={0.5}>
+                <Typography variant="label3">Description</Typography>
+                <Box sx={{ color: "var(--alert)" }}>*</Box>
+              </Stack>
               <TextField
                 multiline
                 rows={3}
