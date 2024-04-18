@@ -21,6 +21,7 @@
         <module>api-gateway</module>
         <module>auth-service</module>
         <module>chatbot-service</module>
+        <module>schedule-service</module>
     </modules>
 
     <properties>

@@ -12,6 +12,7 @@
         <module name="product-service" />
         <module name="auth-service" />
         <module name="discovery-server" />
+        <module name="schedule-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -22,6 +23,7 @@
       <module name="chatbot-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="product-service" options="-parameters" />
+      <module name="schedule-service" options="-parameters" />
     </option>
   </component>
 </project>

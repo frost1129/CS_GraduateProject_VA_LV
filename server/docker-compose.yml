@@ -84,6 +84,21 @@ services:
     networks:
       - keycloak-and-mysql-network
 
+  schedule-service:
+    image: ougraduation/schedule-service:latest
+    container_name: schedule-service
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql
+      - discovery-server
+      - api-gateway
+      - keycloak
+    networks:
+      - keycloak-and-mysql-network
+
 networks:
   keycloak-and-mysql-network:
 
