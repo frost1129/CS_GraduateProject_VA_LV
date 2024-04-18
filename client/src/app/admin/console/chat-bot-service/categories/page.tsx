@@ -4,6 +4,7 @@ import axiosServer from "@/lib/redux/apis/axiosServer";
 import { ICategoryResponse } from "@/lib/types/backend";
 import NoData from "@/lib/components/no-data";
 import CategoryRenderTable from "./components/category-render-table";
+import CategoryHeader from "./components/category-header";
 
 const fetchCategoryData = async () => {
   try {
@@ -22,9 +23,7 @@ const CategoryManagementPage = async () => {
 
   return (
     <Stack direction="column" sx={pageContainerStyles}>
-      <Box sx={{ marginBottom: 2 }}>
-        <Typography variant="h4">Categories</Typography>
-      </Box>
+      <CategoryHeader />
       {rows.length > 0 ? (
         <CategoryRenderTable rows={rows} />
       ) : (

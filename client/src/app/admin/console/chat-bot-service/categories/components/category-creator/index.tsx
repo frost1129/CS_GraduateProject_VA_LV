@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,75 +12,61 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   IconButton,
   Stack,
-  SxProps,
   TextField,
-  Theme,
   Typography,
 } from "@mui/material";
-import { PencilSimple, X } from "@phosphor-icons/react";
+import { Plus, X } from "@phosphor-icons/react";
 
-import { CategoryEditorProps } from "@/lib/types/component";
-import { convertMillisecondsToDate } from "@/lib/utils";
-
-const categoryEditSchema = z.object({
+const categoryCreateSchema = z.object({
+  intentCode: z.string().min(1, "Not be empty"),
   description: z.string().min(1, "Not be empty"),
   note: z.string().nullable(),
 });
 
-type CategoryEditForm = z.infer<typeof categoryEditSchema>;
+type CategoryCreateForm = z.infer<typeof categoryCreateSchema>;
 
-const CategoryEditor = (props: CategoryEditorProps) => {
+const CategoryCreator = () => {
   const { register, handleSubmit, formState, getValues, reset } =
-    useForm<CategoryEditForm>({
-      resolver: zodResolver(categoryEditSchema),
+    useForm<CategoryCreateForm>({
+      resolver: zodResolver(categoryCreateSchema),
       mode: "onChange",
     });
 
-  const { value } = props;
-
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const handleClickOpen = () => {
-    setOpenEditDialog(true);
+    setOpenCreateDialog(true);
   };
   const handleClose = () => {
-    setOpenEditDialog(false);
-    reset({ ...value });
+    reset();
+    setOpenCreateDialog(false);
   };
 
-  const handleUpdateCategory = (data: CategoryEditForm) => {
+  const handleCreateCategory = (data: CategoryCreateForm) => {
     console.log(data);
   };
 
-  useEffect(() => {
-    reset({ ...value });
-  }, []);
-
   return (
     <>
-      <Stack
-        direction="row"
-        component="button"
-        className="reset-btn"
-        onClick={handleClickOpen}
-        sx={btnStyles}
-      >
-        <PencilSimple size={24} />
-        <Typography variant="body2">Edit</Typography>
-      </Stack>
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        <Stack direction="row" gap={1} alignItems="center">
+          <Plus size={20} />
+          <Typography variant="button1">Add new</Typography>
+        </Stack>
+      </Button>
       <Dialog
         component="form"
-        onSubmit={handleSubmit(handleUpdateCategory)}
-        open={openEditDialog}
+        open={openCreateDialog}
         aria-labelledby="category-edit-dialog-title"
         aria-describedby="category-edit-dialog-description"
+        fullWidth
         maxWidth={"tablet"}
+        onSubmit={handleSubmit(handleCreateCategory)}
       >
         <DialogTitle component="div" id="category-edit-dialog-title">
-          <Typography variant="h5">Edit Category</Typography>
+          <Typography variant="h5">Create New Category</Typography>
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -97,36 +83,18 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         </IconButton>
         <DialogContent>
           <Stack direction="column" gap={2}>
-            {/* Created date & Last modified date field */}
-            <Grid container spacing={2}>
-              <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
-                <Stack direction="column" gap={1}>
-                  <Typography variant="label3">Created date</Typography>
-                  <TextField
-                    disabled
-                    value={convertMillisecondsToDate(value.createdDate!)}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
-                <Stack direction="column" gap={1}>
-                  <Typography variant="label3">Last modified date</Typography>
-                  <TextField
-                    disabled
-                    value={
-                      value.lastModifiedDate
-                        ? convertMillisecondsToDate(value.lastModifiedDate)
-                        : "---"
-                    }
-                  />
-                </Stack>
-              </Grid>
-            </Grid>
-
             {/* Intent code field */}
             <Stack direction="column" gap={1}>
-              <Typography variant="label3">Intent code</Typography>
-              <TextField disabled value={value.intentCode} />
+              <Stack direction="row" gap={0.5}>
+                <Typography variant="label3">Intent code</Typography>
+                <Box sx={{ color: "var(--alert)" }}>*</Box>
+              </Stack>
+              <TextField
+                placeholder="Enter intent code..."
+                error={!!formState.errors.intentCode}
+                helperText={formState.errors.intentCode?.message}
+                {...register("intentCode")}
+              />
             </Stack>
 
             {/* Description field */}
@@ -167,7 +135,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
             type="submit"
             disabled={!formState.isValid}
           >
-            Save
+            Create
           </Button>
         </DialogActions>
       </Dialog>
@@ -175,11 +143,4 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   );
 };
 
-export default CategoryEditor;
-
-const btnStyles: SxProps<Theme> = {
-  flex: 1,
-  padding: "6px 16px",
-  alignItems: "center",
-  gap: 1,
-};
+export default CategoryCreator;
