@@ -15,7 +15,7 @@ const CategoryHeader = () => {
       sx={{ marginBottom: 2 }}
       gap={1}
     >
-      <Typography variant="h4" marginBottom={isTablet ? 0 : 2}>
+      <Typography variant="h4" marginBottom={isTablet ? 0 : 1}>
         Categories
       </Typography>
       <Stack
