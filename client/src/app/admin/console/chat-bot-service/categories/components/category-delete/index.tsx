@@ -38,7 +38,7 @@ const CategoryDeleteConfirm = () => {
         open={openDeleteDialog}
         setOpen={setOpenDeleteDialog}
         title="Delete Category"
-        content="Do you want to delete this category? All relative content will be deleted also."
+        content="Do you want to delete this category? All related content will be deleted also."
         deleteFunc={handleDeleteCategory}
         loading={false}
       />
