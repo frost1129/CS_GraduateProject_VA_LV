@@ -50,7 +50,7 @@ const CategoryCreator = () => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+      <Button variant="contained" color="primary" onClick={handleClickOpen} fullWidth>
         <Stack direction="row" gap={1} alignItems="center">
           <Plus size={20} />
           <Typography variant="button1">Add new</Typography>
