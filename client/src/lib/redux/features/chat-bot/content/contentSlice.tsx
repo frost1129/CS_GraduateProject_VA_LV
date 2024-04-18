@@ -6,7 +6,7 @@ const initialState: any = {
   contents: [],
 };
 
-const authSlice = createSlice({
+const contentSlice = createSlice({
   name: "content",
   initialState,
   reducers: {},
@@ -23,4 +23,4 @@ const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export default contentSlice.reducer;

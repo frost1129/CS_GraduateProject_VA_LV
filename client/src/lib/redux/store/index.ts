@@ -8,12 +8,14 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "../features/auth/authSlice";
 import contentReducer from "../features/chat-bot/content/contentSlice";
+import categoryReducer from "../features/chat-bot/category/categorySlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
-      content: contentReducer
+      content: contentReducer,
+      category: categoryReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

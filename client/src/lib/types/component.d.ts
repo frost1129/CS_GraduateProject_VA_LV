@@ -1,6 +1,7 @@
-import { CategoryResponse } from './backend.d';
 import { AlertProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+
+import { ICategoryResponse } from './backend.d';
 
 export interface ToastInformation {
   severity: AlertProps["severity"];
@@ -50,10 +51,13 @@ export interface CustomDataGridProps {
 }
 
 export interface CategoryRenderTableProps {
-  rows: CategoryResponse[];
-  columns: GridColDef<any>[]
+  rows: ICategoryResponse[];
 }
 
 export interface CategoryActionsProps {
-  value: CategoryResponse;
+  value: ICategoryResponse;
+}
+
+export interface CategoryEditorProps {
+  value: ICategoryResponse
 }

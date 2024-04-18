@@ -1,5 +1,4 @@
 import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
 
 import axiosServer from "@/lib/redux/apis/axiosServer";
 import { ICategoryResponse } from "@/lib/types/backend";
@@ -20,41 +19,6 @@ const fetchCategoryData = async () => {
 
 const CategoryManagementPage = async () => {
   const rows: ICategoryResponse[] = (await fetchCategoryData()) || [];
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: "id",
-      headerName: "ID",
-      width: 50,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "intentCode",
-      headerName: "Intent",
-      width: 200,
-      editable: false,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      flex: 1,
-      editable: false,
-    },
-    {
-      field: "createdDate",
-      headerName: "Created Date",
-      type: "number",
-      width: 200,
-      editable: false,
-    },
-    {
-      field: "lastModifiedDate",
-      headerName: "Last Modified Date",
-      type: "number",
-      width: 200,
-      editable: false,
-    },
-  ];
 
   return (
     <Stack direction="column" sx={pageContainerStyles}>
@@ -62,7 +26,7 @@ const CategoryManagementPage = async () => {
         <Typography variant="h4">Categories</Typography>
       </Box>
       {rows.length > 0 ? (
-        <CategoryRenderTable rows={rows} columns={columns} />
+        <CategoryRenderTable rows={rows} />
       ) : (
         <NoData />
       )}

@@ -1,4 +1,4 @@
-import { User } from "./backend";
+import { User, ICategoryResponse } from "./backend";
 
 export interface AuthState {
   signInLoading: boolean;
@@ -8,4 +8,8 @@ export interface AuthState {
   getProfileLoading: boolean;
   userProfile: User | null;
   getProfileError: any;
+}
+
+export interface CategoryState {
+  categories: ICategoryResponse[]
 }
