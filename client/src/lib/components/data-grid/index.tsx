@@ -21,7 +21,7 @@ const CustomDataGrid = (props: CustomDataGridProps) => {
         },
       }}
       pageSizeOptions={[10]}
-      autoHeight
+      autoHeight={false} 
     />
   );
 };

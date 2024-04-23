@@ -31,9 +31,10 @@ public class CategoryRestController {
         return new ResponseEntity<>(categoryService.addOrUpdateCategory(categoryRequest), HttpStatus.CREATED);
     }
 
-    @PatchMapping
+    @PatchMapping("/{categoryId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable(name = "categoryId") String categoryId, @RequestBody CategoryRequest categoryRequest) {
+        categoryRequest.setId(Long.parseLong(categoryId));
         return ResponseEntity.ok(categoryService.addOrUpdateCategory(categoryRequest));
     }
 }

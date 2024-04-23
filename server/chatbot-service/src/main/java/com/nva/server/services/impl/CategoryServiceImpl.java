@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
                     existingCategory.get().setNote(categoryRequest.getNote());
                     existingCategory.get().setLastModifiedDate(System.currentTimeMillis());
 
-                    return mapToCategoryResponse(existingCategory.get());
+                    return mapToCategoryResponse(categoryRepository.save(existingCategory.get()));
                 } catch (Exception e) {
                     throw new SaveDataException("Cập nhật danh mục thất bại!");
                 }

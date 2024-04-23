@@ -44,3 +44,10 @@ export interface ICategoryResponse {
   lastModifiedDate: number | null;
   note: string | null;
 }
+
+export interface ICategoryRequest {
+  id: number | null,
+  intentCode: string | null;
+  description: string;
+  note: string | null;
+}

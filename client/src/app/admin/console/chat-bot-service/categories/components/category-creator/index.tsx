@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +18,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Plus, X } from "@phosphor-icons/react";
+import { ICategoryRequest } from "@/lib/types/backend";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
+import { addNewCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
+import { appendFirst } from "@/lib/redux/features/chat-bot/category/categorySlice";
+import CustomLoadingButton from "@/lib/components/loading-button";
 
 const categoryCreateSchema = z.object({
   intentCode: z.string().min(1, "Not be empty"),
@@ -28,6 +33,10 @@ const categoryCreateSchema = z.object({
 type CategoryCreateForm = z.infer<typeof categoryCreateSchema>;
 
 const CategoryCreator = () => {
+  const dispatch = useAppDispatch();
+  const { saveCategoryLoading, savedCategory, saveCategoryError } =
+    useAppSelector((state) => state.category);
+
   const { register, handleSubmit, formState, getValues, reset } =
     useForm<CategoryCreateForm>({
       resolver: zodResolver(categoryCreateSchema),
@@ -45,12 +54,30 @@ const CategoryCreator = () => {
   };
 
   const handleCreateCategory = (data: CategoryCreateForm) => {
-    console.log(data);
+    const categoryData: ICategoryRequest = {
+      id: null,
+      intentCode: data.intentCode,
+      description: data.description,
+      note: data.note,
+    };
+    dispatch(addNewCategoryThunk(categoryData));
+    handleClose();
   };
+
+  useEffect(() => {
+    if (savedCategory !== null) {
+      dispatch(appendFirst({ category: savedCategory }));
+    }
+  }, [savedCategory, saveCategoryError]);
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleClickOpen} fullWidth>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClickOpen}
+        fullWidth
+      >
         <Stack direction="row" gap={1} alignItems="center">
           <Plus size={20} />
           <Typography variant="button1">Add new</Typography>
@@ -71,6 +98,7 @@ const CategoryCreator = () => {
         <IconButton
           aria-label="close"
           onClick={handleClose}
+          disabled={saveCategoryLoading}
           sx={{
             position: "absolute",
             right: 24,
@@ -93,6 +121,7 @@ const CategoryCreator = () => {
                 placeholder="Enter intent code..."
                 error={!!formState.errors.intentCode}
                 helperText={formState.errors.intentCode?.message}
+                disabled={saveCategoryLoading}
                 {...register("intentCode")}
               />
             </Stack>
@@ -109,6 +138,7 @@ const CategoryCreator = () => {
                 placeholder="Enter description..."
                 error={!!formState.errors.description}
                 helperText={formState.errors.description?.message}
+                disabled={saveCategoryLoading}
                 {...register("description")}
               />
             </Stack>
@@ -120,23 +150,33 @@ const CategoryCreator = () => {
                 multiline
                 rows={3}
                 placeholder="Enter note..."
+                disabled={saveCategoryLoading}
                 {...register("note")}
               />
             </Stack>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ paddingX: 3, paddingBottom: 2 }}>
-          <Button variant="outlined" color="secondary" onClick={handleClose}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClose}
+            disabled={saveCategoryLoading}
+          >
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={!formState.isValid}
-          >
-            Create
-          </Button>
+          {saveCategoryLoading ? (
+            <CustomLoadingButton sx={{ height: "42px" }} />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={!formState.isValid}
+            >
+              Create
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
