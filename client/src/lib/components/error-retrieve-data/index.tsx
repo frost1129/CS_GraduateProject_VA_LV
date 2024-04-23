@@ -4,7 +4,7 @@ import { Stack, SxProps, Theme, Typography } from "@mui/material";
 
 import { images } from "@/lib/assets/img";
 
-const NoData = () => {
+const ErrorRetrieveData = () => {
   return (
     <Stack
       direction="column"
@@ -13,13 +13,13 @@ const NoData = () => {
       justifyContent="center"
       sx={containerStyles}
     >
-      <Image src={images.emptyIcon} alt="empty" width={120} height={120} />
-      <Typography variant="body2">No data</Typography>
+      <Image src={images.errorIcon} alt="error-data" width={120} height={120} />
+      <Typography variant="body2">Oops! Something went wrong</Typography>
     </Stack>
   );
 };
 
-export default NoData;
+export default ErrorRetrieveData;
 
 const containerStyles: SxProps<Theme> = {
   flex: 1,

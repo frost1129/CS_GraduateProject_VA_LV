@@ -1,18 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { CategoryState } from "@/lib/types/redux";
+import { getCategoriesThunk } from "./categoryActions";
 
 const initialState: CategoryState = {
+  listCategoryLoading: false,
   categories: [],
+  listCategoryError: null,
 };
 
 const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {
-    initData: (state, action) => {
-      state.categories = action.payload.categories;
-    },
     appendFirst: (state, action) => {
       state.categories = [action.payload.category, ...state.categories];
     },
@@ -30,17 +30,24 @@ const categorySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(getAllContentThunk.pending, (state) => {
-    //   state.contents = [];
-    // });
-    // builder.addCase(getAllContentThunk.fulfilled, (state, action) => {
-    //   state.contents = action.payload;
-    // });
-    // builder.addCase(getAllContentThunk.rejected, (state, action) => {
-    //   state.contents = [];
-    // });
+    builder.addCase(getCategoriesThunk.pending, (state) => {
+      state.listCategoryLoading = true;
+      state.categories = [];
+      state.listCategoryError = null;
+    });
+    builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
+      state.listCategoryLoading = false;
+      state.categories = action.payload;
+      state.listCategoryError = null;
+    });
+    builder.addCase(getCategoriesThunk.rejected, (state, action) => {
+      state.listCategoryLoading = false;
+      state.categories = [];
+      state.listCategoryError =
+        action.payload !== undefined ? action.payload : null;
+    });
   },
 });
-export const { initData, appendFirst, appendLast, removeById, clearData } =
+export const { appendFirst, appendLast, removeById, clearData } =
   categorySlice.actions;
 export default categorySlice.reducer;

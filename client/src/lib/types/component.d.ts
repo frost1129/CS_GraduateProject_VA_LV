@@ -45,11 +45,6 @@ export interface AdminHeaderProps {
   setDrawerOpen: any;
 }
 
-export interface CustomDataGridProps {
-  rows: any;
-  columns: GridColDef<any>[]
-}
-
 export interface CategoryRenderTableProps {
   rows: ICategoryResponse[];
 }

@@ -1,19 +1,30 @@
 "use client";
 
-import CustomDataGrid from "@/lib/components/data-grid";
-import { CategoryRenderTableProps } from "@/lib/types/component";
-import { convertMillisecondsToDate } from "@/lib/utils";
-import CategoryActions from "../category-action";
 import { useEffect, useState } from "react";
+
 import { GridColDef } from "@mui/x-data-grid";
 
-const CategoryRenderTable = (props: CategoryRenderTableProps) => {
-  const { rows } = props;
+import CustomDataGrid from "@/lib/components/data-grid";
+import { convertMillisecondsToDate } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
+import { getCategoriesThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
+import CategoryActions from "../category-action";
+import NoData from "@/lib/components/no-data";
+import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
+import LoadingData from "@/lib/components/loading-data";
+
+const CategoryRenderTable = () => {
+  const dispatch = useAppDispatch();
+  const { listCategoryLoading, categories, listCategoryError } = useAppSelector(
+    (state) => state.category
+  );
 
   const [newColumns, setNewColumns] = useState<any>();
 
   useEffect(() => {
-    const columns: GridColDef<(typeof rows)[number]>[] = [
+    dispatch(getCategoriesThunk());
+
+    const columns: GridColDef<(typeof categories)[number]>[] = [
       {
         field: "id",
         headerName: "ID",
@@ -66,11 +77,14 @@ const CategoryRenderTable = (props: CategoryRenderTableProps) => {
         renderCell: (value) => <CategoryActions value={value.row} />,
       },
     ];
-
     setNewColumns(columns);
-  }, [rows]);
+  }, []);
+  
+  if (listCategoryLoading) return <LoadingData />
+  else if (categories.length === 0) return <NoData />;
+  else if (listCategoryError !== null) return <ErrorRetrieveData />;
 
-  return <CustomDataGrid rows={rows} columns={newColumns} />;
+  return <CustomDataGrid rows={categories} columns={newColumns} />;
 };
 
 export default CategoryRenderTable;

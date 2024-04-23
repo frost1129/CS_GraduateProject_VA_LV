@@ -1,10 +1,12 @@
-import Image from "next/image";
+import {
+  CircularProgress,
+  Stack,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 
-import { Stack, SxProps, Theme, Typography } from "@mui/material";
-
-import { images } from "@/lib/assets/img";
-
-const NoData = () => {
+const LoadingData = () => {
   return (
     <Stack
       direction="column"
@@ -13,13 +15,12 @@ const NoData = () => {
       justifyContent="center"
       sx={containerStyles}
     >
-      <Image src={images.emptyIcon} alt="empty" width={120} height={120} />
-      <Typography variant="body2">No data</Typography>
+      <CircularProgress sx={{ color: "var(--primary)" }} />
     </Stack>
   );
 };
 
-export default NoData;
+export default LoadingData;
 
 const containerStyles: SxProps<Theme> = {
   flex: 1,

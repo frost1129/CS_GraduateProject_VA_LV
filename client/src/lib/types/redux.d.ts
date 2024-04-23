@@ -11,5 +11,7 @@ export interface AuthState {
 }
 
 export interface CategoryState {
-  categories: ICategoryResponse[]
+  listCategoryLoading: boolean;
+  categories: ICategoryResponse[];
+  listCategoryError: any;
 }

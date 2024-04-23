@@ -1,34 +1,13 @@
-import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
+import { Stack, SxProps, Theme, Typography } from "@mui/material";
 
-import axiosServer from "@/lib/redux/apis/axiosServer";
-import { ICategoryResponse } from "@/lib/types/backend";
-import NoData from "@/lib/components/no-data";
 import CategoryRenderTable from "./components/category-render-table";
 import CategoryHeader from "./components/category-header";
 
-const fetchCategoryData = async () => {
-  try {
-    return (
-      await axiosServer.get(
-        `${process.env.NEXT_PUBLIC_API_HOST_CHAT_BOT_SERVICE}/categories`
-      )
-    ).data;
-  } catch (error: any) {
-    console.log(error.response);
-  }
-};
-
-const CategoryManagementPage = async () => {
-  const rows: ICategoryResponse[] = (await fetchCategoryData()) || [];
-
+const CategoryManagementPage = () => {
   return (
     <Stack direction="column" sx={pageContainerStyles}>
       <CategoryHeader />
-      {rows.length > 0 ? (
-        <CategoryRenderTable rows={rows} />
-      ) : (
-        <NoData />
-      )}
+      <CategoryRenderTable />
     </Stack>
   );
 };

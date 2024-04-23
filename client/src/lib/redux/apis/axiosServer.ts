@@ -1,9 +1,7 @@
-import { cookies } from "next/headers";
 import axios from "axios";
-import authApi from "../features/auth/authApi";
+import { cookies } from "next/headers";
 
-// @ts-ignore
-import Cookies from 'js-cookie'
+import authApi from "../features/auth/authApi";
 
 const axiosServer = axios.create({
   headers: {
@@ -25,7 +23,6 @@ axiosServer.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     // Case: token is expired | Use refresh token to get new token & refresh token
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -35,21 +32,26 @@ axiosServer.interceptors.response.use(
         if (res.status === 200) {
           const accessToken = res.data.access_token;
           const refreshToken = res.data.refresh_token;
+          console.log("token>>", accessToken)
 
-          Cookies.set("token", accessToken);
-          Cookies.set("refreshToken", refreshToken);
+          cookies().set("token", accessToken);
+          cookies().set("refreshToken", refreshToken);
+
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${accessToken}`;
           originalRequest.headers[
             "Authorization"
           ] = `Bearer ${accessToken}`;
           return axiosServer(originalRequest);
         } else if (res.status === 400) {
-          Cookies.delete("token");
-          Cookies.delete("refreshToken");
+          cookies().delete("token");
+          cookies().delete("refreshToken");
           window.location.reload();
           return Promise.reject(error);
         }
       } else return Promise.reject(error);
-    } else return Promise.reject(error);
+    }
   }
 );
 
