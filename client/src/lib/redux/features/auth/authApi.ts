@@ -1,7 +1,5 @@
 import { IUserLogin } from "@/lib/types/backend";
 import axiosAuthentication from "../../apis/axiosAuthentication";
-// @ts-ignore
-import Cookies from "js-cookie";
 
 const authApi = {
   signin: (payload: IUserLogin) =>
@@ -22,11 +20,12 @@ const authApi = {
 
   getProfile: () => axiosAuthentication.get("/userinfo"),
 
-  // signup: (payload: IUserRegister) =>
-  //   axiosAuthentication.post("/auth/signup", { ...payload }),
-
-  // refreshToken: (refreshToken: string) =>
-  //   axiosAuthentication.post("/auth/refreshToken", { refreshToken }),
+  logout: (refreshToken: string) =>
+    axiosAuthentication.post("/logout", {
+      refresh_token: refreshToken,
+      client_id: process.env.NEXT_PUBLIC_CLIENT_ID,
+      client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
+    }),
 
   // updateProfile: (payload: IUserUpdateProfile) =>
   //   axiosAuthentication.patch("/auth/update", { ...payload }),

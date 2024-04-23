@@ -5,8 +5,8 @@ const ADMIN_ROUTES = {
   },
 };
 
-const USER_ROUTES = {
-    PROFILE: "/profile",
-}
+const ROOT = "/";
+const PROFILE = "/profile";
+const LOGIN = "/auth/login";
 
-export default { ADMIN_ROUTES, USER_ROUTES };
+export default { ADMIN_ROUTES, ROOT, PROFILE, LOGIN };

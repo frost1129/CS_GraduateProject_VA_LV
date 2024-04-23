@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+// @ts-ignore
+import Cookies from "js-cookie";
 
 import {
   Box,
@@ -14,12 +16,14 @@ import {
 } from "@mui/material";
 import { Joystick, SignOut, UserCircle } from "@phosphor-icons/react";
 
-import { useAppSelector } from "@/lib/redux/store";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import Routes from "@/lib/constants/Routes";
-import CustomAvatar from "../../custom-avatar";
 import Roles from "@/lib/constants/Roles";
+import { logoutThunk } from "@/lib/redux/features/auth/authActions";
+import CustomAvatar from "../../custom-avatar";
 
 const Profile = () => {
+  const dispatch = useAppDispatch();
   const { userProfile } = useAppSelector((state) => state.auth);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -33,7 +37,7 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    handleClose();
+    dispatch(logoutThunk(Cookies.get("refreshToken")));
   };
 
   const open = Boolean(anchorEl);
@@ -88,7 +92,7 @@ const Profile = () => {
             </MenuItem>
           </Link>
         )}
-        <Link href={`${Routes.USER_ROUTES.PROFILE}`}>
+        <Link href={`${Routes.PROFILE}`}>
           <MenuItem onClick={handleClose}>
             <Stack direction="row" alignItems="center" gap={1}>
               <UserCircle size={24} />

@@ -33,7 +33,7 @@ import CustomToast from "@/lib/components/toast";
 import { ToastInformation } from "@/lib/types/component";
 import { resetSigninStatus } from "@/lib/redux/features/auth/authSlice";
 import CustomLoadingButton from "@/lib/components/loading-button";
-import logoOU from "@/lib/assets/img/logo-ou.webp";
+import { images } from '../../../lib/assets/img/index';
 import "./style.scss";
 
 const signinUserSchema = z.object({
@@ -150,7 +150,7 @@ const LoginPage = () => {
     <>
       <Container className="login-container">
         <Box className="login-wrapper">
-          <Image src={logoOU} alt="logo-ou" width={100} />
+          <Image src={images.logoOU} alt="logo-ou" width={100} priority />
           <Typography component="h1" variant="h5" sx={{ marginTop: 2 }}>
             Đăng nhập
           </Typography>

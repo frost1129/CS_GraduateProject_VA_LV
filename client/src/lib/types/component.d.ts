@@ -45,8 +45,9 @@ export interface AdminHeaderProps {
   setDrawerOpen: any;
 }
 
-export interface CategoryRenderTableProps {
+export interface CustomDataGridProps {
   rows: ICategoryResponse[];
+  columns: GridColDef<any>[number];
 }
 
 export interface CategoryActionsProps {
