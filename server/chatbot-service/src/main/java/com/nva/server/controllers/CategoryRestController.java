@@ -1,8 +1,10 @@
 package com.nva.server.controllers;
 
+import com.nva.server.dtos.CategoryRequest;
 import com.nva.server.dtos.CategoryResponse;
 import com.nva.server.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,5 +23,17 @@ public class CategoryRestController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CategoryResponse>> getCategories(@RequestParam(required = false) Map<String, String> params) {
         return ResponseEntity.ok(categoryService.getCategories(params));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponse> addNewCategory(@RequestBody CategoryRequest categoryRequest) {
+        return new ResponseEntity<>(categoryService.addOrUpdateCategory(categoryRequest), HttpStatus.CREATED);
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.addOrUpdateCategory(categoryRequest));
     }
 }

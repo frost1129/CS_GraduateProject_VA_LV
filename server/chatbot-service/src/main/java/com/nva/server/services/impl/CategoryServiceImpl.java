@@ -1,6 +1,9 @@
 package com.nva.server.services.impl;
 
+import com.nva.server.dtos.CategoryRequest;
 import com.nva.server.dtos.CategoryResponse;
+import com.nva.server.exceptions.EntityNotFound;
+import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Category;
 import com.nva.server.repositories.CategoryRepository;
 import com.nva.server.services.CategoryService;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +46,42 @@ public class CategoryServiceImpl implements CategoryService {
         query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
 
         return entityManager.createQuery(query).getResultList().stream().map(this::mapToCategoryResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public CategoryResponse addOrUpdateCategory(CategoryRequest categoryRequest) {
+        //  CASE: Add new category | ELSE: Update existing category
+        if (categoryRequest.getId() == null) {
+            try {
+                if (categoryRepository.findByIntentCode(categoryRequest.getIntentCode()).isPresent())
+                    throw new SaveDataException("Danh mục đã tồn tại!");
+
+                Category category = new Category();
+                category.setIntentCode(categoryRequest.getIntentCode());
+                category.setDescription(categoryRequest.getDescription());
+                category.setNote(categoryRequest.getNote());
+                category.setCreatedDate(System.currentTimeMillis());
+
+                return mapToCategoryResponse(categoryRepository.save(category));
+            } catch (SaveDataException e) {
+                throw new SaveDataException(e.getMessage());
+            } catch (Exception e) {
+                throw new SaveDataException("Tạo danh mục thất bại!");
+            }
+        } else {
+            Optional<Category> existingCategory = categoryRepository.findById(categoryRequest.getId());
+            if (existingCategory.isPresent()) {
+                try {
+                    existingCategory.get().setDescription(categoryRequest.getDescription());
+                    existingCategory.get().setNote(categoryRequest.getNote());
+                    existingCategory.get().setLastModifiedDate(System.currentTimeMillis());
+
+                    return mapToCategoryResponse(existingCategory.get());
+                } catch (Exception e) {
+                    throw new SaveDataException("Cập nhật danh mục thất bại!");
+                }
+            } else throw new EntityNotFound("Không tìm thấy danh mục!");
+        }
     }
 
     private CategoryResponse mapToCategoryResponse(Category category) {
