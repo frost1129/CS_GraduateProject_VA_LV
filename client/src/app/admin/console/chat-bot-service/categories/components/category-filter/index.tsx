@@ -10,8 +10,6 @@ import { useRouter } from "next/navigation";
 import Routes from "@/lib/constants/Routes";
 
 const CategoryFilter = () => {
-  const queryParams = new URLSearchParams(window.location.search);
-  const kw = queryParams.get("kw");
   const router = useRouter();
 
   const dispatch = useAppDispatch();
@@ -33,8 +31,12 @@ const CategoryFilter = () => {
   };
 
   useEffect(() => {
-    setKeyword(kw === null ? "" : kw);
-  }, [kw]);
+    if (typeof window !== "undefined") {
+      const queryParams = new URLSearchParams(window.location.search);
+      const kw = queryParams.get("kw");
+      setKeyword(kw === null ? "" : kw);
+    }
+  }, []);
 
   return (
     <TextField
