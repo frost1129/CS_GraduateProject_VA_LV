@@ -1,4 +1,4 @@
-import { Stack, SxProps, Theme, Typography } from "@mui/material";
+import { Stack, SxProps, Theme } from "@mui/material";
 
 import CategoryRenderTable from "./components/category-render-table";
 import CategoryHeader from "./components/category-header";

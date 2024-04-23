@@ -4,20 +4,44 @@ import com.nva.server.dtos.CategoryResponse;
 import com.nva.server.models.Category;
 import com.nva.server.repositories.CategoryRepository;
 import com.nva.server.services.CategoryService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final EntityManager entityManager;
 
     @Override
-    public List<CategoryResponse> findAll() {
-        return categoryRepository.findAll().stream().map(this::mapToCategoryResponse).collect(Collectors.toList());
+    public List<CategoryResponse> getCategories(Map<String, String> params) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Category> query = criteriaBuilder.createQuery(Category.class);
+        Root<Category> root = query.from(Category.class);
+
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        if (params != null && params.containsKey("kw") && !params.get("kw").isEmpty()) {
+            String keyword = params.get("kw");
+            predicate = criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("intentCode"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("description"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("note"), "%" + keyword + "%")
+            );
+        }
+        query.select(root).where(predicate);
+        query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
+        return entityManager.createQuery(query).getResultList().stream().map(this::mapToCategoryResponse).collect(Collectors.toList());
     }
 
     private CategoryResponse mapToCategoryResponse(Category category) {

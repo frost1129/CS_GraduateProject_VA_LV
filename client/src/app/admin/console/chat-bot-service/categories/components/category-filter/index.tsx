@@ -1,11 +1,21 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { TextField } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import { useAppDispatch } from "@/lib/redux/store";
+import { getCategoriesThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
+import { useRouter } from "next/navigation";
+import Routes from "@/lib/constants/Routes";
 
 const CategoryFilter = () => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const kw = queryParams.get("kw");
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+
   const [keyword, setKeyword] = useState("");
 
   const handleKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -14,9 +24,17 @@ const CategoryFilter = () => {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log(keyword);
+      router.replace(
+        Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CATEGORIES +
+          `${keyword !== "" ? `?kw=${keyword}` : ""}`
+      );
+      dispatch(getCategoriesThunk({ keyword }));
     }
   };
+
+  useEffect(() => {
+    setKeyword(kw === null ? "" : kw);
+  }, [kw]);
 
   return (
     <TextField

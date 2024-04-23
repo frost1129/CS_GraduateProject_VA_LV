@@ -14,6 +14,9 @@ import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
 import LoadingData from "@/lib/components/loading-data";
 
 const CategoryRenderTable = () => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const kw = queryParams.get("kw");
+
   const dispatch = useAppDispatch();
   const { listCategoryLoading, categories, listCategoryError } = useAppSelector(
     (state) => state.category
@@ -22,8 +25,6 @@ const CategoryRenderTable = () => {
   const [newColumns, setNewColumns] = useState<any>();
 
   useEffect(() => {
-    dispatch(getCategoriesThunk());
-
     const columns: GridColDef<(typeof categories)[number]>[] = [
       {
         field: "id",
@@ -79,8 +80,13 @@ const CategoryRenderTable = () => {
     ];
     setNewColumns(columns);
   }, []);
-  
-  if (listCategoryLoading) return <LoadingData />
+
+  useEffect(() => {
+    if (kw !== null) dispatch(getCategoriesThunk({ keyword: kw }));
+    else dispatch(getCategoriesThunk({}));
+  }, [kw]);
+
+  if (listCategoryLoading) return <LoadingData />;
   else if (categories.length === 0) return <NoData />;
   else if (listCategoryError !== null) return <ErrorRetrieveData />;
 

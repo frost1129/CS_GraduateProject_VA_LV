@@ -1,7 +1,11 @@
 import axiosChatbotService from "@/lib/redux/apis/axiosChatbotService";
 
 const categoryApi = {
-    getCategories: () => axiosChatbotService.get("/categories")
+  getCategories: (params?: any) => {
+    let requestParams = `${params.keyword ? `?kw=${params.keyword}` : ""}`;
+
+    return axiosChatbotService.get(`/categories${requestParams}`);
+  },
 };
 
 export default categoryApi;
