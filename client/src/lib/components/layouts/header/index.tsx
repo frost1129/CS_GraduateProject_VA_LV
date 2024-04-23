@@ -41,7 +41,7 @@ export const ClientHeader = () => {
           alignItems="center"
         >
           <Link href="/" style={{ lineHeight: 0 }}>
-            <Image src={images.logoOU} alt="logo-ou" width={54} />
+            <Image src={images.logoOU} alt="logo-ou" width={54} priority />
           </Link>
           <NavbarAndProfile />
         </Stack>
@@ -82,5 +82,5 @@ export const AdminHeader = (props: AdminHeaderProps) => {
 };
 
 const adminHeaderStyles: SxProps<Theme> = {
-  height: 'var(--height-header)'
+  height: "var(--height-header)",
 };

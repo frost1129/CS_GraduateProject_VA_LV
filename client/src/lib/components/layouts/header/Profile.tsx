@@ -12,10 +12,12 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { SignOut, UserCircle } from "@phosphor-icons/react";
+import { Joystick, SignOut, UserCircle } from "@phosphor-icons/react";
 
 import { useAppSelector } from "@/lib/redux/store";
+import Routes from "@/lib/constants/Routes";
 import CustomAvatar from "../../custom-avatar";
+import Roles from "@/lib/constants/Roles";
 
 const Profile = () => {
   const { userProfile } = useAppSelector((state) => state.auth);
@@ -76,7 +78,17 @@ const Profile = () => {
         }}
         sx={popoverStyles}
       >
-        <Link href="/profile">
+        {userProfile?.realm_access.roles.includes(Roles.ROLE_ADMIN) && (
+          <Link href={`${Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CATEGORIES}`}>
+            <MenuItem onClick={handleClose}>
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Joystick size={24} />
+                <Typography variant="body2">Bảng điều khiển</Typography>
+              </Stack>
+            </MenuItem>
+          </Link>
+        )}
+        <Link href={`${Routes.USER_ROUTES.PROFILE}`}>
           <MenuItem onClick={handleClose}>
             <Stack direction="row" alignItems="center" gap={1}>
               <UserCircle size={24} />

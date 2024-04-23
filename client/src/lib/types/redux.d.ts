@@ -1,4 +1,4 @@
-import { User, ICategoryResponse } from "./backend";
+import { ICategoryResponse, UserKeycloakResponse } from "./backend";
 
 export interface AuthState {
   signInLoading: boolean;
@@ -6,7 +6,7 @@ export interface AuthState {
   signInError: any;
 
   getProfileLoading: boolean;
-  userProfile: User | null;
+  userProfile: UserKeycloakResponse | null;
   getProfileError: any;
 }
 

@@ -1,9 +1,6 @@
 export interface IUserLogin {
   username: string;
   password: string;
-  // grant_type: string;
-  // client_id: string;
-  // client_secret: string;
 }
 
 export interface IUserRegister extends IUserLogin {
@@ -26,7 +23,7 @@ export interface ISigninResponse {
   refreshToken: string;
 }
 
-export interface User {
+export interface UserKeycloakResponse {
   sub: string;
   email_verified: boolean;
   name: string;
@@ -34,6 +31,9 @@ export interface User {
   given_name: string;
   family_name: string;
   email: string;
+  realm_access: {
+    roles: string[];
+  };
 }
 
 export interface ICategoryResponse {
