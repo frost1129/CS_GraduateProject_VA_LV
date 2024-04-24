@@ -22,8 +22,14 @@ import {
 } from "@mui/material";
 import { PencilSimple, X } from "@phosphor-icons/react";
 
-import { CategoryEditorProps } from "@/lib/types/component";
+import { CategoryEditorProps, ToastInformation } from "@/lib/types/component";
 import { convertMillisecondsToDate } from "@/lib/utils";
+import { ICategoryRequest } from "@/lib/types/backend";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
+import { updateCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
+import { updateCategoryById } from "@/lib/redux/features/chat-bot/category/categorySlice";
+import CustomToast from "@/lib/components/toast";
+import CustomLoadingButton from "@/lib/components/loading-button";
 
 const categoryEditSchema = z.object({
   description: z.string().min(1, "Not be empty"),
@@ -33,15 +39,23 @@ const categoryEditSchema = z.object({
 type CategoryEditForm = z.infer<typeof categoryEditSchema>;
 
 const CategoryEditor = (props: CategoryEditorProps) => {
+  const { value } = props;
+
+  // Redux
+  const dispatch = useAppDispatch();
+  const { updateCategoryLoading, updatedCategory, updateCategoryError } =
+    useAppSelector((state) => state.category);
+
+  // React Hook Form
   const { register, handleSubmit, formState, getValues, reset } =
     useForm<CategoryEditForm>({
       resolver: zodResolver(categoryEditSchema),
       mode: "onChange",
     });
 
-  const { value } = props;
-
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [toastInfo, setToastInfo] = useState<ToastInformation>();
+  const [openToast, setOpenToast] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     setOpenEditDialog(true);
@@ -52,12 +66,43 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   };
 
   const handleUpdateCategory = (data: CategoryEditForm) => {
-    console.log(data);
+    const categoryData: ICategoryRequest = {
+      id: null,
+      intentCode: null,
+      description: data.description,
+      note: data.note,
+    };
+    dispatch(
+      updateCategoryThunk({
+        categoryId: value.id.toString(),
+        category: categoryData,
+      })
+    );
   };
 
   useEffect(() => {
     reset({ ...value });
   }, []);
+
+  useEffect(() => {
+    if (updatedCategory !== null) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "success",
+        title: "Thành công",
+        message: "Chỉnh sửa danh mục thành công!",
+      });
+      dispatch(updateCategoryById({ category: updatedCategory }));
+      handleClose();
+    } else if (updateCategoryError !== null) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "error",
+        title: "Thất bại",
+        message: updateCategoryError,
+      });
+    }
+  }, [updatedCategory, updateCategoryError]);
 
   return (
     <>
@@ -85,6 +130,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         <IconButton
           aria-label="close"
           onClick={handleClose}
+          disabled={updateCategoryLoading}
           sx={{
             position: "absolute",
             right: 24,
@@ -141,6 +187,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
                 placeholder="Enter description..."
                 error={!!formState.errors.description}
                 helperText={formState.errors.description?.message}
+                disabled={updateCategoryLoading}
                 {...register("description")}
               />
             </Stack>
@@ -152,25 +199,42 @@ const CategoryEditor = (props: CategoryEditorProps) => {
                 multiline
                 rows={3}
                 placeholder="Enter note..."
+                disabled={updateCategoryLoading}
                 {...register("note")}
               />
             </Stack>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ paddingX: 3, paddingBottom: 2 }}>
-          <Button variant="outlined" color="secondary" onClick={handleClose}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClose}
+            disabled={updateCategoryLoading}
+          >
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={!formState.isValid}
-          >
-            Save
-          </Button>
+          {updateCategoryLoading ? (
+            <CustomLoadingButton sx={{ height: "42px" }} />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={!formState.isValid}
+            >
+              Save
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
+      <CustomToast
+        open={openToast}
+        handleClose={() => setOpenToast(false)}
+        title={toastInfo?.title!}
+        message={toastInfo?.message!}
+        severity={toastInfo?.severity}
+      />
     </>
   );
 };

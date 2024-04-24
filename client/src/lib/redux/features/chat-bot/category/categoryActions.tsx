@@ -28,3 +28,22 @@ export const addNewCategoryThunk = createAsyncThunk(
     }
   }
 );
+
+export const updateCategoryThunk = createAsyncThunk(
+  "updateCategory",
+  async (
+    {
+      categoryId,
+      category,
+    }: { categoryId: string; category: ICategoryRequest },
+    { rejectWithValue }
+  ) => {
+    try {
+      return await categoryApi.updateCategory(categoryId, category);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message)
+        return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);

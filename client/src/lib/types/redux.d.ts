@@ -18,4 +18,8 @@ export interface CategoryState {
   saveCategoryLoading: boolean;
   savedCategory: ICategoryResponse | null;
   saveCategoryError: any;
+
+  updateCategoryLoading: boolean;
+  updatedCategory: ICategoryResponse | null;
+  updateCategoryError: any;
 }

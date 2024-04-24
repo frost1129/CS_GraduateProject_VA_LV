@@ -21,7 +21,7 @@ import { Plus, X } from "@phosphor-icons/react";
 import { ICategoryRequest } from "@/lib/types/backend";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { addNewCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
-import { appendFirst } from "@/lib/redux/features/chat-bot/category/categorySlice";
+import { appendCategoryFirst } from "@/lib/redux/features/chat-bot/category/categorySlice";
 import CustomLoadingButton from "@/lib/components/loading-button";
 import { ToastInformation } from "@/lib/types/component";
 import CustomToast from "@/lib/components/toast";
@@ -75,7 +75,7 @@ const CategoryCreator = () => {
         title: "Thành công",
         message: "Tạo mới danh mục thành công!",
       });
-      dispatch(appendFirst({ category: savedCategory }));
+      dispatch(appendCategoryFirst({ category: savedCategory }));
       handleClose();
     } else if (saveCategoryError !== null) {
       setOpenToast(true);

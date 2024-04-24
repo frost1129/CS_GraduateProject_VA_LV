@@ -6,11 +6,15 @@ const categoryApi = {
     let requestParams = `${params.keyword ? `?kw=${params.keyword}` : ""}`;
     return axiosChatbotService.get(`/categories${requestParams}`);
   },
+
   addNewCategory: (category: ICategoryRequest) =>
     axiosChatbotService.post("/categories", {
-      intentCode: category.intentCode,
-      description: category.description,
-      note: category.note
+      ...category,
+    }),
+
+  updateCategory: (categoryId: string, category: ICategoryRequest) =>
+    axiosChatbotService.patch(`/categories/${categoryId}`, {
+      ...category,
     }),
 };
 
