@@ -42,14 +42,13 @@ const categorySlice = createSlice({
     });
     builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
       state.listCategoryLoading = false;
-      state.categories = action.payload;
+      state.categories = action.payload.data;
       state.listCategoryError = null;
     });
     builder.addCase(getCategoriesThunk.rejected, (state, action) => {
       state.listCategoryLoading = false;
       state.categories = [];
-      state.listCategoryError =
-        action.payload !== undefined ? action.payload : null;
+      state.listCategoryError = action.payload ? action.payload : null;
     });
 
     // Add new category
@@ -60,14 +59,13 @@ const categorySlice = createSlice({
     });
     builder.addCase(addNewCategoryThunk.fulfilled, (state, action) => {
       state.saveCategoryLoading = false;
-      state.savedCategory = action.payload;
+      state.savedCategory = action.payload.data;
       state.saveCategoryError = null;
     });
     builder.addCase(addNewCategoryThunk.rejected, (state, action) => {
       state.saveCategoryLoading = false;
       state.savedCategory = null;
-      state.saveCategoryError =
-        action.payload !== undefined ? action.payload : null;
+      state.saveCategoryError = action.payload ? action.payload : null;
     });
   },
 });

@@ -7,9 +7,9 @@ export const getCategoriesThunk = createAsyncThunk(
   "getCategories",
   async (params: any, { rejectWithValue }) => {
     try {
-      return (await categoryApi.getCategories(params)).data;
+      return await categoryApi.getCategories(params);
     } catch (error: any) {
-      if (error.response && error.response.data.message)
+      if (error.response && error.response.data && error.response.data.message)
         return rejectWithValue(error.response.data.message);
       return rejectWithValue(error.message);
     }
@@ -20,9 +20,9 @@ export const addNewCategoryThunk = createAsyncThunk(
   "addNewCategory",
   async (category: ICategoryRequest, { rejectWithValue }) => {
     try {
-      return (await categoryApi.addNewCategory(category)).data;
+      return await categoryApi.addNewCategory(category);
     } catch (error: any) {
-      if (error.response && error.response.data.message)
+      if (error.response && error.response.data && error.response.data.message)
         return rejectWithValue(error.response.data.message);
       return rejectWithValue(error.message);
     }

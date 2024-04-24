@@ -42,7 +42,7 @@ axiosChatbotService.interceptors.response.use(
         window.location.reload();
         return Promise.reject(error);
       }
-    }
+    } else return Promise.reject(error);
   }
 );
 

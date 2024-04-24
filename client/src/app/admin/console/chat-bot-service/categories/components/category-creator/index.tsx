@@ -23,6 +23,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { addNewCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
 import { appendFirst } from "@/lib/redux/features/chat-bot/category/categorySlice";
 import CustomLoadingButton from "@/lib/components/loading-button";
+import { ToastInformation } from "@/lib/types/component";
+import CustomToast from "@/lib/components/toast";
 
 const categoryCreateSchema = z.object({
   intentCode: z.string().min(1, "Not be empty"),
@@ -44,6 +46,8 @@ const CategoryCreator = () => {
     });
 
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [toastInfo, setToastInfo] = useState<ToastInformation>();
+  const [openToast, setOpenToast] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     setOpenCreateDialog(true);
@@ -61,12 +65,25 @@ const CategoryCreator = () => {
       note: data.note,
     };
     dispatch(addNewCategoryThunk(categoryData));
-    handleClose();
   };
 
   useEffect(() => {
     if (savedCategory !== null) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "success",
+        title: "Thành công",
+        message: "Tạo mới danh mục thành công!",
+      });
       dispatch(appendFirst({ category: savedCategory }));
+      handleClose();
+    } else if (saveCategoryError !== null) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "error",
+        title: "Thất bại",
+        message: saveCategoryError,
+      });
     }
   }, [savedCategory, saveCategoryError]);
 
@@ -179,6 +196,13 @@ const CategoryCreator = () => {
           )}
         </DialogActions>
       </Dialog>
+      <CustomToast
+        open={openToast}
+        handleClose={() => setOpenToast(false)}
+        title={toastInfo?.title!}
+        message={toastInfo?.message!}
+        severity={toastInfo?.severity}
+      />
     </>
   );
 };
