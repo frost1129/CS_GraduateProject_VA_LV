@@ -9,4 +9,5 @@ import java.util.Map;
 public interface CategoryService {
     List<CategoryResponse> getCategories(Map<String, String> params);
     CategoryResponse addOrUpdateCategory(CategoryRequest categoryRequest);
+    boolean deleteCategory(Long categoryId);
 }

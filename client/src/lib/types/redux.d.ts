@@ -22,4 +22,7 @@ export interface CategoryState {
   updateCategoryLoading: boolean;
   updatedCategory: ICategoryResponse | null;
   updateCategoryError: any;
+
+  deleteCategoryLoading: boolean;
+  deleteCategorySuccess: any;
 }

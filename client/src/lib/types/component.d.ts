@@ -1,7 +1,7 @@
 import { AlertProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
-import { ICategoryResponse } from './backend.d';
+import { ICategoryResponse } from "./backend.d";
 
 export interface ToastInformation {
   severity: AlertProps["severity"];
@@ -16,19 +16,17 @@ export interface ToastProps {
   message: string;
   severity: AlertProps["severity"];
   anchorOrigin?: SnackbarProps["anchorOrigin"];
+  duration?: number;
 }
 
 export interface CustomLoadingButtonProps {
   fullWidth?: boolean;
   variant?: "text" | "contained" | "outlined";
-  size?: OverridableStringUnion<"small" | "medium" | "large", ButtonPropsSizeOverrides>;
-  color?:
-    | "info"
-    | "warning"
-    | "error"
-    | "inherit"
-    | "primary"
-    | "secondary";
+  size?: OverridableStringUnion<
+    "small" | "medium" | "large",
+    ButtonPropsSizeOverrides
+  >;
+  color?: "info" | "warning" | "error" | "inherit" | "primary" | "secondary";
   sx?: SxProps<Theme>;
 }
 
@@ -37,7 +35,7 @@ export interface CustomAvatarProps {
   height?: number;
   src?: string;
   alt?: string;
-  sx?: SxProps<Theme>
+  sx?: SxProps<Theme>;
   className?: string;
 }
 
@@ -55,7 +53,7 @@ export interface CategoryActionsProps {
 }
 
 export interface CategoryEditorProps {
-  value: ICategoryResponse
+  value: ICategoryResponse;
 }
 
 export interface ConfirmDeleteDialogProps {
@@ -65,4 +63,8 @@ export interface ConfirmDeleteDialogProps {
   content: string;
   deleteFunc: any;
   loading: boolean;
+}
+
+export interface CategoryDeleterProps {
+  value: ICategoryResponse;
 }

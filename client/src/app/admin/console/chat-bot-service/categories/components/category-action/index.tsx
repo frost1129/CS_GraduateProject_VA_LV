@@ -14,7 +14,7 @@ import {
 
 import { CategoryActionsProps } from "@/lib/types/component";
 import CategoryEditor from "../category-editor";
-import CategoryDeleteConfirm from "../category-delete";
+import CategoryDeleter from "../category-deleter";
 
 const CategoryActions = (props: CategoryActionsProps) => {
   const { value } = props;
@@ -63,7 +63,7 @@ const CategoryActions = (props: CategoryActionsProps) => {
           <CategoryEditor value={value} />
         </MenuItem>
         <MenuItem sx={{ padding: 0 }}>
-          <CategoryDeleteConfirm />
+          <CategoryDeleter value={value} />
         </MenuItem>
       </Popover>
     </>

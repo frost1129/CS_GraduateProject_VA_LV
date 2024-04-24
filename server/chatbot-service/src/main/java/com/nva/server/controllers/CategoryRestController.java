@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +37,12 @@ public class CategoryRestController {
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable(name = "categoryId") String categoryId, @RequestBody CategoryRequest categoryRequest) {
         categoryRequest.setId(Long.parseLong(categoryId));
         return ResponseEntity.ok(categoryService.addOrUpdateCategory(categoryRequest));
+    }
+
+    @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteCategory(@PathVariable(name = "categoryId") String categoryId) {
+        categoryService.deleteCategory(Long.parseLong(categoryId));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Xóa danh mục thành công!"));
     }
 }

@@ -1,14 +1,14 @@
-import { Alert, AlertTitle, Box, Snackbar, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Snackbar, Typography } from "@mui/material";
 import {
   CheckCircle,
   Info,
   WarningCircle,
   X,
   XCircle,
-} from '@phosphor-icons/react';
+} from "@phosphor-icons/react";
 
-import './style.scss';
-import { ToastProps } from '@/lib/types/component';
+import "./style.scss";
+import { ToastProps } from "@/lib/types/component";
 
 const CustomToast = (props: ToastProps) => {
   const {
@@ -17,14 +17,15 @@ const CustomToast = (props: ToastProps) => {
     title,
     message,
     severity,
-    anchorOrigin = { vertical: 'top', horizontal: 'right' },
+    anchorOrigin = { vertical: "top", horizontal: "right" },
+    duration = 3000,
   } = props;
 
   return (
     <>
       <Snackbar
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={duration}
         onClose={handleClose}
         anchorOrigin={anchorOrigin}
       >

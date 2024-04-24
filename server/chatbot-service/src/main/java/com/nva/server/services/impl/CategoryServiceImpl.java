@@ -84,6 +84,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Override
+    public boolean deleteCategory(Long categoryId) {
+        try {
+            categoryRepository.deleteById(categoryId);
+            return true;
+        } catch (Exception e) {
+            throw new SaveDataException("Xóa danh mục thất bại!");
+        }
+    }
+
     private CategoryResponse mapToCategoryResponse(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setId(category.getId());

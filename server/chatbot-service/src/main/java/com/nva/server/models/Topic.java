@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.List;
+
 @Entity
 @Table(name = "topics")
 @Data
@@ -27,6 +29,9 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    private List<Content> contents;
 
     @CreatedDate
     @Column(nullable = false)

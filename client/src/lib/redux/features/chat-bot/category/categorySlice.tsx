@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { CategoryState } from "@/lib/types/redux";
 import {
   addNewCategoryThunk,
+  deleteCategoryThunk,
   getCategoriesThunk,
   updateCategoryThunk,
 } from "./categoryActions";
@@ -19,6 +20,9 @@ const initialState: CategoryState = {
   updateCategoryLoading: false,
   updatedCategory: null,
   updateCategoryError: null,
+
+  deleteCategoryLoading: false,
+  deleteCategorySuccess: null,
 };
 
 const categorySlice = createSlice({
@@ -47,6 +51,11 @@ const categorySlice = createSlice({
         return c;
       });
       state.categories = updatedCategories;
+    },
+    resetCategoryStatus: (state) => {
+      const tempCategories = state.categories;
+      state = { ...initialState };
+      state.categories = tempCategories;
     },
   },
   extraReducers: (builder) => {
@@ -100,6 +109,20 @@ const categorySlice = createSlice({
       state.updatedCategory = null;
       state.updateCategoryError = action.payload ? action.payload : null;
     });
+
+    // Delete category
+    builder.addCase(deleteCategoryThunk.pending, (state) => {
+      state.deleteCategoryLoading = true;
+      state.deleteCategorySuccess = null;
+    });
+    builder.addCase(deleteCategoryThunk.fulfilled, (state, action) => {
+      state.deleteCategoryLoading = false;
+      state.deleteCategorySuccess = action.payload.data;
+    });
+    builder.addCase(deleteCategoryThunk.rejected, (state) => {
+      state.deleteCategoryLoading = false;
+      state.deleteCategorySuccess = null;
+    });
   },
 });
 export const {
@@ -108,5 +131,6 @@ export const {
   removeCategoryById,
   clearCategoryData,
   updateCategoryById,
+  resetCategoryStatus,
 } = categorySlice.actions;
 export default categorySlice.reducer;

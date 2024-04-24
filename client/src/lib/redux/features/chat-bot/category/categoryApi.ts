@@ -16,6 +16,9 @@ const categoryApi = {
     axiosChatbotService.patch(`/categories/${categoryId}`, {
       ...category,
     }),
+
+  deleteCategory: (categoryId: string) =>
+    axiosChatbotService.delete(`/categories/${categoryId}`),
 };
 
 export default categoryApi;

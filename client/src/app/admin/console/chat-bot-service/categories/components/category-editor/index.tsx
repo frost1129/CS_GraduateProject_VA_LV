@@ -27,7 +27,9 @@ import { convertMillisecondsToDate } from "@/lib/utils";
 import { ICategoryRequest } from "@/lib/types/backend";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { updateCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
-import { updateCategoryById } from "@/lib/redux/features/chat-bot/category/categorySlice";
+import {
+  updateCategoryById,
+} from "@/lib/redux/features/chat-bot/category/categorySlice";
 import CustomToast from "@/lib/components/toast";
 import CustomLoadingButton from "@/lib/components/loading-button";
 
@@ -47,7 +49,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
     useAppSelector((state) => state.category);
 
   // React Hook Form
-  const { register, handleSubmit, formState, getValues, reset } =
+  const { register, handleSubmit, formState, reset } =
     useForm<CategoryEditForm>({
       resolver: zodResolver(categoryEditSchema),
       mode: "onChange",
@@ -60,6 +62,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   const handleClickOpen = () => {
     setOpenEditDialog(true);
   };
+
   const handleClose = () => {
     setOpenEditDialog(false);
     reset({ ...value });
@@ -81,10 +84,6 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   };
 
   useEffect(() => {
-    reset({ ...value });
-  }, []);
-
-  useEffect(() => {
     if (updatedCategory !== null) {
       setOpenToast(true);
       setToastInfo({
@@ -92,6 +91,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         title: "Thành công",
         message: "Chỉnh sửa danh mục thành công!",
       });
+
       dispatch(updateCategoryById({ category: updatedCategory }));
       handleClose();
     } else if (updateCategoryError !== null) {
@@ -103,6 +103,12 @@ const CategoryEditor = (props: CategoryEditorProps) => {
       });
     }
   }, [updatedCategory, updateCategoryError]);
+
+  // Reset states
+  useEffect(() => {
+    reset({ ...value });
+    setOpenToast(false);
+  }, []);
 
   return (
     <>
@@ -116,125 +122,129 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         <PencilSimple size={24} />
         <Typography variant="body2">Edit</Typography>
       </Stack>
-      <Dialog
-        component="form"
-        onSubmit={handleSubmit(handleUpdateCategory)}
-        open={openEditDialog}
-        aria-labelledby="category-edit-dialog-title"
-        aria-describedby="category-edit-dialog-description"
-        maxWidth={"tablet"}
-      >
-        <DialogTitle component="div" id="category-edit-dialog-title">
-          <Typography variant="h5">Edit Category</Typography>
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          disabled={updateCategoryLoading}
-          sx={{
-            position: "absolute",
-            right: 24,
-            top: 12,
-            padding: 1,
-            color: (theme) => theme.palette.grey[500],
-          }}
+      {openEditDialog && (
+        <Dialog
+          component="form"
+          onSubmit={handleSubmit(handleUpdateCategory)}
+          open={true}
+          aria-labelledby="category-edit-dialog-title"
+          aria-describedby="category-edit-dialog-description"
+          maxWidth={"tablet"}
         >
-          <X size={24} />
-        </IconButton>
-        <DialogContent>
-          <Stack direction="column" gap={2}>
-            {/* Created date & Last modified date field */}
-            <Grid container spacing={2}>
-              <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
-                <Stack direction="column" gap={1}>
-                  <Typography variant="label3">Created date</Typography>
-                  <TextField
-                    disabled
-                    value={convertMillisecondsToDate(value.createdDate!)}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
-                <Stack direction="column" gap={1}>
-                  <Typography variant="label3">Last modified date</Typography>
-                  <TextField
-                    disabled
-                    value={
-                      value.lastModifiedDate
-                        ? convertMillisecondsToDate(value.lastModifiedDate)
-                        : "---"
-                    }
-                  />
-                </Stack>
-              </Grid>
-            </Grid>
-
-            {/* Intent code field */}
-            <Stack direction="column" gap={1}>
-              <Typography variant="label3">Intent code</Typography>
-              <TextField disabled value={value.intentCode} />
-            </Stack>
-
-            {/* Description field */}
-            <Stack direction="column" gap={1}>
-              <Stack direction="row" gap={0.5}>
-                <Typography variant="label3">Description</Typography>
-                <Box sx={{ color: "var(--alert)" }}>*</Box>
-              </Stack>
-              <TextField
-                multiline
-                rows={3}
-                placeholder="Enter description..."
-                error={!!formState.errors.description}
-                helperText={formState.errors.description?.message}
-                disabled={updateCategoryLoading}
-                {...register("description")}
-              />
-            </Stack>
-
-            {/* Note field */}
-            <Stack direction="column" gap={1}>
-              <Typography variant="label3">Note</Typography>
-              <TextField
-                multiline
-                rows={3}
-                placeholder="Enter note..."
-                disabled={updateCategoryLoading}
-                {...register("note")}
-              />
-            </Stack>
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ paddingX: 3, paddingBottom: 2 }}>
-          <Button
-            variant="outlined"
-            color="secondary"
+          <DialogTitle component="div" id="category-edit-dialog-title">
+            <Typography variant="h5">Edit Category</Typography>
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
             onClick={handleClose}
             disabled={updateCategoryLoading}
+            sx={{
+              position: "absolute",
+              right: 24,
+              top: 12,
+              padding: 1,
+              color: (theme) => theme.palette.grey[500],
+            }}
           >
-            Cancel
-          </Button>
-          {updateCategoryLoading ? (
-            <CustomLoadingButton sx={{ height: "42px" }} />
-          ) : (
+            <X size={24} />
+          </IconButton>
+          <DialogContent>
+            <Stack direction="column" gap={2}>
+              {/* Created date & Last modified date field */}
+              <Grid container spacing={2}>
+                <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
+                  <Stack direction="column" gap={1}>
+                    <Typography variant="label3">Created date</Typography>
+                    <TextField
+                      disabled
+                      value={convertMillisecondsToDate(value.createdDate!)}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
+                  <Stack direction="column" gap={1}>
+                    <Typography variant="label3">Last modified date</Typography>
+                    <TextField
+                      disabled
+                      value={
+                        value.lastModifiedDate
+                          ? convertMillisecondsToDate(value.lastModifiedDate)
+                          : "---"
+                      }
+                    />
+                  </Stack>
+                </Grid>
+              </Grid>
+
+              {/* Intent code field */}
+              <Stack direction="column" gap={1}>
+                <Typography variant="label3">Intent code</Typography>
+                <TextField disabled value={value.intentCode} />
+              </Stack>
+
+              {/* Description field */}
+              <Stack direction="column" gap={1}>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="label3">Description</Typography>
+                  <Box sx={{ color: "var(--alert)" }}>*</Box>
+                </Stack>
+                <TextField
+                  multiline
+                  rows={3}
+                  placeholder="Enter description..."
+                  error={!!formState.errors.description}
+                  helperText={formState.errors.description?.message}
+                  disabled={updateCategoryLoading}
+                  {...register("description")}
+                />
+              </Stack>
+
+              {/* Note field */}
+              <Stack direction="column" gap={1}>
+                <Typography variant="label3">Note</Typography>
+                <TextField
+                  multiline
+                  rows={3}
+                  placeholder="Enter note..."
+                  disabled={updateCategoryLoading}
+                  {...register("note")}
+                />
+              </Stack>
+            </Stack>
+          </DialogContent>
+          <DialogActions sx={{ paddingX: 3, paddingBottom: 2 }}>
             <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              disabled={!formState.isValid}
+              variant="outlined"
+              color="secondary"
+              onClick={handleClose}
+              disabled={updateCategoryLoading}
             >
-              Save
+              Cancel
             </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-      <CustomToast
-        open={openToast}
-        handleClose={() => setOpenToast(false)}
-        title={toastInfo?.title!}
-        message={toastInfo?.message!}
-        severity={toastInfo?.severity}
-      />
+            {updateCategoryLoading ? (
+              <CustomLoadingButton sx={{ height: "42px" }} />
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={!formState.isValid}
+              >
+                Save
+              </Button>
+            )}
+          </DialogActions>
+        </Dialog>
+      )}
+      {openToast && (
+        <CustomToast
+          open={openToast}
+          handleClose={() => setOpenToast(false)}
+          title={toastInfo?.title!}
+          message={toastInfo?.message!}
+          severity={toastInfo?.severity}
+        />
+      )}
     </>
   );
 };
