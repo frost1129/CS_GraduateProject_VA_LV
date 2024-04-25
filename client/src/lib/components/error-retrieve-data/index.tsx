@@ -14,7 +14,7 @@ const ErrorRetrieveData = () => {
       sx={containerStyles}
     >
       <Image src={images.errorIcon} alt="error-data" width={120} height={120} />
-      <Typography variant="body2">Oops! Something went wrong</Typography>
+      <Typography variant="body2">Oops! Đã xảy ra lỗi.</Typography>
     </Stack>
   );
 };

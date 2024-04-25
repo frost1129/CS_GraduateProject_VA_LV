@@ -17,7 +17,7 @@ const CategoryHeader = () => {
       gap={1}
     >
       <Typography variant="h4" marginBottom={isTablet ? 0 : 1}>
-        Categories
+        Danh mục
       </Typography>
       <Stack
         direction={isTablet ? "row" : "column-reverse"}

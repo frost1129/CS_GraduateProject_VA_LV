@@ -53,13 +53,13 @@ const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
           onClick={handleClose}
           disabled={loading}
         >
-          Cancel
+          Hủy
         </Button>
         {loading ? (
           <CustomLoadingButton sx={{ height: "40px" }} />
         ) : (
           <Button variant="contained" color="error" onClick={deleteFunc}>
-            Delete
+            Xóa
           </Button>
         )}
       </DialogActions>

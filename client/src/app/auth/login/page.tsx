@@ -33,7 +33,7 @@ import CustomToast from "@/lib/components/toast";
 import { ToastInformation } from "@/lib/types/component";
 import { resetSigninStatus } from "@/lib/redux/features/auth/authSlice";
 import CustomLoadingButton from "@/lib/components/loading-button";
-import { images } from '../../../lib/assets/img/index';
+import { images } from "../../../lib/assets/img/index";
 import "./style.scss";
 
 const signinUserSchema = z.object({
@@ -226,6 +226,7 @@ const LoginPage = () => {
         </Box>
       </Container>
       <CustomToast
+        id="login-toast"
         open={openToast}
         title={toastInfo?.title || ""}
         handleClose={() => setOpenToast(false)}

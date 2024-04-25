@@ -2,8 +2,8 @@ import { AdminLayout } from "@/lib/components/layouts";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin Console",
-  description: "Admin Console",
+  title: "Bảng điều khiển",
+  description: "Bảng điều khiển",
 };
 
 export default function AdminConsoleLayout({

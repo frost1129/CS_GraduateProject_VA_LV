@@ -50,15 +50,15 @@ const CategoryDeleter = (props: CategoryDeleterProps) => {
         sx={deleteBtnStyles}
       >
         <Trash size={24} />
-        <Typography variant="body2">Delete</Typography>
+        <Typography variant="body2">Xóa</Typography>
       </Stack>
 
       {openDeleteDialog && (
         <ConfirmDeleteDialog
           open={openDeleteDialog}
           setOpen={setOpenDeleteDialog}
-          title="Delete Category"
-          content="Do you want to delete this category? All related content will be deleted also."
+          title="Xóa danh mục"
+          content="Bạn có chắc chắn muốn xóa danh mục này? Tất cả những dữ liệu liên quan cũng bị xóa theo. Tiếp tục?"
           deleteFunc={handleDeleteCategory}
           loading={deleteCategoryLoading}
         />

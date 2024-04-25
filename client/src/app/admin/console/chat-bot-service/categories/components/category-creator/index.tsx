@@ -30,8 +30,8 @@ import { ToastInformation } from "@/lib/types/component";
 import CustomToast from "@/lib/components/toast";
 
 const categoryCreateSchema = z.object({
-  intentCode: z.string().min(1, "Not be empty"),
-  description: z.string().min(1, "Not be empty"),
+  intentCode: z.string().min(1, "Không được bỏ trống").max(255, "Không vượt quá 255 ký tự"),
+  description: z.string().min(1, "Không được bỏ trống"),
   note: z.string().nullable(),
 });
 
@@ -104,7 +104,7 @@ const CategoryCreator = () => {
       >
         <Stack direction="row" gap={1} alignItems="center">
           <Plus size={20} />
-          <Typography variant="button1">Add new</Typography>
+          <Typography variant="button1">Tạo mới</Typography>
         </Stack>
       </Button>
       <Dialog
@@ -118,7 +118,7 @@ const CategoryCreator = () => {
         onSubmit={handleSubmit(handleCreateCategory)}
       >
         <DialogTitle component="div" id="category-create-dialog-title">
-          <Typography variant="h5">Create New Category</Typography>
+          <Typography variant="h5">Tạo mới danh mục</Typography>
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -139,11 +139,11 @@ const CategoryCreator = () => {
             {/* Intent code field */}
             <Stack direction="column" gap={1}>
               <Stack direction="row" gap={0.5}>
-                <Typography variant="label3">Intent code</Typography>
+                <Typography variant="label3">Chuỗi xác định</Typography>
                 <Box sx={{ color: "var(--alert)" }}>*</Box>
               </Stack>
               <TextField
-                placeholder="Enter intent code..."
+                placeholder="Nhập chuỗi xác định..."
                 error={!!formState.errors.intentCode}
                 helperText={formState.errors.intentCode?.message}
                 disabled={saveCategoryLoading}
@@ -154,13 +154,13 @@ const CategoryCreator = () => {
             {/* Description field */}
             <Stack direction="column" gap={1}>
               <Stack direction="row" gap={0.5}>
-                <Typography variant="label3">Description</Typography>
+                <Typography variant="label3">Mô tả</Typography>
                 <Box sx={{ color: "var(--alert)" }}>*</Box>
               </Stack>
               <TextField
                 multiline
                 rows={3}
-                placeholder="Enter description..."
+                placeholder="Nhập mô tả"
                 error={!!formState.errors.description}
                 helperText={formState.errors.description?.message}
                 disabled={saveCategoryLoading}
@@ -170,11 +170,11 @@ const CategoryCreator = () => {
 
             {/* Note field */}
             <Stack direction="column" gap={1}>
-              <Typography variant="label3">Note</Typography>
+              <Typography variant="label3">Ghi chú</Typography>
               <TextField
                 multiline
                 rows={3}
-                placeholder="Enter note..."
+                placeholder="Nhập ghi chú..."
                 disabled={saveCategoryLoading}
                 {...register("note")}
               />
@@ -188,7 +188,7 @@ const CategoryCreator = () => {
             onClick={handleClose}
             disabled={saveCategoryLoading}
           >
-            Cancel
+            Hủy
           </Button>
           {saveCategoryLoading ? (
             <CustomLoadingButton sx={{ height: "42px" }} />
@@ -199,7 +199,7 @@ const CategoryCreator = () => {
               type="submit"
               disabled={!formState.isValid}
             >
-              Create
+              Tạo
             </Button>
           )}
         </DialogActions>

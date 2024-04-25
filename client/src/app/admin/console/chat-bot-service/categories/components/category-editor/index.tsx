@@ -35,7 +35,7 @@ import CustomToast from "@/lib/components/toast";
 import CustomLoadingButton from "@/lib/components/loading-button";
 
 const categoryEditSchema = z.object({
-  description: z.string().min(1, "Not be empty"),
+  description: z.string().min(1, "Không được bỏ trống"),
   note: z.string().nullable(),
 });
 
@@ -124,7 +124,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         sx={btnStyles}
       >
         <PencilSimple size={24} />
-        <Typography variant="body2">Edit</Typography>
+        <Typography variant="body2">Chỉnh sửa</Typography>
       </Stack>
       {openEditDialog && (
         <Dialog
@@ -137,7 +137,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
           maxWidth={"tablet"}
         >
           <DialogTitle component="div" id="category-edit-dialog-title">
-            <Typography variant="h5">Edit Category</Typography>
+            <Typography variant="h5">Chỉnh sửa danh mục</Typography>
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -159,7 +159,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
               <Grid container spacing={2}>
                 <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
                   <Stack direction="column" gap={1}>
-                    <Typography variant="label3">Created date</Typography>
+                    <Typography variant="label3">Ngày tạo</Typography>
                     <TextField
                       disabled
                       value={convertMillisecondsToDate(value.createdDate!)}
@@ -168,7 +168,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
                 </Grid>
                 <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
                   <Stack direction="column" gap={1}>
-                    <Typography variant="label3">Last modified date</Typography>
+                    <Typography variant="label3">Ngày chỉnh sửa</Typography>
                     <TextField
                       disabled
                       value={
@@ -183,20 +183,20 @@ const CategoryEditor = (props: CategoryEditorProps) => {
 
               {/* Intent code field */}
               <Stack direction="column" gap={1}>
-                <Typography variant="label3">Intent code</Typography>
+                <Typography variant="label3">Chuỗi xác định</Typography>
                 <TextField disabled value={value.intentCode} />
               </Stack>
 
               {/* Description field */}
               <Stack direction="column" gap={1}>
                 <Stack direction="row" gap={0.5}>
-                  <Typography variant="label3">Description</Typography>
+                  <Typography variant="label3">Mô tả</Typography>
                   <Box sx={{ color: "var(--alert)" }}>*</Box>
                 </Stack>
                 <TextField
                   multiline
                   rows={3}
-                  placeholder="Enter description..."
+                  placeholder="Nhập mô tả..."
                   error={!!formState.errors.description}
                   helperText={formState.errors.description?.message}
                   disabled={updateCategoryLoading}
@@ -206,11 +206,11 @@ const CategoryEditor = (props: CategoryEditorProps) => {
 
               {/* Note field */}
               <Stack direction="column" gap={1}>
-                <Typography variant="label3">Note</Typography>
+                <Typography variant="label3">Ghi chú</Typography>
                 <TextField
                   multiline
                   rows={3}
-                  placeholder="Enter note..."
+                  placeholder="Nhập ghi chú..."
                   disabled={updateCategoryLoading}
                   {...register("note")}
                 />
@@ -224,7 +224,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
               onClick={handleClose}
               disabled={updateCategoryLoading}
             >
-              Cancel
+              Hủy
             </Button>
             {updateCategoryLoading ? (
               <CustomLoadingButton sx={{ height: "42px" }} />
@@ -235,7 +235,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
                 type="submit"
                 disabled={!formState.isValid}
               >
-                Save
+                Lưu
               </Button>
             )}
           </DialogActions>

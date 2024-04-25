@@ -85,17 +85,17 @@ const drawerWidth = "100%";
 const drawerData = [
   {
     id: "1",
-    serviceName: "Chat bot Service",
+    serviceName: "Hỏi đáp học vụ",
     items: [
       {
         id: "1-1",
-        name: "Category",
+        name: "Danh mục",
         link: "/admin/console/chat-bot-service/categories",
         icon: <Club size={iconSize} />,
       },
       {
         id: "1-2",
-        name: "Topic",
+        name: "Chủ đề",
         link: "/admin/console/chat-bot-service/topics",
         icon: <BookBookmark size={iconSize} />,
       },

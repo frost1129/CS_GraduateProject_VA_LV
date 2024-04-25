@@ -32,19 +32,19 @@ const CategoryRenderTable = () => {
       },
       {
         field: "intentCode",
-        headerName: "Intent",
+        headerName: "Chuỗi xác định",
         width: 200,
         editable: false,
       },
       {
         field: "description",
-        headerName: "Description",
+        headerName: "Mô tả",
         flex: 1,
         editable: false,
       },
       {
         field: "createdDate",
-        headerName: "Created Date",
+        headerName: "Ngày tạo",
         type: "number",
         width: 200,
         editable: false,
@@ -54,7 +54,7 @@ const CategoryRenderTable = () => {
       },
       {
         field: "lastModifiedDate",
-        headerName: "Last Modified Date",
+        headerName: "Ngày chỉnh sửa",
         type: "number",
         width: 200,
         editable: false,
@@ -67,7 +67,7 @@ const CategoryRenderTable = () => {
       },
       {
         field: "actions",
-        headerName: "Actions",
+        headerName: "Tác vụ",
         width: 150,
         editable: false,
         headerAlign: "center",

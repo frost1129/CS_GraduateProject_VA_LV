@@ -41,7 +41,7 @@ const CategoryFilter = () => {
   return (
     <TextField
       sx={{ minWidth: "250px" }}
-      placeholder="Search..."
+      placeholder="Nhập từ khóa..."
       value={keyword}
       onChange={handleKeywordChange}
       onKeyDown={handleSearch}
