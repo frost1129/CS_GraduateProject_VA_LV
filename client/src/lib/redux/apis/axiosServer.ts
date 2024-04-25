@@ -32,7 +32,6 @@ axiosServer.interceptors.response.use(
         if (res.status === 200) {
           const accessToken = res.data.access_token;
           const refreshToken = res.data.refresh_token;
-          console.log("token>>", accessToken)
 
           cookies().set("token", accessToken);
           cookies().set("refreshToken", refreshToken);
@@ -40,9 +39,7 @@ axiosServer.interceptors.response.use(
           axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${accessToken}`;
-          originalRequest.headers[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
           return axiosServer(originalRequest);
         } else if (res.status === 400) {
           cookies().delete("token");

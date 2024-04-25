@@ -3,11 +3,17 @@ import { ITopicRequest } from "@/lib/types/backend";
 
 const topicApi = {
   getTopics: (params?: any) => {
-    let requestParams = "";
-    requestParams += `${params.keyword ? `?kw=${params.keyword}` : ""}`
-    requestParams += `${params.categoryId ? `?categoryId=${params.categoryId}` : ""}`
+    const queryParts = [];
 
-    return axiosChatbotService.get(`/topics${requestParams}`);
+    if (params.keyword)
+      queryParts.push(`kw=${encodeURIComponent(params.keyword)}`);
+
+    if (params.categoryId)
+      queryParts.push(`categoryId=${encodeURIComponent(params.categoryId)}`);
+
+    const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+
+    return axiosChatbotService.get(`/topics${queryString}`);
   },
 
   addNewTopic: (category: ITopicRequest) =>

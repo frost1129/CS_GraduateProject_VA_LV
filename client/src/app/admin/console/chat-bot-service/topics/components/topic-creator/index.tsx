@@ -175,7 +175,7 @@ const TopicCreator = () => {
                       value={categories.find((c) => c.id === value) || null} // Set the initial value
                       onChange={(_, data) => onChange(data?.id)} // Pass the selected value's code
                       onBlur={onBlur} // Notify when the input is touched
-                      disabled={saveTopicLoading || listCategoryLoading}
+                      disabled={saveTopicLoading || listCategoryLoading || listCategoryError !== null}
                       renderInput={(params) => (
                         <TextField
                           {...params}
