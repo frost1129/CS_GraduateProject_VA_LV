@@ -85,10 +85,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId) {
         try {
             categoryRepository.deleteById(categoryId);
-            return true;
         } catch (Exception e) {
             throw new SaveDataException("Xóa danh mục thất bại!");
         }
