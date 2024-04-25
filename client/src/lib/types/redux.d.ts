@@ -1,4 +1,4 @@
-import { ICategoryResponse, UserKeycloakResponse } from "./backend";
+import { ICategoryResponse, ITopicResponse, UserKeycloakResponse } from "./backend";
 
 export interface AuthState {
   signInLoading: boolean;
@@ -28,6 +28,28 @@ export interface CategoryState {
   deleteCategoryError: any;
 }
 
+export interface TopicState {
+  listTopicLoading: boolean;
+  topics: ITopicResponse[];
+  listTopicError: any;
+
+  saveTopicLoading: boolean;
+  savedTopic: ITopicResponse | null;
+  saveTopicError: any;
+
+  updateTopicLoading: boolean;
+  updatedTopic: ITopicResponse | null;
+  updateTopicError: any;
+
+  deleteTopicLoading: boolean;
+  deleteTopicSuccess: any;
+  deleteTopicError: any;
+}
+
 export interface ResetCategoryStatusPayload {
   keys: Array<keyof CategoryState>;
+}
+
+export interface ResetTopicStatusPayload {
+  keys: Array<keyof TopicState>;
 }

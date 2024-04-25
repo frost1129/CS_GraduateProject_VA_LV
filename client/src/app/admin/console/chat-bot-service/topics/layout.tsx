@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Topic | Admin Console",
-  description: "Topic | Admin Console",
+  title: "Chủ đề | Bảng điều khiển",
+  description: "Chủ đề | Bảng điều khiển",
 };
 
 export default function AdminConsoleLayout({

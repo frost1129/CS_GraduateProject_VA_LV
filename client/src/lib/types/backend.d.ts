@@ -40,14 +40,36 @@ export interface ICategoryResponse {
   id: number;
   intentCode: string;
   description: string;
-  createdDate: number | null;
+  createdDate: number;
   lastModifiedDate: number | null;
   note: string | null;
 }
 
 export interface ICategoryRequest {
-  id: number | null,
+  id: number | null;
   intentCode: string | null;
   description: string;
   note: string | null;
+}
+
+export interface ITopicRequest {
+  id: number | null;
+  intentCode: string | null;
+  description: string;
+  categoryId: number;
+  note: string | null;
+}
+
+export interface ITopicResponse {
+  id: number;
+  intentCode: string;
+  description: string;
+  createdDate: number;
+  lastModifiedDate: number | null;
+  note: string | null;
+  category: {
+    id: number;
+    intentCode: string;
+    description: string;
+  };
 }

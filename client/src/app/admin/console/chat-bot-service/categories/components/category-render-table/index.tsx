@@ -77,6 +77,7 @@ const CategoryRenderTable = () => {
     ];
     setNewColumns(columns);
   }, []);
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
       const queryParams = new URLSearchParams(window.location.search);

@@ -9,6 +9,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import contentReducer from "../features/chat-bot/content/contentSlice";
 import categoryReducer from "../features/chat-bot/category/categorySlice";
+import topicReducer from "../features/chat-bot/topic/topicSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -16,6 +17,7 @@ export const makeStore = () => {
       auth: authReducer,
       content: contentReducer,
       category: categoryReducer,
+      topic: topicReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

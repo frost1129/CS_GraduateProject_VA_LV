@@ -377,6 +377,85 @@ const theme = extendTheme({
       },
     },
 
+    MuiAutocomplete: {
+      defaultProps: {
+        fullWidth: true,
+      },
+
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          "& .MuiFormHelperText-root": {
+            marginLeft: 0,
+            marginTop: "6px",
+            "&.Mui-error": {
+              color: "var(--alert)",
+            },
+          },
+          "& .MuiInputLabel-root": {
+            position: "static",
+            color: "var(--text-primary)",
+            transform: "none",
+            fontWeight: "600",
+            fontSize: "14px",
+            marginBottom: "8px",
+            "&.Mui-focused ": {
+              color: "var(--text-primary)",
+            },
+            "&.Mui-error ": {
+              color: "var(--text-primary)",
+            },
+            "&.Mui-disabled ": {
+              color: "var(--text-tertiary)",
+            },
+          },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "6px",
+            "& input": {
+              color: "var(--text-primary)",
+              "&::placeholder": {
+                color: "var(--text-secondary)",
+              },
+              overflow: "hidden",
+              fontSize: 16,
+              padding: "8px 16px",
+              height: "24px",
+            },
+            "& fieldset": {
+              border: "1px solid",
+              borderColor: "var(--border-color)",
+            },
+
+            //hover
+            "&:hover fieldset": {
+              borderColor: "var(--grey-neutral-300)",
+            },
+            //focus
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--primary)",
+              borderWidth: "1px",
+            },
+
+            "&.Mui-error fieldset": {
+              borderColor: "var(--alert) ",
+            },
+            "&.Mui-disabled fieldset": {
+              borderColor: "var(--grey-neutral-200)",
+              color: "var(--text-disable)",
+            },
+          },
+          "& .MuiInputBase-root": {
+            fontSize: 16,
+            padding: 0,
+            height: "40px",
+            "& .MuiInputBase-input": {
+              fontSize: 16,
+              padding: "8px 16px",
+            },
+          },
+        }),
+      },
+    },
+
     MuiTab: {
       styleOverrides: {
         root: ({ ownerState }) => ({

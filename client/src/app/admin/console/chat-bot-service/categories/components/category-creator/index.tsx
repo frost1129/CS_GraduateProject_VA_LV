@@ -42,7 +42,7 @@ const CategoryCreator = () => {
   const { saveCategoryLoading, savedCategory, saveCategoryError } =
     useAppSelector((state) => state.category);
 
-  const { register, handleSubmit, formState, getValues, reset } =
+  const { register, handleSubmit, formState, reset } =
     useForm<CategoryCreateForm>({
       resolver: zodResolver(categoryCreateSchema),
       mode: "onChange",
