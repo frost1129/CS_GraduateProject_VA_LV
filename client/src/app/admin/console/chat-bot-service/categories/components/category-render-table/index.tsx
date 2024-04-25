@@ -62,7 +62,7 @@ const CategoryRenderTable = () => {
         align: "right",
         valueGetter: (value: any) => {
           if (value === null) return "-";
-          else convertMillisecondsToDate(value);
+          else return convertMillisecondsToDate(value);
         },
       },
       {
