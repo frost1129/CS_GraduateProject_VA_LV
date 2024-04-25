@@ -25,4 +25,9 @@ export interface CategoryState {
 
   deleteCategoryLoading: boolean;
   deleteCategorySuccess: any;
+  deleteCategoryError: any;
+}
+
+export interface ResetCategoryStatusPayload {
+  keys: Array<keyof CategoryState>;
 }

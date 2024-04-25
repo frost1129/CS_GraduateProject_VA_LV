@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { CategoryState } from "@/lib/types/redux";
+import { CategoryState, ResetCategoryStatusPayload } from "@/lib/types/redux";
 import {
   addNewCategoryThunk,
   deleteCategoryThunk,
@@ -23,6 +23,7 @@ const initialState: CategoryState = {
 
   deleteCategoryLoading: false,
   deleteCategorySuccess: null,
+  deleteCategoryError: null,
 };
 
 const categorySlice = createSlice({
@@ -52,10 +53,16 @@ const categorySlice = createSlice({
       });
       state.categories = updatedCategories;
     },
-    resetCategoryStatus: (state) => {
-      const tempCategories = state.categories;
-      state = { ...initialState };
-      state.categories = tempCategories;
+
+    resetCategoryStatus: (
+      state,
+      action: PayloadAction<ResetCategoryStatusPayload>
+    ) => {
+      const { keys } = action.payload;
+
+      keys.forEach((key) => {
+        if (key in state) state[key as keyof CategoryState] = initialState[key];
+      });
     },
   },
   extraReducers: (builder) => {
@@ -114,14 +121,17 @@ const categorySlice = createSlice({
     builder.addCase(deleteCategoryThunk.pending, (state) => {
       state.deleteCategoryLoading = true;
       state.deleteCategorySuccess = null;
+      state.deleteCategoryError = null;
     });
     builder.addCase(deleteCategoryThunk.fulfilled, (state, action) => {
       state.deleteCategoryLoading = false;
       state.deleteCategorySuccess = action.payload.data;
+      state.deleteCategoryError = null;
     });
-    builder.addCase(deleteCategoryThunk.rejected, (state) => {
+    builder.addCase(deleteCategoryThunk.rejected, (state, action) => {
       state.deleteCategoryLoading = false;
       state.deleteCategorySuccess = null;
+      state.deleteCategoryError = action.payload ? action.payload : null;
     });
   },
 });

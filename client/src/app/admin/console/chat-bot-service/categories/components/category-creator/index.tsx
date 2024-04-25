@@ -21,7 +21,10 @@ import { Plus, X } from "@phosphor-icons/react";
 import { ICategoryRequest } from "@/lib/types/backend";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { addNewCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
-import { appendCategoryFirst } from "@/lib/redux/features/chat-bot/category/categorySlice";
+import {
+  appendCategoryFirst,
+  resetCategoryStatus,
+} from "@/lib/redux/features/chat-bot/category/categorySlice";
 import CustomLoadingButton from "@/lib/components/loading-button";
 import { ToastInformation } from "@/lib/types/component";
 import CustomToast from "@/lib/components/toast";
@@ -75,7 +78,9 @@ const CategoryCreator = () => {
         title: "Thành công",
         message: "Tạo mới danh mục thành công!",
       });
+
       dispatch(appendCategoryFirst({ category: savedCategory }));
+      dispatch(resetCategoryStatus({ keys: ["savedCategory"] }));
       handleClose();
     } else if (saveCategoryError !== null) {
       setOpenToast(true);
@@ -84,6 +89,8 @@ const CategoryCreator = () => {
         title: "Thất bại",
         message: saveCategoryError,
       });
+
+      dispatch(resetCategoryStatus({ keys: ["saveCategoryError"] }));
     }
   }, [savedCategory, saveCategoryError]);
 
@@ -101,15 +108,16 @@ const CategoryCreator = () => {
         </Stack>
       </Button>
       <Dialog
+        id="category-create-dialog"
         component="form"
         open={openCreateDialog}
-        aria-labelledby="category-edit-dialog-title"
-        aria-describedby="category-edit-dialog-description"
+        aria-labelledby="category-create-dialog-title"
+        aria-describedby="category-create-dialog-description"
         fullWidth
         maxWidth={"tablet"}
         onSubmit={handleSubmit(handleCreateCategory)}
       >
-        <DialogTitle component="div" id="category-edit-dialog-title">
+        <DialogTitle component="div" id="category-create-dialog-title">
           <Typography variant="h5">Create New Category</Typography>
         </DialogTitle>
         <IconButton
@@ -196,13 +204,16 @@ const CategoryCreator = () => {
           )}
         </DialogActions>
       </Dialog>
-      <CustomToast
-        open={openToast}
-        handleClose={() => setOpenToast(false)}
-        title={toastInfo?.title!}
-        message={toastInfo?.message!}
-        severity={toastInfo?.severity}
-      />
+      {openToast && (
+        <CustomToast
+          id="category-create-toast"
+          open={openToast}
+          handleClose={() => setOpenToast(false)}
+          title={toastInfo?.title!}
+          message={toastInfo?.message!}
+          severity={toastInfo?.severity}
+        />
+      )}
     </>
   );
 };

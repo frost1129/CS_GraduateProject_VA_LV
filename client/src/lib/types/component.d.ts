@@ -10,6 +10,7 @@ export interface ToastInformation {
 }
 
 export interface ToastProps {
+  id: string;
   open: boolean;
   handleClose?: any;
   title: string;

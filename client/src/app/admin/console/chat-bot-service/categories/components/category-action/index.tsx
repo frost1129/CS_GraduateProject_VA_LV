@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 
-import { DotsThree, PencilSimple, Trash } from "@phosphor-icons/react";
+import { DotsThree } from "@phosphor-icons/react";
 import {
   MenuItem,
   Popover,
   Stack,
   SxProps,
   Theme,
-  Typography,
 } from "@mui/material";
 
 import { CategoryActionsProps } from "@/lib/types/component";

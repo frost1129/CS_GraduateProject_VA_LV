@@ -28,6 +28,7 @@ import { ICategoryRequest } from "@/lib/types/backend";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { updateCategoryThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
 import {
+  resetCategoryStatus,
   updateCategoryById,
 } from "@/lib/redux/features/chat-bot/category/categorySlice";
 import CustomToast from "@/lib/components/toast";
@@ -93,6 +94,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
       });
 
       dispatch(updateCategoryById({ category: updatedCategory }));
+      dispatch(resetCategoryStatus({ keys: ["updatedCategory"] }));
       handleClose();
     } else if (updateCategoryError !== null) {
       setOpenToast(true);
@@ -101,17 +103,19 @@ const CategoryEditor = (props: CategoryEditorProps) => {
         title: "Thất bại",
         message: updateCategoryError,
       });
+
+      dispatch(resetCategoryStatus({ keys: ["updateCategoryError"] }));
     }
   }, [updatedCategory, updateCategoryError]);
 
-  // Reset states
+  // Reset input fields
   useEffect(() => {
     reset({ ...value });
     setOpenToast(false);
   }, []);
 
   return (
-    <>
+    <Box>
       <Stack
         direction="row"
         component="button"
@@ -124,6 +128,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
       </Stack>
       {openEditDialog && (
         <Dialog
+          id="category-edit-dialog"
           component="form"
           onSubmit={handleSubmit(handleUpdateCategory)}
           open={true}
@@ -238,6 +243,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
       )}
       {openToast && (
         <CustomToast
+        id="category-edit-toast"
           open={openToast}
           handleClose={() => setOpenToast(false)}
           title={toastInfo?.title!}
@@ -245,7 +251,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
           severity={toastInfo?.severity}
         />
       )}
-    </>
+    </Box>
   );
 };
 

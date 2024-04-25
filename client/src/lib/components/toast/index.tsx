@@ -12,6 +12,7 @@ import { ToastProps } from "@/lib/types/component";
 
 const CustomToast = (props: ToastProps) => {
   const {
+    id,
     open,
     handleClose,
     title,
@@ -22,33 +23,32 @@ const CustomToast = (props: ToastProps) => {
   } = props;
 
   return (
-    <>
-      <Snackbar
-        open={open}
-        autoHideDuration={duration}
+    <Snackbar
+      id={id}
+      open={open}
+      autoHideDuration={duration}
+      onClose={handleClose}
+      anchorOrigin={anchorOrigin}
+    >
+      <Alert
+        className="toast-alert"
         onClose={handleClose}
-        anchorOrigin={anchorOrigin}
+        severity={severity}
+        iconMapping={{
+          success: <CheckCircle size={48} color="var(--success)" />,
+          info: <Info size={48} color="var(--information)" />,
+          warning: <WarningCircle size={48} color="var(--warning)" />,
+          error: <XCircle size={48} color="var(--alert)" />,
+        }}
       >
-        <Alert
-          className="toast-alert"
-          onClose={handleClose}
-          severity={severity}
-          iconMapping={{
-            success: <CheckCircle size={48} color="var(--success)" />,
-            info: <Info size={48} color="var(--information)" />,
-            warning: <WarningCircle size={48} color="var(--warning)" />,
-            error: <XCircle size={48} color="var(--alert)" />,
-          }}
-        >
-          <AlertTitle>
-            <Typography variant="h6">{title}</Typography>
-          </AlertTitle>
-          <Typography variant="body2" className="alert-message">
-            {message}
-          </Typography>
-        </Alert>
-      </Snackbar>
-    </>
+        <AlertTitle>
+          <Typography variant="h6">{title}</Typography>
+        </AlertTitle>
+        <Typography variant="body2" className="alert-message">
+          {message}
+        </Typography>
+      </Alert>
+    </Snackbar>
   );
 };
 
