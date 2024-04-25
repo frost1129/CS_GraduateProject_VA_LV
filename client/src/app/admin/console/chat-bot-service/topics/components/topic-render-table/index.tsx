@@ -12,6 +12,7 @@ import NoData from "@/lib/components/no-data";
 import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
 import CustomDataGrid from "@/lib/components/data-grid";
 import TopicActions from "../topic-actions";
+import { ITopicResponse } from "@/lib/types/backend";
 
 const TopicRenderTable = () => {
   const dispatch = useAppDispatch();
@@ -39,8 +40,15 @@ const TopicRenderTable = () => {
       {
         field: "description",
         headerName: "Mô tả",
-        flex: 1,
+        width: 300,
         editable: false,
+      },
+      {
+        field: "category",
+        headerName: "Danh mục",
+        width: 300,
+        editable: false,
+        valueGetter: (value: any) => value.description,
       },
       {
         field: "createdDate",

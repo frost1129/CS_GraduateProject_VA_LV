@@ -115,7 +115,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
   }, []);
 
   return (
-    <Box>
+    <>
       <Stack
         direction="row"
         component="button"
@@ -251,7 +251,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
           severity={toastInfo?.severity}
         />
       )}
-    </Box>
+    </>
   );
 };
 
