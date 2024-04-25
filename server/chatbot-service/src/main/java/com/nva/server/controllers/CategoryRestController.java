@@ -29,6 +29,7 @@ public class CategoryRestController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> addNewCategory(@RequestBody CategoryRequest categoryRequest) {
+        categoryRequest.setId(null);
         return new ResponseEntity<>(categoryService.addOrUpdateCategory(categoryRequest), HttpStatus.CREATED);
     }
 
