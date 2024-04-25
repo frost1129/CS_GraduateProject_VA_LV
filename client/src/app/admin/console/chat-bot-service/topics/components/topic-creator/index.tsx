@@ -92,7 +92,7 @@ const TopicCreator = () => {
         message: "Tạo mới chủ đề thành công!",
       });
 
-      dispatch(appendTopicFirst({ category: savedTopic }));
+      dispatch(appendTopicFirst({ topic: savedTopic }));
       dispatch(resetTopicStatus({ keys: ["savedTopic"] }));
       handleClose();
     } else if (saveTopicError !== null) {

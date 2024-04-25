@@ -1,7 +1,7 @@
 import { AlertProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
-import { ICategoryResponse } from "./backend.d";
+import { ICategoryResponse, ITopicResponse } from "./backend.d";
 
 export interface ToastInformation {
   severity: AlertProps["severity"];
@@ -68,4 +68,16 @@ export interface ConfirmDeleteDialogProps {
 
 export interface CategoryDeleterProps {
   value: ICategoryResponse;
+}
+
+export interface TopicActionsProps {
+  value: ITopicResponse;
+}
+
+export interface TopicEditorProps {
+  value: ITopicResponse;
+}
+
+export interface TopicDeleterProps {
+  value: ITopicResponse;
 }
