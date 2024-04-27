@@ -169,10 +169,17 @@ public class ContentServiceImpl implements ContentService {
         contentResponse.setCreatedDate(content.getCreatedDate());
         contentResponse.setLastModifiedDate(content.getLastModifiedDate());
 
-        if (content.getParentContent() != null)
-            contentResponse.setParentContentId(content.getParentContent().getId());
+        if (content.getParentContent() != null) {
+            contentResponse.setParentContent(ContentResponseV2.builder()
+                    .id(content.getParentContent().getId())
+                    .contentLevel(content.getParentContent().getContentLevel())
+                    .intentCode(content.getParentContent().getIntentCode())
+                    .title(content.getParentContent().getTitle())
+                    .text(content.getParentContent().getText())
+                    .note(content.getParentContent().getNote()).build());
+        }
         else
-            contentResponse.setParentContentId(null);
+            contentResponse.setParentContent(null);
 
         return contentResponse;
     }

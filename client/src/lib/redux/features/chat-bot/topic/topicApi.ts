@@ -1,17 +1,21 @@
 import axiosChatbotService from "@/lib/redux/apis/axiosChatbotService";
 import { ITopicRequest } from "@/lib/types/backend";
+import { TopicRequestParams } from "@/lib/types/redux";
 
 const topicApi = {
-  getTopics: (params?: any) => {
-    const queryParts = [];
+  getTopics: (params?: TopicRequestParams) => {
+    let queryString = "";
 
-    if (params.keyword)
-      queryParts.push(`kw=${encodeURIComponent(params.keyword)}`);
+    if (params) {
+      const queryParts = [];
+      if (params.keyword)
+        queryParts.push(`kw=${encodeURIComponent(params.keyword)}`);
 
-    if (params.categoryId)
-      queryParts.push(`categoryId=${encodeURIComponent(params.categoryId)}`);
+      if (params.categoryId)
+        queryParts.push(`categoryId=${encodeURIComponent(params.categoryId)}`);
 
-    const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+      queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    }
 
     return axiosChatbotService.get(`/topics${queryString}`);
   },

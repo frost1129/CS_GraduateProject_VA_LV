@@ -1,5 +1,3 @@
-"use client";
-
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { CustomDataGridProps } from "@/lib/types/component";

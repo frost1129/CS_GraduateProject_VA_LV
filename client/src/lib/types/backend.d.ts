@@ -73,3 +73,47 @@ export interface ITopicResponse {
     description: string;
   };
 }
+
+export interface ISaveContentRequest {
+  parentContentId: number | null;
+  schoolYearId: number;
+  topicId: number | null;
+  intentCode: string;
+  title: string;
+  text: string;
+  note: string | null;
+}
+
+export interface IUpdateContentRequest {
+  topicId: number | null;
+  title: string;
+  text: string;
+  note: string | null;
+}
+
+export interface IContentResponse {
+  id: number;
+  parentContentId: number | null;
+  contentLevel: number;
+  schoolYear: {
+    id: number;
+    year: string;
+    courseName: string;
+  };
+  topic: {
+    id: number;
+    intentCode: string;
+    description: string;
+    category: {
+      id: number;
+      intentCode: string;
+      description: string;
+    };
+  };
+  intentCode: string;
+  title: string;
+  text: string;
+  note: string;
+  createdDate: number;
+  lastModifiedDate: number | null;
+}

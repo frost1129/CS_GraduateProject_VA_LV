@@ -1,23 +1,19 @@
 package com.nva.server.dtos;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContentResponse {
+@Builder
+public class ContentResponseV2 {
     private Long id;
-    private ContentResponseV2 parentContent;
     private Integer contentLevel;
-    private SchoolYearResponseV2 schoolYear;
-    private TopicResponseV2 topic;
     private String intentCode;
     private String title;
     private String text;
     private String note;
-    private Long createdDate;
-    private Long lastModifiedDate;
 }
-

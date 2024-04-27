@@ -13,7 +13,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { BookBookmark, Club } from "@phosphor-icons/react";
+import { BookBookmark, BookOpenText, Club } from "@phosphor-icons/react";
 import { images } from "@/lib/assets/img";
 
 const CustomDrawer = () => {
@@ -98,6 +98,12 @@ const drawerData = [
         name: "Chủ đề",
         link: "/admin/console/chat-bot-service/topics",
         icon: <BookBookmark size={iconSize} />,
+      },
+      {
+        id: "1-3",
+        name: "Nội dung học vụ",
+        link: "/admin/console/chat-bot-service/contents",
+        icon: <BookOpenText size={iconSize} />,
       },
     ],
   },

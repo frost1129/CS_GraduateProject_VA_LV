@@ -7,6 +7,7 @@ const privateRoutes = [
   Routes.PROFILE,
   Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CATEGORIES,
   Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.TOPICS,
+  Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS
 ];
 export const unAuthenticatedRoutes = [Routes.LOGIN];
 

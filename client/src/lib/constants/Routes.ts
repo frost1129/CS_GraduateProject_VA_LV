@@ -2,6 +2,7 @@ const ADMIN_ROUTES = {
   CHAT_BOT_SERVICE: {
     CATEGORIES: "/admin/console/chat-bot-service/categories",
     TOPICS: "/admin/console/chat-bot-service/topics",
+    CONTENTS: "/admin/console/chat-bot-service/contents"
   },
 };
 

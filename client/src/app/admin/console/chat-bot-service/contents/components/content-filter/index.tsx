@@ -3,36 +3,32 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  Autocomplete,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Autocomplete, MenuItem, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 
 import Routes from "@/lib/constants/Routes";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
+import { getContentsThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
 import { getTopicsThunk } from "@/lib/redux/features/chat-bot/topic/topicActions";
-import { getCategoriesThunk } from "@/lib/redux/features/chat-bot/category/categoryActions";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import theme from "@/lib/theme";
-import { ICategoryResponse } from "@/lib/types/backend";
-import { TopicRequestParams } from "@/lib/types/redux";
+import { ITopicResponse } from "@/lib/types/backend";
+import { ContentRequestParams } from "@/lib/types/redux";
 
-const TopicFilter = () => {
+const ContentFilter = () => {
   const router = useRouter();
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
 
   const dispatch = useAppDispatch();
-  const { categories, listCategoryLoading, listCategoryError } = useAppSelector(
-    (state) => state.category
+  const { topics, listTopicLoading, listTopicError } = useAppSelector(
+    (state) => state.topic
   );
+  // const { sYea, listContentLoading, listContentError } = useAppSelector(
+  //   (state) => state.content
+  // );
 
   const [keyword, setKeyword] = useState("");
-  const [filterByCategoryValue, setFilterByCategoryValue] =
-    useState<ICategoryResponse | null>(null);
+  const [filterByTopicValue, setFilterByTopicValue] =
+    useState<ITopicResponse | null>(null);
 
   const handleKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -40,57 +36,65 @@ const TopicFilter = () => {
 
   const handleSearchByKeyword = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      let searchParams: TopicRequestParams = { };
+      let searchParams: ContentRequestParams = {};
       searchParams = { ...searchParams, keyword };
 
       const queryParams = new URLSearchParams(window.location.search);
-      const categoryId = queryParams.get("categoryId");
 
       const queryParts = [];
       keyword && queryParts.push(`kw=${encodeURIComponent(keyword)}`);
 
-      if (categoryId) {
-        queryParts.push(`categoryId=${encodeURIComponent(categoryId)}`);
-        searchParams = { ...searchParams, categoryId };
+      const topicId = queryParams.get("topicId");
+      if (topicId) {
+        queryParts.push(`topicId=${encodeURIComponent(topicId)}`);
+        searchParams = { ...searchParams, topicId };
+      }
+
+      const sYear = queryParams.get("sYear");
+      if (sYear) {
+        queryParts.push(`sYear=${encodeURIComponent(sYear)}`);
+        searchParams = { ...searchParams, sYear };
       }
 
       const queryString =
         queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
-      router.replace(Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.TOPICS + queryString);
-      dispatch(getTopicsThunk(searchParams));
+      router.replace(
+        Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS + queryString
+      );
+      dispatch(getContentsThunk(searchParams));
     }
   };
 
-  const handleSearchByCategory = (value: ICategoryResponse | null) => {
-    let searchParams: TopicRequestParams = { };
-    searchParams = { ...searchParams, categoryId: value?.id.toString() };
+  const handleSearchByTopic = (value: ITopicResponse | null) => {
+    let searchParams: ContentRequestParams = {};
+    searchParams = { ...searchParams, topicId: value?.id.toString() };
 
     const queryParams = new URLSearchParams(window.location.search);
-    const kw = queryParams.get("kw");
 
     const queryParts = [];
 
+    const kw = queryParams.get("kw");
     if (kw) {
       queryParts.push(`kw=${encodeURIComponent(kw)}`);
       searchParams = { ...searchParams, keyword: kw };
     }
 
-    value && queryParts.push(`categoryId=${encodeURIComponent(value.id)}`);
+    value && queryParts.push(`topicId=${encodeURIComponent(value.id)}`);
 
     const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
-    router.replace(Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.TOPICS + queryString);
-    dispatch(getTopicsThunk(searchParams));
+    router.replace(Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS + queryString);
+    dispatch(getContentsThunk(searchParams));
   };
 
   useEffect(() => {
-    categories.length === 0 && dispatch(getCategoriesThunk({}));
+    topics.length === 0 && dispatch(getTopicsThunk({}));
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && categories.length > 0) {
-      let searchParams = {};
+    if (typeof window !== "undefined" && topics.length > 0) {
+      let searchParams: ContentRequestParams = {};
       const queryParams = new URLSearchParams(window.location.search);
 
       const kw = queryParams.get("kw");
@@ -99,17 +103,17 @@ const TopicFilter = () => {
         searchParams = { ...searchParams, keyword: kw };
       }
 
-      const categoryId = queryParams.get("categoryId");
-      if (categoryId) {
-        const categoryObj = categories.find((c) => c.id === Number(categoryId));
-        setFilterByCategoryValue(categoryObj || null);
-        categoryObj &&
-          (searchParams = { ...searchParams, categoryId: categoryObj.id });
+      const topicId = queryParams.get("topicId");
+      if (topicId) {
+        const topicObj = topics.find((t) => t.id === Number(topicId));
+        setFilterByTopicValue(topicObj || null);
+        topicObj &&
+          (searchParams = { ...searchParams, topicId: topicObj.id.toString() });
       }
 
-      dispatch(getTopicsThunk(searchParams));
+      dispatch(getContentsThunk(searchParams));
     }
-  }, [categories]);
+  }, [topics]);
 
   return (
     <Stack
@@ -132,16 +136,16 @@ const TopicFilter = () => {
       />
       <Autocomplete
         id="category-select"
-        options={categories}
+        options={topics}
         autoHighlight
         sx={{ minWidth: "250px" }}
         getOptionLabel={(option) => option.description}
-        disabled={listCategoryLoading || listCategoryError !== null}
+        disabled={listTopicLoading || listTopicError !== null}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        value={filterByCategoryValue}
-        onChange={(_: any, newValue: ICategoryResponse | null) => {
-          setFilterByCategoryValue(newValue);
-          handleSearchByCategory(newValue);
+        value={filterByTopicValue}
+        onChange={(_: any, newValue: ITopicResponse | null) => {
+          setFilterByTopicValue(newValue);
+          handleSearchByTopic(newValue);
         }}
         renderInput={(params) => (
           <TextField {...params} placeholder="Chọn 1 danh mục" />
@@ -163,4 +167,4 @@ const TopicFilter = () => {
   );
 };
 
-export default TopicFilter;
+export default ContentFilter;

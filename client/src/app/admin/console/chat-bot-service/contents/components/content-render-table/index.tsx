@@ -4,23 +4,23 @@ import { useEffect, useState } from "react";
 
 import { GridColDef } from "@mui/x-data-grid";
 
-import { useAppSelector } from "@/lib/redux/store";
-import { convertMillisecondsToDate } from "@/lib/utils";
+import CustomDataGrid from "@/lib/components/data-grid";
+import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
 import LoadingData from "@/lib/components/loading-data";
 import NoData from "@/lib/components/no-data";
-import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
-import CustomDataGrid from "@/lib/components/data-grid";
-import TopicActions from "../topic-actions";
+import { useAppSelector } from "@/lib/redux/store";
+import { convertMillisecondsToDate } from "@/lib/utils";
+import ContentActions from "../content-actions";
 
-const TopicRenderTable = () => {
-  const { topics, listTopicLoading, listTopicError } = useAppSelector(
-    (state) => state.topic
+const ContentRenderTable = () => {
+  const { contents, listContentLoading, listContentError } = useAppSelector(
+    (state) => state.content
   );
 
   const [newColumns, setNewColumns] = useState<any>();
 
   useEffect(() => {
-    const columns: GridColDef<(typeof topics)[number]>[] = [
+    const columns: GridColDef<(typeof contents)[number]>[] = [
       {
         field: "id",
         headerName: "ID",
@@ -31,21 +31,27 @@ const TopicRenderTable = () => {
       {
         field: "intentCode",
         headerName: "Chuỗi xác định",
-        width: 200,
+        width: 250,
         editable: false,
       },
       {
-        field: "description",
-        headerName: "Mô tả",
-        width: 300,
-        editable: false,
-      },
-      {
-        field: "category",
-        headerName: "Danh mục",
+        field: "topic",
+        headerName: "Chủ đề",
         width: 300,
         editable: false,
         valueGetter: (value: any) => value.description,
+      },
+      {
+        field: "title",
+        headerName: "Tiêu đề",
+        width: 300,
+        editable: false,
+      },
+      {
+        field: "text",
+        headerName: "Nội dung",
+        width: 300,
+        editable: false,
       },
       {
         field: "createdDate",
@@ -77,17 +83,17 @@ const TopicRenderTable = () => {
         editable: false,
         headerAlign: "center",
         sortable: false,
-        renderCell: (value) => <TopicActions value={value.row} />,
+        renderCell: (value) => <ContentActions value={value.row} />,
       },
     ];
     setNewColumns(columns);
   }, []);
 
-  if (listTopicLoading) return <LoadingData />;
-  else if (topics.length === 0) return <NoData />;
-  else if (listTopicError !== null) return <ErrorRetrieveData />;
+  if (listContentLoading) return <LoadingData />;
+  else if (contents.length === 0) return <NoData />;
+  else if (listContentError !== null) return <ErrorRetrieveData />;
 
-  return <CustomDataGrid rows={topics} columns={newColumns} />;
+  return <CustomDataGrid rows={contents} columns={newColumns} />;
 };
 
-export default TopicRenderTable;
+export default ContentRenderTable;
