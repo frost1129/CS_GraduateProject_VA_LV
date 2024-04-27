@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContentResponse {
     private Long id;
+    private String uuid;
     private ContentResponseV2 parentContent;
     private Integer contentLevel;
     private SchoolYearResponseV2 schoolYear;
@@ -16,6 +17,7 @@ public class ContentResponse {
     private String intentCode;
     private String title;
     private String text;
+    private String imageLink;
     private String note;
     private Long createdDate;
     private Long lastModifiedDate;

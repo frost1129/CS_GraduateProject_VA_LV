@@ -15,5 +15,6 @@ public class ContentRequest {
     private String intentCode;
     private String title;
     private String text;
+    private String imageBase64;
     private String note;
 }

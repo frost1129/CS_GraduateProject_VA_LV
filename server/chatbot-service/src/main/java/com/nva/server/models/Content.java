@@ -1,5 +1,6 @@
 package com.nva.server.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,9 @@ public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "parent_content_id")
@@ -44,8 +48,14 @@ public class Content {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 10000)
+    @Column(length = 10000)
     private String text;
+
+    @Transient
+    @JsonIgnore
+    private String imageBase64;
+
+    private String imageLink;
 
     @CreatedDate
     @Column(nullable = false)

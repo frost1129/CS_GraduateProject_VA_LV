@@ -1,5 +1,6 @@
 [
   {
+    "uuid": "6e1f9c38-0830-44d3-a22d-dc71f540f0b7",
     "contentLevel": 1,
     "schoolYear": {
       "id": 1
@@ -15,6 +16,7 @@
     "text": "Text 1"
   },
   {
+    "uuid": "4f7e6151-350c-471e-ba87-8dc416c049d2",
     "parentContent": {
       "id": 1
     },
@@ -33,6 +35,7 @@
     "text": "Text 2"
   },
   {
+    "uuid": "9825e7b5-5fe6-489f-9b8b-d07c3e8c8a9c",
     "parentContent": {
       "id": 1
     },
@@ -51,6 +54,7 @@
     "text": "Text 3"
   },
   {
+    "uuid": "3b54d8e4-fc69-4b58-88bd-3559fe2aec2d",
     "parentContent": {
       "id": 2
     },
@@ -69,6 +73,7 @@
     "text": "Text 4"
   },
   {
+    "uuid": "b89f3a7a-cdfd-43f1-9a9b-f2d60c467564",
     "parentContent": {
       "id": 2
     },

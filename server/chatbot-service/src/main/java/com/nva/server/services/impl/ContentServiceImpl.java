@@ -1,5 +1,6 @@
 package com.nva.server.services.impl;
 
+import com.cloudinary.Cloudinary;
 import com.nva.server.dtos.*;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
@@ -15,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +26,7 @@ public class ContentServiceImpl implements ContentService {
     private final SchoolYearRepository schoolYearRepository;
     private final TopicRepository topicRepository;
     private final EntityManager entityManager;
+    private final Cloudinary cloudinary;
 
     @Override
     @Transactional
@@ -39,10 +39,32 @@ public class ContentServiceImpl implements ContentService {
                     throw new SaveDataException("Nội dung đã tồn tại!");
                 else {
                     Content content = new Content();
+                    content.setUuid(UUID.randomUUID().toString());
                     content.setSchoolYear(schoolYearRepository.findById(contentRequest.getSchoolYearId()).get());
                     content.setNote(contentRequest.getNote());
                     content.setTitle(contentRequest.getTitle());
                     content.setText(contentRequest.getText());
+
+                    // CASE: If image base64 string is not null
+                    if (contentRequest.getImageBase64() != null && !contentRequest.getImageBase64().isEmpty()) {
+                        try {
+                            String publicId = "ou_graduation_" + content.getUuid();
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("resource_type", "image");
+                            params.put("folder", "ou_graduation_project");
+                            params.put("public_id", publicId);
+
+                            Map<?, ?> uploadResult = this.cloudinary.uploader().upload(contentRequest.getImageBase64(), params);
+                            // Extract the secure URL of the uploaded image
+                            content.setImageLink(uploadResult.get("secure_url").toString());
+
+                            if (!uploadResult.isEmpty())
+                                this.cloudinary.uploader().destroy(publicId, null);
+
+                        } catch (Exception e) {
+                            throw new SaveDataException("Tạo mới nội dung thất bại!");
+                        }
+                    }
 
                     // CASE: Is child content
                     if (contentRequest.getParentContentId() != null) {
@@ -81,6 +103,27 @@ public class ContentServiceImpl implements ContentService {
                     existingContent.get().setText(contentRequest.getText());
                     existingContent.get().setNote(contentRequest.getNote());
                     existingContent.get().setLastModifiedDate(System.currentTimeMillis());
+
+                    // CASE: If image base64 string is not null
+                    if (contentRequest.getImageBase64() != null && !contentRequest.getImageBase64().isEmpty()) {
+                        try {
+                            String publicId = "ou_graduation_" + existingContent.get().getUuid();
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("resource_type", "image");
+                            params.put("folder", "ou_graduation_project");
+                            params.put("public_id", publicId);
+
+                            Map<?, ?> uploadResult = this.cloudinary.uploader().upload(contentRequest.getImageBase64(), params);
+                            // Extract the secure URL of the uploaded image
+                            existingContent.get().setImageLink(uploadResult.get("secure_url").toString());
+
+                            if (!uploadResult.isEmpty())
+                                this.cloudinary.uploader().destroy(publicId, null);
+
+                        } catch (Exception e) {
+                            throw new SaveDataException("Chỉnh sửa nội dung thất bại!");
+                        }
+                    }
 
                     // CASE: Content is super parent
                     if (existingContent.get().getParentContent() == null) {
@@ -145,6 +188,7 @@ public class ContentServiceImpl implements ContentService {
 
     private ContentResponse mapToContentResponse(Content content) {
         ContentResponse contentResponse = new ContentResponse();
+        contentResponse.setUuid(content.getUuid());
         contentResponse.setId(content.getId());
         contentResponse.setContentLevel(content.getContentLevel());
         contentResponse.setSchoolYear(SchoolYearResponseV2.builder()
@@ -177,8 +221,7 @@ public class ContentServiceImpl implements ContentService {
                     .title(content.getParentContent().getTitle())
                     .text(content.getParentContent().getText())
                     .note(content.getParentContent().getNote()).build());
-        }
-        else
+        } else
             contentResponse.setParentContent(null);
 
         return contentResponse;

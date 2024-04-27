@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ContentResponseV2 {
     private Long id;
+    private String uuid;
     private Integer contentLevel;
     private String intentCode;
     private String title;
     private String text;
+    private String imageLink;
     private String note;
 }
