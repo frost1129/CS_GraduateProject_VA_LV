@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentRequest {
+    private Long id;
     private Long parentContentId;
     private Long schoolYearId;
     private Long topicId;

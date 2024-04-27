@@ -38,7 +38,6 @@ public class Content {
     private Topic topic;
 
     @Column(nullable = false, unique = true)
-    @Lob
     private String intentCode;
 
     @Lob

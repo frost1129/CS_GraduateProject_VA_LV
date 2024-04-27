@@ -3,89 +3,144 @@ package com.nva.server.services.impl;
 import com.nva.server.dtos.*;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
+import com.nva.server.models.SchoolYear;
+import com.nva.server.models.Topic;
 import com.nva.server.repositories.ContentRepository;
 import com.nva.server.repositories.SchoolYearRepository;
 import com.nva.server.repositories.TopicRepository;
 import com.nva.server.services.ContentService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ContentServiceImpl implements ContentService {
     private final ContentRepository contentRepository;
     private final SchoolYearRepository schoolYearRepository;
     private final TopicRepository topicRepository;
+    private final EntityManager entityManager;
 
     @Override
-    public List<ContentResponse> findAll() {
-        return contentRepository.findAll().stream().map(this::mapToContentResponse).collect(Collectors.toList());
-    }
+    @Transactional
+    public ContentResponse addOrUpdateContent(ContentRequest contentRequest) {
 
-    @Override
-    public ContentResponse addOrUpdate(Long contentId, ContentRequest contentRequest) {
-        try {
+        // CASE: Save new content
+        if (contentRequest.getId() == null) {
+            try {
+                if (contentRepository.findByIntentCode(contentRequest.getIntentCode()).isPresent())
+                    throw new SaveDataException("Nội dung đã tồn tại!");
+                else {
+                    Content content = new Content();
+                    content.setSchoolYear(schoolYearRepository.findById(contentRequest.getSchoolYearId()).get());
+                    content.setNote(contentRequest.getNote());
+                    content.setTitle(contentRequest.getTitle());
+                    content.setText(contentRequest.getText());
 
-            // CASE: Save new content
-            if (contentId == null)
-                return mapToContentResponse(contentRepository.save(mapToContent(contentRequest)));
+                    // CASE: Is child content
+                    if (contentRequest.getParentContentId() != null) {
+                        Optional<Content> parentContent = contentRepository.findById(contentRequest.getParentContentId());
+                        if (parentContent.isPresent()) {
+                            content.setParentContent(parentContent.get());
+                            content.setContentLevel(parentContent.get().getContentLevel() + 1);
+                            content.setTopic(parentContent.get().getTopic());
 
-            // CASE: Update existing content
-            Optional<Content> existingContent = contentRepository.findById(contentId);
-            if (existingContent.isPresent()) {
-                // TODO: Handle update attributes of current content
-                existingContent.get().setTitle(contentRequest.getTitle());
-                existingContent.get().setText(contentRequest.getText());
-                existingContent.get().setNote(contentRequest.getNote());
-                existingContent.get().setLastModifiedDate(System.currentTimeMillis());
+                            if (contentRequest.getIntentCode() == null)
+                                throw new Exception();
+                            content.setIntentCode(parentContent.get().getIntentCode() + "." + contentRequest.getIntentCode());
+                        } else throw new SaveDataException("Nội dung gốc không tồn tại!");
 
-                // CASE: Content is super parent
-                if (existingContent.get().getParentContent() == null) {
-                    existingContent.get().setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+                    } else {
+                        // CASE: Is parent content
+                        content.setContentLevel(1);
+                        content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+                        content.setIntentCode(contentRequest.getIntentCode());
+                    }
 
-                    // TODO: Handle update topic of children content of current content
-                    List<Content> childContents = existingContent.get().getChildContents();
-                    childContents.forEach(content -> content.setTopic(topicRepository.findById(existingContent.get().getTopic().getId()).get()));
+                    return mapToContentResponse(contentRepository.save(content));
                 }
-
-                return mapToContentResponse(existingContent.get());
+            } catch (SaveDataException e) {
+                throw new SaveDataException(e.getMessage());
+            } catch (Exception e) {
+                throw new SaveDataException("Tạo mới nội dung thất bại!");
             }
-            throw new SaveDataException("ID không tồn tại");
-        } catch (Exception e) {
-            throw new SaveDataException(e.getMessage());
+        } else {
+            // CASE: Update existing content
+            Optional<Content> existingContent = contentRepository.findById(contentRequest.getId());
+            if (existingContent.isPresent()) {
+                try {
+                    // TODO: Handle update attributes of current content
+                    existingContent.get().setTitle(contentRequest.getTitle());
+                    existingContent.get().setText(contentRequest.getText());
+                    existingContent.get().setNote(contentRequest.getNote());
+                    existingContent.get().setLastModifiedDate(System.currentTimeMillis());
+
+                    // CASE: Content is super parent
+                    if (existingContent.get().getParentContent() == null) {
+                        existingContent.get().setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
+
+                        // TODO: Handle update topic of children content of current content
+                        List<Content> childContents = existingContent.get().getChildContents();
+                        childContents.forEach(content -> content.setTopic(topicRepository.findById(existingContent.get().getTopic().getId()).get()));
+                    }
+
+                    return mapToContentResponse(existingContent.get());
+                } catch (Exception e) {
+                    throw new SaveDataException("Cập nhật nội dung thất bại!");
+                }
+            } else throw new SaveDataException("Nội dung không tồn tại");
         }
     }
 
-    private Content mapToContent(ContentRequest contentRequest) throws Exception {
-        Content content = new Content();
-        content.setSchoolYear(schoolYearRepository.findById(contentRequest.getSchoolYearId()).get());
-        content.setNote(contentRequest.getNote());
-        content.setTitle(contentRequest.getTitle());
-        content.setText(contentRequest.getText());
+    @Override
+    public List<ContentResponse> getContents(Map<String, String> params) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Content> query = criteriaBuilder.createQuery(Content.class);
+        Root<Content> root = query.from(Content.class);
 
-        // CASE: Is child content
-        if (contentRequest.getParentContentId() != null) {
-            Optional<Content> parentContent = contentRepository.findById(contentRequest.getParentContentId());
-            if (parentContent.isPresent()) {
-                content.setParentContent(parentContent.get());
-                content.setContentLevel(parentContent.get().getContentLevel() + 1);
-                content.setTopic(parentContent.get().getTopic());
-                content.setIntentCode(parentContent.get().getIntentCode() + "." + contentRequest.getIntentCode());
-            } else throw new Exception();
-        } else {
-            // CASE: Is parent content
-            content.setContentLevel(1);
-            content.setTopic(topicRepository.findById(contentRequest.getTopicId()).get());
-            content.setIntentCode(contentRequest.getIntentCode());
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        if (params != null && params.containsKey("kw") && !params.get("kw").isEmpty()) {
+            String keyword = params.get("kw");
+            predicate = criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("intentCode"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("title"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("text"), "%" + keyword + "%")
+            );
         }
 
-        return content;
+        if (params != null && params.containsKey("topicId") && !params.get("topicId").isEmpty()) {
+            long topicId = Long.parseLong(params.get("topicId"));
+            Join<Content, Topic> topicJoin = root.join("topic");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(topicJoin.get("id"), topicId));
+        }
+
+        if (params != null && params.containsKey("sYear") && !params.get("sYear").isEmpty()) {
+            String sYear = params.get("sYear");
+            Join<Content, SchoolYear> schoolYearJoin = root.join("schoolYear");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(schoolYearJoin.get("year"), sYear));
+        }
+
+        query.select(root).where(predicate);
+        query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
+        return entityManager.createQuery(query).getResultList().stream().map(this::mapToContentResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteContent(Long contentId) {
+        try {
+            contentRepository.deleteById(contentId);
+        } catch (Exception e) {
+            throw new SaveDataException("Xóa nội dung thất bại!");
+        }
     }
 
     private ContentResponse mapToContentResponse(Content content) {

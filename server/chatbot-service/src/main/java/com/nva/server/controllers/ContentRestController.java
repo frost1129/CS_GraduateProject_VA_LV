@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/chat-bot-service/contents")
@@ -19,20 +21,32 @@ public class ContentRestController {
     private final ContentService contentService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<List<ContentResponse>> getContents() {
-        return ResponseEntity.ok(contentService.findAll());
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<List<ContentResponse>> getContents(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(contentService.getContents(params));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ContentResponse> saveContent(@RequestBody ContentRequest contentRequest) {
-        return new ResponseEntity<>(contentService.addOrUpdate(null, contentRequest), HttpStatus.CREATED);
+        contentRequest.setId(null);
+        return new ResponseEntity<>(contentService.addOrUpdateContent(contentRequest), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{contentId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ContentResponse> updateContent(@PathVariable("contentId") Long contentId, @RequestBody ContentRequest contentRequest) {
-        return new ResponseEntity<>(contentService.addOrUpdate(contentId, contentRequest), HttpStatus.OK);
+    public ResponseEntity<ContentResponse> updateContent(
+            @PathVariable("contentId") String contentId,
+            @RequestBody ContentRequest contentRequest
+    ) {
+        contentRequest.setId(Long.parseLong(contentId));
+        return new ResponseEntity<>(contentService.addOrUpdateContent(contentRequest), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{contentId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteContent(@PathVariable(name = "contentId") String contentId) {
+        contentService.deleteContent(Long.parseLong(contentId));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Xóa nội dung thành công!"));
     }
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    @Transactional
     public TopicResponse addOrUpdateTopic(TopicRequest topicRequest) {
         //  CASE: Add new topic | ELSE: Update existing topic
         if (topicRequest.getId() == null) {

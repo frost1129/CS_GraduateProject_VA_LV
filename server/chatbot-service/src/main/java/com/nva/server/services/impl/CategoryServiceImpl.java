@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponse addOrUpdateCategory(CategoryRequest categoryRequest) {
         //  CASE: Add new category | ELSE: Update existing category
         if (categoryRequest.getId() == null) {
