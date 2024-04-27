@@ -108,7 +108,7 @@ public class TopicServiceImpl implements TopicService {
         topicResponse.setIntentCode(topic.getIntentCode());
         topicResponse.setDescription(topic.getDescription());
         topicResponse.setCreatedDate(topic.getCreatedDate());
-        topic.setLastModifiedDate(topic.getLastModifiedDate());
+        topicResponse.setLastModifiedDate(topic.getLastModifiedDate());
         topicResponse.setNote(topic.getNote());
 
         topicResponse.setCategory(CategoryResponseV2.builder()

@@ -100,7 +100,7 @@ const topicSlice = createSlice({
       state.saveTopicError = action.payload ? action.payload : null;
     });
 
-    // Update category
+    // Update topic
     builder.addCase(updateTopicThunk.pending, (state) => {
       state.updateTopicLoading = true;
       state.updatedTopic = null;
@@ -117,7 +117,7 @@ const topicSlice = createSlice({
       state.updateTopicError = action.payload ? action.payload : null;
     });
 
-    // Delete category
+    // Delete topic
     builder.addCase(deleteTopicThunk.pending, (state) => {
       state.deleteTopicLoading = true;
       state.deleteTopicSuccess = null;
