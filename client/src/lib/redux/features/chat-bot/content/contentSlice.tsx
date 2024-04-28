@@ -49,7 +49,7 @@ const contentSlice = createSlice({
       state.contents = [];
     },
 
-    updateContentById: (state, action) => {
+    updateContent: (state, action) => {
       const updatedContents = state.contents.map((c) => {
         if (c.id === action.payload.content.id)
           return { ...c, ...action.payload.content };
@@ -105,7 +105,7 @@ const contentSlice = createSlice({
       state.saveContentError = action.payload ? action.payload : null;
     });
 
-    // Update topic
+    // Update content
     builder.addCase(updateContentThunk.pending, (state) => {
       state.updateContentLoading = true;
       state.updatedContent = null;
@@ -146,7 +146,7 @@ export const {
   appendContentLast,
   removeContentById,
   clearContentData,
-  updateContentById,
+  updateContent,
   resetContentStatus,
 } = contentSlice.actions;
 export default contentSlice.reducer;
