@@ -42,7 +42,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1714228772124,1,NULL,'category-1','Category Description 1',NULL),(1714228772150,2,NULL,'category-2','Category Description 2',NULL),(1714228772152,3,NULL,'category-3','Category Description 3',NULL);
+INSERT INTO `categories` VALUES (1714264726547,1,NULL,'category-1','Category Description 1',NULL),(1714264726572,2,NULL,'category-2','Category Description 2',NULL),(1714264726575,3,NULL,'category-3','Category Description 3',NULL);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +61,7 @@ CREATE TABLE `contents` (
   `parent_content_id` bigint DEFAULT NULL,
   `school_year_id` bigint NOT NULL,
   `topic_id` bigint NOT NULL,
-  `text` varchar(10000) DEFAULT NULL,
+  `text` varchar(10000) NOT NULL,
   `image_link` varchar(255) DEFAULT NULL,
   `intent_code` varchar(255) NOT NULL,
   `uuid` varchar(255) DEFAULT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE `contents` (
 
 LOCK TABLES `contents` WRITE;
 /*!40000 ALTER TABLE `contents` DISABLE KEYS */;
-INSERT INTO `contents` VALUES (1,1714228772230,1,NULL,NULL,1,1,'Text 1',NULL,'content-1','6e1f9c38-0830-44d3-a22d-dc71f540f0b7',NULL,'Title 1'),(2,1714228772232,2,NULL,1,1,1,'Text 2',NULL,'content-1.content-2','4f7e6151-350c-471e-ba87-8dc416c049d2',NULL,'Title 2'),(2,1714228772235,3,NULL,1,1,2,'Text 3',NULL,'content-1.content-3','9825e7b5-5fe6-489f-9b8b-d07c3e8c8a9c',NULL,'Title 3'),(3,1714228772239,4,NULL,2,2,2,'Text 4',NULL,'content-2.content-4','3b54d8e4-fc69-4b58-88bd-3559fe2aec2d',NULL,'Title 4'),(3,1714228772244,5,NULL,2,3,2,'Text 5',NULL,'content-2.content-5','b89f3a7a-cdfd-43f1-9a9b-f2d60c467564',NULL,'Title 5');
+INSERT INTO `contents` VALUES (1,1714264726648,1,NULL,NULL,1,1,'Text 1',NULL,'content-1','6e1f9c38-0830-44d3-a22d-dc71f540f0b7',NULL,'Title 1'),(2,1714264726649,2,NULL,1,1,1,'Text 2',NULL,'content-1.content-2','4f7e6151-350c-471e-ba87-8dc416c049d2',NULL,'Title 2'),(2,1714264726652,3,NULL,1,1,2,'Text 3',NULL,'content-1.content-3','9825e7b5-5fe6-489f-9b8b-d07c3e8c8a9c',NULL,'Title 3'),(3,1714264726653,4,NULL,2,2,2,'Text 4',NULL,'content-2.content-4','3b54d8e4-fc69-4b58-88bd-3559fe2aec2d',NULL,'Title 4'),(3,1714264726655,5,NULL,2,3,2,'Text 5',NULL,'content-2.content-5','b89f3a7a-cdfd-43f1-9a9b-f2d60c467564',NULL,'Title 5');
 /*!40000 ALTER TABLE `contents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +113,7 @@ CREATE TABLE `conversation_histories` (
 
 LOCK TABLES `conversation_histories` WRITE;
 /*!40000 ALTER TABLE `conversation_histories` DISABLE KEYS */;
-INSERT INTO `conversation_histories` VALUES (1714228772266,1,NULL,'Question 1','Answer 1','id1'),(1714228772269,2,NULL,'Question 2','Answer 2','id1'),(1714228772270,3,NULL,'Question 3','Answer 3','id1'),(1714228772272,4,NULL,'Question 4','Answer 4','id2'),(1714228772274,5,NULL,'Question 5','Answer 5','id2'),(1714228772276,6,NULL,'Question 6','Answer 6','id2');
+INSERT INTO `conversation_histories` VALUES (1714264726673,1,NULL,'Question 1','Answer 1','id1'),(1714264726675,2,NULL,'Question 2','Answer 2','id1'),(1714264726676,3,NULL,'Question 3','Answer 3','id1'),(1714264726677,4,NULL,'Question 4','Answer 4','id2'),(1714264726679,5,NULL,'Question 5','Answer 5','id2'),(1714264726680,6,NULL,'Question 6','Answer 6','id2');
 /*!40000 ALTER TABLE `conversation_histories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +141,7 @@ CREATE TABLE `school_years` (
 
 LOCK TABLES `school_years` WRITE;
 /*!40000 ALTER TABLE `school_years` DISABLE KEYS */;
-INSERT INTO `school_years` VALUES ('2022',1714228772206,1,NULL,'K22',NULL),('2023',1714228772208,2,NULL,'K23',NULL),('2024',1714228772209,3,NULL,'K24',NULL);
+INSERT INTO `school_years` VALUES ('2022',1714264726628,1,NULL,'K22',NULL),('2023',1714264726629,2,NULL,'K23',NULL),('2024',1714264726630,3,NULL,'K24',NULL);
 /*!40000 ALTER TABLE `school_years` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +173,7 @@ CREATE TABLE `topics` (
 
 LOCK TABLES `topics` WRITE;
 /*!40000 ALTER TABLE `topics` DISABLE KEYS */;
-INSERT INTO `topics` VALUES (1,1714228772175,1,NULL,'topic-1','Topic Description 1',NULL),(1,1714228772177,2,NULL,'topic-2','Topic Description 2',NULL),(1,1714228772179,3,NULL,'topic-3','Topic Description 3',NULL),(2,1714228772180,4,NULL,'topic-4','Topic Description 4',NULL),(2,1714228772182,5,NULL,'topic-5','Topic Description 5',NULL),(2,1714228772184,6,NULL,'topic-6','Topic Description 6',NULL),(3,1714228772185,7,NULL,'topic-7','Topic Description 7',NULL),(3,1714228772186,8,NULL,'topic-8','Topic Description 8',NULL),(3,1714228772187,9,NULL,'topic-9','Topic Description 9',NULL);
+INSERT INTO `topics` VALUES (1,1714264726600,1,NULL,'topic-1','Topic Description 1',NULL),(1,1714264726603,2,NULL,'topic-2','Topic Description 2',NULL),(1,1714264726605,3,NULL,'topic-3','Topic Description 3',NULL),(2,1714264726606,4,NULL,'topic-4','Topic Description 4',NULL),(2,1714264726608,5,NULL,'topic-5','Topic Description 5',NULL),(2,1714264726609,6,NULL,'topic-6','Topic Description 6',NULL),(3,1714264726610,7,NULL,'topic-7','Topic Description 7',NULL),(3,1714264726612,8,NULL,'topic-8','Topic Description 8',NULL),(3,1714264726613,9,NULL,'topic-9','Topic Description 9',NULL);
 /*!40000 ALTER TABLE `topics` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -186,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-27 21:41:02
+-- Dump completed on 2024-04-28  7:39:21
