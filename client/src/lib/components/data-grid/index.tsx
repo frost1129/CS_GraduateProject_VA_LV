@@ -1,26 +1,23 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { CustomDataGridProps } from "@/lib/types/component";
+import CustomPagination from "./CustomPagination";
 
 const CustomDataGrid = (props: CustomDataGridProps) => {
-  const { rows, columns } = props;
+  const { rows, columns, hidePagination = false } = props;
 
   return (
-    <DataGrid
-      rows={rows || defaultRows}
-      columns={columns || defaultColumns}
-      disableColumnFilter
-      disableColumnMenu
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 10,
-          },
-        },
-      }}
-      pageSizeOptions={[10]}
-      autoHeight={false} 
-    />
+    <>
+      <DataGrid
+        rows={rows || defaultRows}
+        columns={columns || defaultColumns}
+        disableColumnFilter
+        disableColumnMenu
+        hideFooter
+        autoHeight={false} 
+      />
+      {!hidePagination && <CustomPagination />}
+    </>
   );
 };
 

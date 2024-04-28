@@ -47,6 +47,7 @@ export interface AdminHeaderProps {
 export interface CustomDataGridProps {
   rows: any;
   columns: GridColDef<any>[number];
+  hidePagination?: boolean;
 }
 
 export interface CategoryActionsProps {
