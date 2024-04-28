@@ -85,3 +85,11 @@ export interface TopicEditorProps {
 export interface TopicDeleterProps {
   value: ITopicResponse;
 }
+
+export interface ContentEditorProps {
+  value: IContentResponse;
+}
+
+export interface ContentDeleterProps {
+  value: IContentResponse;
+}

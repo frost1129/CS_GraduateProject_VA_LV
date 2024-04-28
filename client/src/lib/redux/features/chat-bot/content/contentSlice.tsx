@@ -40,7 +40,7 @@ const contentSlice = createSlice({
 
     removeContentById: (state, action) => {
       const updatedContents = state.contents.filter(
-        (t) => t.id !== action.payload.topicId
+        (c) => c.id !== action.payload.contentId
       );
       state.contents = updatedContents;
     },
@@ -50,10 +50,10 @@ const contentSlice = createSlice({
     },
 
     updateContentById: (state, action) => {
-      const updatedContents = state.contents.map((t) => {
-        if (t.id === action.payload.topic.id)
-          return { ...t, ...action.payload.topic };
-        return t;
+      const updatedContents = state.contents.map((c) => {
+        if (c.id === action.payload.content.id)
+          return { ...c, ...action.payload.content };
+        return c;
       });
       state.contents = updatedContents;
     },

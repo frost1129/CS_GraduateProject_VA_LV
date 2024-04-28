@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   MenuItem,
   Stack,
@@ -21,25 +22,22 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { FilePlus, Plus, X } from "@phosphor-icons/react";
+import { FilePlus, PencilSimple, X } from "@phosphor-icons/react";
 
 import CustomLoadingButton from "@/lib/components/loading-button";
 import CustomToast from "@/lib/components/toast";
-import { addNewContentThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
+import { updateContentThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
 import {
-  appendContentFirst,
   resetContentStatus,
+  updateContentById,
 } from "@/lib/redux/features/chat-bot/content/contentSlice";
-import { getTopicsThunk } from "@/lib/redux/features/chat-bot/topic/topicActions";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
-import { ISaveContentRequest } from "@/lib/types/backend";
-import { ToastInformation } from "@/lib/types/component";
+import { IUpdateContentRequest } from "@/lib/types/backend";
+import { ContentEditorProps, ToastInformation } from "@/lib/types/component";
+import { convertMillisecondsToDate } from "@/lib/utils";
 
-const contentCreateSchema = z.object({
-  intentCode: z
-    .string()
-    .min(1, "Không được bỏ trống")
-    .max(255, "Không vượt quá 255 ký tự"),
+const contentEditSchema = z.object({
+  topicId: z.number(),
   title: z
     .string()
     .min(1, "Không được bỏ trống")
@@ -49,67 +47,68 @@ const contentCreateSchema = z.object({
     .min(1, "Không được bỏ trống")
     .max(10000, "Không vượt quá 10000 kí tự"),
   note: z.string().nullable(),
-  topicId: z.number(),
-  parentContentId: z.number().nullable().default(null),
-  schoolYearId: z.number(),
+  imageLink: z.string().nullable(),
   imageBase64: z.string().nullable().default(null),
 });
 
-type ContentCreateForm = z.infer<typeof contentCreateSchema>;
+type ContentEditForm = z.infer<typeof contentEditSchema>;
 
-const ContentCreator = () => {
+const ContentEditor = (props: ContentEditorProps) => {
+  const { value } = props;
+
+  // Redux
   const dispatch = useAppDispatch();
   const { topics, listTopicLoading, listTopicError } = useAppSelector(
     (state) => state.topic
   );
-  const { saveContentLoading, savedContent, saveContentError, contents } =
+  const { updateContentLoading, updatedContent, updateContentError } =
     useAppSelector((state) => state.content);
 
+  // React Hook Form
   const {
     register,
     handleSubmit,
     formState,
     reset,
     control,
-    watch,
     setValue,
+    watch,
     getValues,
-  } = useForm<ContentCreateForm>({
-    resolver: zodResolver(contentCreateSchema),
+  } = useForm<ContentEditForm>({
+    resolver: zodResolver(contentEditSchema),
     mode: "onChange",
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [toastInfo, setToastInfo] = useState<ToastInformation>();
   const [openToast, setOpenToast] = useState<boolean>(false);
 
   const handleClickOpen = () => {
-    setOpenCreateDialog(true);
-  };
-  
-  const handleClose = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset file input to allow another selection
-    }
-    reset({});
-    setOpenCreateDialog(false);
+    setOpenEditDialog(true);
   };
 
-  const handleCreateContent = (data: ContentCreateForm) => {
-    const contentData: ISaveContentRequest = {
-      intentCode: data.intentCode,
+  const handleClose = () => {
+    setOpenEditDialog(false);
+    reset({ ...value });
+  };
+
+  const handleUpdateContent = (data: ContentEditForm) => {
+    const contentData: IUpdateContentRequest = {
+      topicId: data.topicId,
       title: data.title,
       text: data.text,
       note: data.note,
-      imageBase64: data.imageBase64,
-      parentContentId: data.parentContentId,
-      topicId: data.topicId,
-      schoolYearId: data.schoolYearId,
+      imageBase64:
+        data.imageBase64 === data.imageLink ? null : data.imageBase64,
     };
-    dispatch(addNewContentThunk(contentData));
-    console.log(data);
+    dispatch(
+      updateContentThunk({
+        contentId: value.id.toString(),
+        content: contentData,
+      })
+    );
   };
 
   const handleOpenFileDialog = () => {
@@ -156,64 +155,64 @@ const ContentCreator = () => {
   };
 
   useEffect(() => {
-    if (savedContent !== null) {
+    if (updatedContent !== null) {
       setOpenToast(true);
       setToastInfo({
         severity: "success",
         title: "Thành công",
-        message: "Tạo mới chủ đề thành công!",
+        message: "Chỉnh sửa chủ đề thành công!",
       });
 
-      dispatch(appendContentFirst({ topic: savedContent }));
-      dispatch(resetContentStatus({ keys: ["savedContent"] }));
+      dispatch(updateContentById({ content: updatedContent }));
+      dispatch(resetContentStatus({ keys: ["updatedContent"] }));
       handleClose();
-    } else if (saveContentError !== null) {
+    } else if (updateContentError !== null) {
       setOpenToast(true);
       setToastInfo({
         severity: "error",
         title: "Thất bại",
-        message: saveContentError,
+        message: updateContentError,
       });
 
-      dispatch(resetContentStatus({ keys: ["saveContentError"] }));
+      dispatch(resetContentStatus({ keys: ["updateContentError"] }));
     }
-  }, [savedContent, saveContentError]);
+  }, [updatedContent, updateContentError]);
 
+  // Reset input fields
   useEffect(() => {
-    if (topics.length === 0) dispatch(getTopicsThunk({}));
+    reset({ ...value, topicId: value.topic.id, imageBase64: value.imageLink });
+    setOpenToast(false);
   }, []);
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
+      <Stack
+        direction="row"
+        component="button"
+        className="reset-btn"
         onClick={handleClickOpen}
-        fullWidth
+        sx={btnStyles}
       >
-        <Stack direction="row" gap={1} alignItems="center">
-          <Plus size={20} />
-          <Typography variant="button1">Tạo mới</Typography>
-        </Stack>
-      </Button>
-      {openCreateDialog && (
+        <PencilSimple size={24} />
+        <Typography variant="body2">Chỉnh sửa</Typography>
+      </Stack>
+      {openEditDialog && (
         <Dialog
-          id="content-create-dialog"
+          id="content-edit-dialog"
           component="form"
+          onSubmit={handleSubmit(handleUpdateContent)}
           open={true}
-          aria-labelledby="content-create-dialog-title"
-          aria-describedby="content-create-dialog-description"
-          fullWidth
+          aria-labelledby="content-edit-dialog-title"
+          aria-describedby="content-edit-dialog-description"
           maxWidth={"tablet"}
-          onSubmit={handleSubmit(handleCreateContent)}
         >
-          <DialogTitle component="div" id="content-create-dialog-title">
-            <Typography variant="h5">Tạo mới nội dung</Typography>
+          <DialogTitle component="div" id="content-edit-dialog-title">
+            <Typography variant="h5">Chỉnh sửa danh mục</Typography>
           </DialogTitle>
           <IconButton
             aria-label="close"
             onClick={handleClose}
-            disabled={saveContentLoading}
+            disabled={updateContentLoading}
             sx={{
               position: "absolute",
               right: 24,
@@ -225,127 +224,60 @@ const ContentCreator = () => {
             <X size={24} />
           </IconButton>
           <DialogContent>
-            <Stack direction="column" gap={2}>
-              <Stack direction="row" gap={2} alignItems="flex-start">
-                {/* School year field */}
-                <Stack direction="column" gap={1} sx={{ width: "40%" }}>
-                  <Stack direction="row" gap={0.5}>
-                    <Typography variant="label3">Năm học</Typography>
-                    <Box sx={{ color: "var(--alert)" }}>*</Box>
+            <Stack direction="column" gap={2} flex={1}>
+              {/* Created date & Last modified date field */}
+              <Grid container spacing={2}>
+                <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
+                  <Stack direction="column" gap={1}>
+                    <Typography variant="label3">Ngày tạo</Typography>
+                    <TextField
+                      disabled
+                      value={convertMillisecondsToDate(value.createdDate!)}
+                    />
                   </Stack>
-                  <Controller
-                    name="schoolYearId"
-                    control={control}
-                    render={({
-                      field: { onChange, onBlur, value, ref },
-                      fieldState: { error },
-                    }) => (
-                      <Autocomplete
-                        id="school-year-select"
-                        options={[1, 2, 3, 4]}
-                        autoHighlight
-                        getOptionLabel={(option) => option.toString()}
-                        value={[1, 2, 3, 4].find((y) => y === value) || null} // Set the initial value
-                        onChange={(_, data) => onChange(data)} // Pass the selected value's code
-                        onBlur={onBlur} // Notify when the input is touched
-                        disabled={saveContentLoading}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            inputRef={ref}
-                            placeholder="Chọn năm học"
-                            error={!!error}
-                            helperText={error ? "Phải chọn năm học" : null}
-                          />
-                        )}
-                        renderOption={(props, option) => (
-                          <MenuItem
-                            {...props}
-                            sx={{ marginX: 1, marginTop: 0.5 }}
-                            key={option}
-                          >
-                            <Stack direction="column" gap={0.25}>
-                              <Typography variant="body2">{option}</Typography>
-                            </Stack>
-                          </MenuItem>
-                        )}
-                      />
-                    )}
-                  />
-                </Stack>
+                </Grid>
+                <Grid item oversize={6} desktop={6} tablet={6} mobile={12}>
+                  <Stack direction="column" gap={1}>
+                    <Typography variant="label3">Ngày chỉnh sửa</Typography>
+                    <TextField
+                      disabled
+                      value={
+                        value.lastModifiedDate
+                          ? convertMillisecondsToDate(value.lastModifiedDate)
+                          : "---"
+                      }
+                    />
+                  </Stack>
+                </Grid>
+              </Grid>
 
-                {/* Parent content field */}
-                <Stack direction="column" gap={1} flex={1}>
-                  <Stack direction="row" gap={0.5}>
-                    <Typography variant="label3">
-                      Kế thừa từ nội dung
-                    </Typography>
-                  </Stack>
-                  <Controller
-                    name="parentContentId"
-                    control={control}
-                    render={({
-                      field: { onChange, onBlur, value, ref },
-                      fieldState: { error },
-                    }) => (
-                      <Autocomplete
-                        id="parent-content-select"
-                        options={contents}
-                        autoHighlight
-                        getOptionLabel={(option) => option.title}
-                        value={contents.find((c) => c.id === value) || null} // Set the initial value
-                        onChange={(_, data) => {
-                          onChange(data?.id || null);
-                          data?.topic.id &&
-                            setValue("topicId", Number(data.topic.id));
-                        }} // Pass the selected value's code
-                        onBlur={onBlur} // Notify when the input is touched
-                        disabled={saveContentLoading}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            inputRef={ref}
-                            placeholder="Chọn 1 nội dung kế thừa"
-                            error={!!error}
-                            helperText={
-                              error ? "Phải chọn 1 nội dung kế thừa" : null
-                            }
-                          />
-                        )}
-                        renderOption={(props, option) => (
-                          <MenuItem
-                            {...props}
-                            sx={{ marginX: 1, marginTop: 0.5 }}
-                            key={option.id}
-                          >
-                            <Stack direction="column" gap={0.25}>
-                              <Typography variant="caption">
-                                {option.intentCode}
-                              </Typography>
-                              <Typography variant="body2">
-                                {option.title}
-                              </Typography>
-                            </Stack>
-                          </MenuItem>
-                        )}
-                      />
-                    )}
-                  />
+              {/* Parent content */}
+              {value.parentContent !== null && (
+                <Stack direction="column" gap={1}>
+                  <Typography variant="label3">Kế thừa từ nội dung</Typography>
+                  <TextField disabled value={value.parentContent.title} />
                 </Stack>
-              </Stack>
+              )}
 
               {/* Topic field */}
-              {!watch("parentContentId") && (
-                <Stack direction="column" gap={1}>
-                  <Stack direction="row" gap={0.5}>
-                    <Typography variant="label3">Chủ đề</Typography>
+              <Stack direction="column" gap={1}>
+                <Stack direction="row" gap={0.5}>
+                  <Typography variant="label3">Chủ đề</Typography>
+                  {value.parentContent === null && (
                     <Box sx={{ color: "var(--alert)" }}>*</Box>
-                  </Stack>
+                  )}
+                </Stack>
+                {value.parentContent === null ? (
                   <Controller
                     name="topicId"
                     control={control}
                     render={({
-                      field: { onChange, onBlur, value, ref },
+                      field: {
+                        onChange,
+                        onBlur,
+                        value: autoCompleteValue,
+                        ref,
+                      },
                       fieldState: { error },
                     }) => (
                       <Autocomplete
@@ -353,14 +285,13 @@ const ContentCreator = () => {
                         options={topics}
                         autoHighlight
                         getOptionLabel={(option) => option.description}
-                        value={topics.find((c) => c.id === value) || null} // Set the initial value
-                        onChange={(_, data) => {
-                          if (watch("parentContentId")) onChange(null);
-                          else onChange(data?.id);
-                        }} // Pass the selected value's code
+                        value={
+                          topics.find((t) => t.id === autoCompleteValue) || null
+                        } // Set the initial value
+                        onChange={(_, data) => onChange(data?.id)} // Pass the selected value's code
                         onBlur={onBlur} // Notify when the input is touched
                         disabled={
-                          saveContentLoading ||
+                          updateContentLoading ||
                           listTopicLoading ||
                           listTopicError !== null
                         }
@@ -392,22 +323,15 @@ const ContentCreator = () => {
                       />
                     )}
                   />
-                </Stack>
-              )}
+                ) : (
+                  <TextField disabled value={value.topic.description} />
+                )}
+              </Stack>
 
               {/* Intent code field */}
               <Stack direction="column" gap={1}>
-                <Stack direction="row" gap={0.5}>
-                  <Typography variant="label3">Chuỗi xác định</Typography>
-                  <Box sx={{ color: "var(--alert)" }}>*</Box>
-                </Stack>
-                <TextField
-                  placeholder="Nhập chuỗi xác định..."
-                  error={!!formState.errors.intentCode}
-                  helperText={formState.errors.intentCode?.message}
-                  disabled={saveContentLoading}
-                  {...register("intentCode")}
-                />
+                <Typography variant="label3">Chuỗi xác định</Typography>
+                <TextField disabled value={value.intentCode} />
               </Stack>
 
               {/* Title field */}
@@ -422,7 +346,7 @@ const ContentCreator = () => {
                   placeholder="Nhập tiêu đề..."
                   error={!!formState.errors.title}
                   helperText={formState.errors.title?.message}
-                  disabled={saveContentLoading}
+                  disabled={updateContentLoading}
                   {...register("title")}
                 />
               </Stack>
@@ -430,16 +354,16 @@ const ContentCreator = () => {
               {/* Text field */}
               <Stack direction="column" gap={1}>
                 <Stack direction="row" gap={0.5}>
-                  <Typography variant="label3">Nội dung</Typography>
+                  <Typography variant="label3">Mô tả</Typography>
                   <Box sx={{ color: "var(--alert)" }}>*</Box>
                 </Stack>
                 <TextField
                   multiline
                   rows={3}
-                  placeholder="Nhập nội dung..."
+                  placeholder="Nhập tiêu đề..."
                   error={!!formState.errors.text}
                   helperText={formState.errors.text?.message}
-                  disabled={saveContentLoading}
+                  disabled={updateContentLoading}
                   {...register("text")}
                 />
               </Stack>
@@ -457,6 +381,7 @@ const ContentCreator = () => {
                     <IconButton
                       aria-label="close"
                       onClick={handleRemoveDemoContentImage}
+                      disabled={updateContentLoading}
                       sx={{
                         position: "absolute",
                         right: 24,
@@ -495,23 +420,22 @@ const ContentCreator = () => {
                   multiline
                   rows={3}
                   placeholder="Nhập ghi chú..."
-                  disabled={saveContentLoading}
+                  disabled={updateContentLoading}
                   {...register("note")}
                 />
               </Stack>
             </Stack>
           </DialogContent>
-
           <DialogActions sx={{ paddingX: 3, paddingBottom: 2 }}>
             <Button
               variant="outlined"
               color="secondary"
               onClick={handleClose}
-              disabled={saveContentLoading}
+              disabled={updateContentLoading}
             >
               Hủy
             </Button>
-            {saveContentLoading ? (
+            {updateContentLoading ? (
               <CustomLoadingButton sx={{ height: "42px" }} />
             ) : (
               <Button
@@ -520,7 +444,7 @@ const ContentCreator = () => {
                 type="submit"
                 disabled={!formState.isValid}
               >
-                Tạo
+                Lưu
               </Button>
             )}
           </DialogActions>
@@ -528,7 +452,7 @@ const ContentCreator = () => {
       )}
       {openToast && (
         <CustomToast
-          id="content-create-toast"
+          id="content-edit-toast"
           open={openToast}
           handleClose={() => setOpenToast(false)}
           title={toastInfo?.title!}
@@ -549,10 +473,16 @@ const ContentCreator = () => {
   );
 };
 
-export default ContentCreator;
+export default ContentEditor;
+
+const btnStyles: SxProps<Theme> = {
+  flex: 1,
+  padding: "6px 16px",
+  alignItems: "center",
+  gap: 1,
+};
 
 const contentImageAdderStyles: SxProps<Theme> = {
-  width: "100%",
   height: "200px",
   justifyContent: "center",
   alignItems: "center",

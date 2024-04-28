@@ -90,11 +90,21 @@ export interface IUpdateContentRequest {
   title: string;
   text: string;
   note: string | null;
+  imageBase64: string | null;
 }
 
 export interface IContentResponse {
   id: number;
-  parentContentId: number | null;
+  parentContent: {
+    id: number;
+    uuid: string;
+    contentLevel: number;
+    intentCode: string;
+    title: string;
+    text: string;
+    imageLink: string | null;
+    note: string | null;
+  };
   contentLevel: number;
   schoolYear: {
     id: number;
@@ -115,6 +125,7 @@ export interface IContentResponse {
   title: string;
   text: string;
   note: string;
+  imageLink: string | null;
   createdDate: number;
   lastModifiedDate: number | null;
 }
