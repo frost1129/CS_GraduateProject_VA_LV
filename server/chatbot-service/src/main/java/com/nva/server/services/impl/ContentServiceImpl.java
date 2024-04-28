@@ -180,7 +180,13 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public void deleteContent(Long contentId) {
         try {
-            contentRepository.deleteById(contentId);
+            Optional<Content> existingContent = contentRepository.findById(contentId);
+
+            if (existingContent.isPresent()) {
+                String publicId = "ou_graduation_" + existingContent.get().getUuid();
+                this.cloudinary.uploader().destroy(publicId, null);
+                contentRepository.deleteById(contentId);
+            }
         } catch (Exception e) {
             throw new SaveDataException("Xóa nội dung thất bại!");
         }
