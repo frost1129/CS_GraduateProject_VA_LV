@@ -277,7 +277,7 @@ const TopicCreator = () => {
       )}
       {openToast && (
         <CustomToast
-          id="category-create-toast"
+          id="topic-create-toast"
           open={openToast}
           handleClose={() => setOpenToast(false)}
           title={toastInfo?.title!}
@@ -290,19 +290,3 @@ const TopicCreator = () => {
 };
 
 export default TopicCreator;
-
-interface CountryType {
-  code: string;
-  label: string;
-  phone: string;
-  suggested?: boolean;
-}
-
-const countries: readonly CountryType[] = [
-  { code: "AD", label: "Andorra", phone: "376" },
-  {
-    code: "AE",
-    label: "United Arab Emirates",
-    phone: "971",
-  },
-];

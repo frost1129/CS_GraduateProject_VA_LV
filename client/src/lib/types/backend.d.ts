@@ -82,6 +82,7 @@ export interface ISaveContentRequest {
   title: string;
   text: string;
   note: string | null;
+  imageBase64: string | null;
 }
 
 export interface IUpdateContentRequest {
