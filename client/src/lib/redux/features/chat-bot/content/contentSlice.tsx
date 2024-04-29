@@ -53,7 +53,7 @@ const contentSlice = createSlice({
     removeContentByIdV2: (state, action) => {
       if (state.contentDataResponse) {
         const updatedContents = state.contentDataResponse.data.filter(
-          (c) => c.id !== action.payload.contentId
+          (c) => (c.id !== action.payload.contentId || c.parentContent?.id !== action.payload.contentId)
         );
 
         const newContentDataResponse = {
@@ -174,7 +174,7 @@ const contentSlice = createSlice({
       state.updateContentError = action.payload ? action.payload : null;
     });
 
-    // Delete topic
+    // Delete content
     builder.addCase(deleteContentThunk.pending, (state) => {
       state.deleteContentLoading = true;
       state.deleteContentSuccess = null;
@@ -182,7 +182,8 @@ const contentSlice = createSlice({
     });
     builder.addCase(deleteContentThunk.fulfilled, (state, action) => {
       state.deleteContentLoading = false;
-      state.deleteContentSuccess = action.payload.data;
+      state.deleteContentSuccess = true;
+      state.contentDataResponse = action.payload.data;
       state.deleteContentError = null;
     });
     builder.addCase(deleteContentThunk.rejected, (state, action) => {

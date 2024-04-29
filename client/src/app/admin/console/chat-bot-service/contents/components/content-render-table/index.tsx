@@ -135,7 +135,7 @@ const ContentRenderTable = () => {
 
   return (
     <CustomDataGrid
-      rows={contentDataResponse?.data || []}
+      rows={contentDataResponse?.data}
       columns={newColumns}
       pagination={{
         currentPage: contentDataResponse?.currentPage || null,

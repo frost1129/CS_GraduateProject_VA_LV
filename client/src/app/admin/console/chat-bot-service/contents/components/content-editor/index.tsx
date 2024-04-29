@@ -205,6 +205,7 @@ const ContentEditor = (props: ContentEditorProps) => {
           aria-labelledby="content-edit-dialog-title"
           aria-describedby="content-edit-dialog-description"
           maxWidth={"tablet"}
+          fullWidth
         >
           <DialogTitle component="div" id="content-edit-dialog-title">
             <Typography variant="h5">Chỉnh sửa danh mục</Typography>
@@ -252,12 +253,20 @@ const ContentEditor = (props: ContentEditorProps) => {
               </Grid>
 
               {/* Parent content */}
-              {value.parentContent !== null && (
-                <Stack direction="column" gap={1}>
-                  <Typography variant="label3">Kế thừa từ nội dung</Typography>
-                  <TextField disabled value={value.parentContent.title} />
+              <Stack direction="row" gap={2}>
+                <Stack direction="column" gap={1} flex={1}>
+                  <Typography variant="label3">Năm học</Typography>
+                  <TextField disabled value={value.schoolYear?.year || "---"} />
                 </Stack>
-              )}
+                {value.parentContent !== null && (
+                  <Stack direction="column" gap={1} flex={1}>
+                    <Typography variant="label3">
+                      Kế thừa từ nội dung
+                    </Typography>
+                    <TextField disabled value={value.parentContent.title} />
+                  </Stack>
+                )}
+              </Stack>
 
               {/* Topic field */}
               <Stack direction="column" gap={1}>

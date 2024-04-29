@@ -111,7 +111,7 @@ export interface IContentResponse {
     id: number;
     year: string;
     courseName: string;
-  };
+  } | null;
   topic: {
     id: number;
     intentCode: string;

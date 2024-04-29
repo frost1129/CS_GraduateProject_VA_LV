@@ -7,7 +7,10 @@ import { Trash } from "@phosphor-icons/react";
 
 import ConfirmDeleteDialog from "@/lib/components/confirm-delete-dialog";
 import { deleteContentThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
-import { removeContentByIdV2, resetContentStatus } from "@/lib/redux/features/chat-bot/content/contentSlice";
+import {
+  removeContentByIdV2,
+  resetContentStatus,
+} from "@/lib/redux/features/chat-bot/content/contentSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { ContentDeleterProps } from "@/lib/types/component";
 
@@ -29,7 +32,6 @@ const ContentDeleter = (props: ContentDeleterProps) => {
 
   useEffect(() => {
     if (deleteContentSuccess !== null) {
-      dispatch(removeContentByIdV2({ contentId: value.id }));
       dispatch(resetContentStatus({ keys: ["deleteContentSuccess"] }));
       handleClose();
     } else if (deleteContentError !== null) {

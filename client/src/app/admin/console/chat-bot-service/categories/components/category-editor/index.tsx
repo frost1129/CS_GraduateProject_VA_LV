@@ -135,6 +135,7 @@ const CategoryEditor = (props: CategoryEditorProps) => {
           aria-labelledby="category-edit-dialog-title"
           aria-describedby="category-edit-dialog-description"
           maxWidth={"tablet"}
+          fullWidth
         >
           <DialogTitle component="div" id="category-edit-dialog-title">
             <Typography variant="h5">Chỉnh sửa danh mục</Typography>

@@ -13,7 +13,13 @@ const NoData = () => {
       justifyContent="center"
       sx={containerStyles}
     >
-      <Image src={images.emptyIcon} alt="empty" width={120} height={120} />
+      <Image
+        src={images.emptyIcon}
+        alt="empty"
+        width={120}
+        height={120}
+        priority
+      />
       <Typography variant="body2">No data</Typography>
     </Stack>
   );
