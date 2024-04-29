@@ -29,12 +29,6 @@ const TopicRenderTable = () => {
         headerAlign: "center",
       },
       {
-        field: "intentCode",
-        headerName: "Chuỗi xác định",
-        width: 200,
-        editable: false,
-      },
-      {
         field: "description",
         headerName: "Mô tả",
         width: 300,
@@ -42,7 +36,7 @@ const TopicRenderTable = () => {
       },
       {
         field: "category",
-        headerName: "Danh mục",
+        headerName: "Thuộc danh mục",
         width: 300,
         editable: false,
         valueGetter: (value: any) => value.description,

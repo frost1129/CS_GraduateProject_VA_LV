@@ -31,12 +31,6 @@ const CategoryRenderTable = () => {
         headerAlign: "center",
       },
       {
-        field: "intentCode",
-        headerName: "Chuỗi xác định",
-        width: 200,
-        editable: false,
-      },
-      {
         field: "description",
         headerName: "Mô tả",
         flex: 1,

@@ -69,19 +69,6 @@ const ContentRenderTable = () => {
         headerAlign: "center",
       },
       {
-        field: "intentCode",
-        headerName: "Chuỗi xác định",
-        width: 250,
-        editable: false,
-      },
-      {
-        field: "topic",
-        headerName: "Chủ đề",
-        width: 300,
-        editable: false,
-        valueGetter: (value: any) => value.description,
-      },
-      {
         field: "title",
         headerName: "Tiêu đề",
         width: 300,
@@ -92,6 +79,22 @@ const ContentRenderTable = () => {
         headerName: "Nội dung",
         width: 300,
         editable: false,
+      },
+      {
+        field: "topic",
+        headerName: "Thuộc chủ đề",
+        width: 300,
+        editable: false,
+        valueGetter: (value: any) => value.description,
+      },
+      {
+        field: "schoolYear",
+        headerName: "Năm học",
+        width: 100,
+        align: "center",
+        headerAlign: "center",
+        editable: false,
+        valueGetter: (value: any) => value.year,
       },
       {
         field: "createdDate",
