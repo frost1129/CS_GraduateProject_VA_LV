@@ -20,6 +20,19 @@ export const getContentsThunk = createAsyncThunk(
   }
 );
 
+export const getContentsV2Thunk = createAsyncThunk(
+  "getContentsV2",
+  async (params: ContentRequestParams, { rejectWithValue }) => {
+    try {
+      return await contentApi.getContentsV2(params);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message)
+        return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const addNewContentThunk = createAsyncThunk(
   "addNewContent",
   async (content: ISaveContentRequest, { rejectWithValue }) => {

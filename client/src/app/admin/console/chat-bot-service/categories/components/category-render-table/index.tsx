@@ -77,7 +77,7 @@ const CategoryRenderTable = () => {
     ];
     setNewColumns(columns);
   }, []);
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const queryParams = new URLSearchParams(window.location.search);
@@ -91,7 +91,9 @@ const CategoryRenderTable = () => {
   else if (categories.length === 0) return <NoData />;
   else if (listCategoryError !== null) return <ErrorRetrieveData />;
 
-  return <CustomDataGrid rows={categories} columns={newColumns} />;
+  return (
+    <CustomDataGrid rows={categories} columns={newColumns} hidePagination />
+  );
 };
 
 export default CategoryRenderTable;

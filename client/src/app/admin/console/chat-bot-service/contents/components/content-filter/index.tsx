@@ -3,11 +3,18 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Autocomplete, MenuItem, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import {
+  Autocomplete,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 
 import Routes from "@/lib/constants/Routes";
-import { getContentsThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
+import { getContentsV2Thunk } from "@/lib/redux/features/chat-bot/content/contentActions";
 import { getTopicsThunk } from "@/lib/redux/features/chat-bot/topic/topicActions";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import theme from "@/lib/theme";
@@ -22,9 +29,6 @@ const ContentFilter = () => {
   const { topics, listTopicLoading, listTopicError } = useAppSelector(
     (state) => state.topic
   );
-  // const { sYea, listContentLoading, listContentError } = useAppSelector(
-  //   (state) => state.content
-  // );
 
   const [keyword, setKeyword] = useState("");
   const [filterByTopicValue, setFilterByTopicValue] =
@@ -62,7 +66,7 @@ const ContentFilter = () => {
       router.replace(
         Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS + queryString
       );
-      dispatch(getContentsThunk(searchParams));
+      dispatch(getContentsV2Thunk(searchParams));
     }
   };
 
@@ -80,12 +84,24 @@ const ContentFilter = () => {
       searchParams = { ...searchParams, keyword: kw };
     }
 
+    const sYear = queryParams.get("sYear");
+    if (sYear) {
+      queryParts.push(`sYear=${encodeURIComponent(sYear)}`);
+      searchParams = { ...searchParams, keyword: sYear };
+    }
+
+    const page = queryParams.get("page");
+    if (page) {
+      queryParts.push(`page=${encodeURIComponent(page)}`);
+      searchParams = { ...searchParams, page: Number(page) };
+    }
+
     value && queryParts.push(`topicId=${encodeURIComponent(value.id)}`);
 
     const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
     router.replace(Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS + queryString);
-    dispatch(getContentsThunk(searchParams));
+    dispatch(getContentsV2Thunk({ ...searchParams }));
   };
 
   useEffect(() => {
@@ -103,6 +119,9 @@ const ContentFilter = () => {
         searchParams = { ...searchParams, keyword: kw };
       }
 
+      const page = queryParams.get("page");
+      if (page) searchParams = { ...searchParams, page: Number(page) };
+
       const topicId = queryParams.get("topicId");
       if (topicId) {
         const topicObj = topics.find((t) => t.id === Number(topicId));
@@ -111,7 +130,7 @@ const ContentFilter = () => {
           (searchParams = { ...searchParams, topicId: topicObj.id.toString() });
       }
 
-      dispatch(getContentsThunk(searchParams));
+      dispatch(getContentsV2Thunk(searchParams));
     }
   }, [topics]);
 

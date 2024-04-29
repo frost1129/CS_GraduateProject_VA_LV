@@ -1,9 +1,17 @@
 import { Pagination, Stack, SxProps, Theme } from "@mui/material";
 
-const CustomPagination = () => {
+import { CustomPaginationProps } from "@/lib/types/component";
+
+const CustomPagination = (props: CustomPaginationProps) => {
+  const { pagination, onPageChange } = props;
+
   return (
     <Stack sx={containerStyles}>
-      <Pagination count={10} defaultPage={1} />
+      <Pagination
+        count={pagination?.totalPages || 0}
+        page={pagination?.currentPage || 1}
+        onChange={(_, value) => onPageChange(_, value)}
+      />
     </Stack>
   );
 };

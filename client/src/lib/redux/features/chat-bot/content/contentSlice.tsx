@@ -5,6 +5,7 @@ import {
   addNewContentThunk,
   deleteContentThunk,
   getContentsThunk,
+  getContentsV2Thunk,
   updateContentThunk,
 } from "./contentActions";
 
@@ -12,6 +13,10 @@ const initialState: ContentState = {
   listContentLoading: false,
   contents: [],
   listContentError: null,
+
+  listContentLoadingV2: false,
+  contentDataResponse: null,
+  listContentErrorV2: null,
 
   saveContentLoading: false,
   savedContent: null,
@@ -45,6 +50,20 @@ const contentSlice = createSlice({
       state.contents = updatedContents;
     },
 
+    removeContentByIdV2: (state, action) => {
+      if (state.contentDataResponse) {
+        const updatedContents = state.contentDataResponse.data.filter(
+          (c) => c.id !== action.payload.contentId
+        );
+
+        const newContentDataResponse = {
+          ...state.contentDataResponse,
+          data: updatedContents,
+        };
+        state.contentDataResponse = newContentDataResponse;
+      }
+    },
+
     clearContentData: (state) => {
       state.contents = [];
     },
@@ -56,6 +75,22 @@ const contentSlice = createSlice({
         return c;
       });
       state.contents = updatedContents;
+    },
+
+    updateContentV2: (state, action) => {
+      if (state.contentDataResponse) {
+        const updatedContents = state.contentDataResponse.data.map((c) => {
+          if (c.id === action.payload.content.id)
+            return { ...c, ...action.payload.content };
+          return c;
+        });
+
+        const newContentDataResponse = {
+          ...state.contentDataResponse,
+          data: updatedContents,
+        };
+        state.contentDataResponse = newContentDataResponse;
+      }
     },
 
     resetContentStatus: (
@@ -88,7 +123,24 @@ const contentSlice = createSlice({
       state.listContentError = action.payload ? action.payload : null;
     });
 
-    // Add new topic
+    // Get contents V2
+    builder.addCase(getContentsV2Thunk.pending, (state) => {
+      state.listContentLoadingV2 = true;
+      state.contentDataResponse = null;
+      state.listContentErrorV2 = null;
+    });
+    builder.addCase(getContentsV2Thunk.fulfilled, (state, action) => {
+      state.listContentLoadingV2 = false;
+      state.contentDataResponse = action.payload.data;
+      state.listContentErrorV2 = null;
+    });
+    builder.addCase(getContentsV2Thunk.rejected, (state, action) => {
+      state.listContentLoadingV2 = false;
+      state.contentDataResponse = null;
+      state.listContentErrorV2 = action.payload ? action.payload : null;
+    });
+
+    // Add new content
     builder.addCase(addNewContentThunk.pending, (state) => {
       state.saveContentLoading = true;
       state.savedContent = null;
@@ -148,5 +200,7 @@ export const {
   clearContentData,
   updateContent,
   resetContentStatus,
+  updateContentV2,
+  removeContentByIdV2,
 } = contentSlice.actions;
 export default contentSlice.reducer;

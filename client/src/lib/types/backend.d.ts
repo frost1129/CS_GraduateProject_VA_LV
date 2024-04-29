@@ -95,6 +95,7 @@ export interface IUpdateContentRequest {
 
 export interface IContentResponse {
   id: number;
+  uuid: string;
   parentContent: {
     id: number;
     uuid: string;
@@ -104,7 +105,7 @@ export interface IContentResponse {
     text: string;
     imageLink: string | null;
     note: string | null;
-  };
+  } | null;
   contentLevel: number;
   schoolYear: {
     id: number;
@@ -128,4 +129,11 @@ export interface IContentResponse {
   imageLink: string | null;
   createdDate: number;
   lastModifiedDate: number | null;
+}
+
+export interface IContentResponseV2 {
+  data: IContentResponse[];
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
 }

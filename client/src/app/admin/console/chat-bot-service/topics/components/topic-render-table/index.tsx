@@ -87,7 +87,7 @@ const TopicRenderTable = () => {
   else if (topics.length === 0) return <NoData />;
   else if (listTopicError !== null) return <ErrorRetrieveData />;
 
-  return <CustomDataGrid rows={topics} columns={newColumns} />;
+  return <CustomDataGrid rows={topics} columns={newColumns} hidePagination />;
 };
 
 export default TopicRenderTable;

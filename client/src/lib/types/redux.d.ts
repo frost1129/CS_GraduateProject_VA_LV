@@ -1,6 +1,7 @@
 import {
   ICategoryResponse,
   IContentResponse,
+  IContentResponseV2,
   ITopicResponse,
   UserKeycloakResponse,
 } from "./backend";
@@ -52,9 +53,15 @@ export interface TopicState {
 }
 
 export interface ContentState {
+  // Content V1
   listContentLoading: boolean;
   contents: IContentResponse[];
   listContentError: any;
+
+  // Content V2
+  listContentLoadingV2: boolean;
+  contentDataResponse: IContentResponseV2 | null;
+  listContentErrorV2: any;
 
   saveContentLoading: boolean;
   savedContent: IContentResponse | null;
@@ -90,4 +97,5 @@ export interface ContentRequestParams {
   keyword?: string;
   topicId?: string;
   sYear?: string;
+  page?: number;
 }

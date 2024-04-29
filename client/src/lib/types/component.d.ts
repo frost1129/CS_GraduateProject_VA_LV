@@ -1,7 +1,11 @@
 import { AlertProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
-import { ICategoryResponse, IContentResponse, ITopicResponse } from "./backend.d";
+import {
+  ICategoryResponse,
+  IContentResponse,
+  ITopicResponse,
+} from "./backend.d";
 
 export interface ToastInformation {
   severity: AlertProps["severity"];
@@ -44,11 +48,17 @@ export interface AdminHeaderProps {
   setDrawerOpen: any;
 }
 
-export interface CustomDataGridProps {
+export type CustomDataGridProps = {
   rows: any;
   columns: GridColDef<any>[number];
   hidePagination?: boolean;
-}
+  pagination?: {
+    currentPage: number | null;
+    pageSize: number | null;
+    totalPages: number | null;
+  };
+  onPageChange?: any;
+};
 
 export interface CategoryActionsProps {
   value: ICategoryResponse;
@@ -93,4 +103,13 @@ export interface ContentEditorProps {
 
 export interface ContentDeleterProps {
   value: IContentResponse;
+}
+
+export interface CustomPaginationProps {
+  pagination?: {
+    currentPage: number | null;
+    pageSize: number | null;
+    totalPages: number | null;
+  };
+  onPageChange?: any;
 }

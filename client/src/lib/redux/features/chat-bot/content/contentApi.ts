@@ -26,6 +26,28 @@ const contentApi = {
     return axiosChatbotService.get(`/contents${queryString}`);
   },
 
+  getContentsV2: (params?: ContentRequestParams) => {
+    let queryString = "";
+
+    if (params) {
+      const queryParts = [];
+      if (params.keyword)
+        queryParts.push(`kw=${encodeURIComponent(params.keyword)}`);
+
+      if (params.topicId)
+        queryParts.push(`topicId=${encodeURIComponent(params.topicId)}`);
+
+      if (params.sYear)
+        queryParts.push(`sYear=${encodeURIComponent(params.sYear)}`);
+      if (params.page)
+        queryParts.push(`page=${encodeURIComponent(params.page)}`);
+
+      queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    }
+
+    return axiosChatbotService.get(`/contents/v2${queryString}`);
+  },
+
   addNewContent: (content: ISaveContentRequest) =>
     axiosChatbotService.post("/contents", {
       ...content,

@@ -2,6 +2,7 @@ package com.nva.server.controllers;
 
 import com.nva.server.dtos.ContentRequest;
 import com.nva.server.dtos.ContentResponse;
+import com.nva.server.dtos.ContentResponseV3;
 import com.nva.server.services.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,12 @@ public class ContentRestController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<ContentResponse>> getContents(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(contentService.getContents(params));
+    }
+
+    @GetMapping("/v2")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<ContentResponseV3> getContentsV2(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(contentService.getContentsV2(params));
     }
 
     @PostMapping

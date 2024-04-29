@@ -1,6 +1,7 @@
 package com.nva.server.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.nva.server.constants.CustomPageSize;
 import com.nva.server.dtos.*;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
@@ -11,6 +12,7 @@ import com.nva.server.repositories.SchoolYearRepository;
 import com.nva.server.repositories.TopicRepository;
 import com.nva.server.services.ContentService;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -175,6 +177,63 @@ public class ContentServiceImpl implements ContentService {
         query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
 
         return entityManager.createQuery(query).getResultList().stream().map(this::mapToContentResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public ContentResponseV3 getContentsV2(Map<String, String> params) {
+        ContentResponseV3 responseV3 = new ContentResponseV3();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Content> query = criteriaBuilder.createQuery(Content.class);
+        Root<Content> root = query.from(Content.class);
+
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        if (page <= 0) page = 1;
+        responseV3.setCurrentPage(page);
+        responseV3.setPageSize(CustomPageSize.CONTENT_PAGE_SIZE);
+
+        if (params.containsKey("kw") && !params.get("kw").isEmpty()) {
+            String keyword = params.get("kw");
+            predicate = criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("intentCode"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("title"), "%" + keyword + "%"),
+                    criteriaBuilder.like(root.get("text"), "%" + keyword + "%")
+            );
+        }
+
+        if (params.containsKey("topicId") && !params.get("topicId").isEmpty()) {
+            long topicId = Long.parseLong(params.get("topicId"));
+            Join<Content, Topic> topicJoin = root.join("topic");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(topicJoin.get("id"), topicId));
+        }
+
+        if (params.containsKey("sYear") && !params.get("sYear").isEmpty()) {
+            String sYear = params.get("sYear");
+            Join<Content, SchoolYear> schoolYearJoin = root.join("schoolYear");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(schoolYearJoin.get("year"), sYear));
+        }
+
+        query.select(root).where(predicate);
+        query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
+        // Pagination calculation
+        TypedQuery<Content> typedQuery = entityManager.createQuery(query);
+
+        long totalDataSize = typedQuery.getResultList().size();
+
+        typedQuery.setFirstResult((page - 1) * CustomPageSize.CONTENT_PAGE_SIZE);
+        typedQuery.setMaxResults(CustomPageSize.CONTENT_PAGE_SIZE);
+
+        // Fetching results
+        responseV3.setData(typedQuery.getResultList().stream().map(this::mapToContentResponse).collect(Collectors.toList()));
+
+
+        int totalPages = (int) Math.ceil((double) totalDataSize / CustomPageSize.CONTENT_PAGE_SIZE);
+        responseV3.setTotalPages(totalPages);
+
+        return responseV3;
     }
 
     @Override

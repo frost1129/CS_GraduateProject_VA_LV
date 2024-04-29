@@ -29,7 +29,7 @@ import CustomToast from "@/lib/components/toast";
 import { updateContentThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
 import {
   resetContentStatus,
-  updateContent,
+  updateContentV2,
 } from "@/lib/redux/features/chat-bot/content/contentSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { IUpdateContentRequest } from "@/lib/types/backend";
@@ -163,7 +163,7 @@ const ContentEditor = (props: ContentEditorProps) => {
         message: "Chỉnh sửa chủ đề thành công!",
       });
 
-      dispatch(updateContent({ content: updatedContent }));
+      dispatch(updateContentV2({ content: updatedContent }));
       dispatch(resetContentStatus({ keys: ["updatedContent"] }));
       handleClose();
     } else if (updateContentError !== null) {

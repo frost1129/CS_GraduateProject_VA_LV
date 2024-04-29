@@ -4,7 +4,13 @@ import { CustomDataGridProps } from "@/lib/types/component";
 import CustomPagination from "./CustomPagination";
 
 const CustomDataGrid = (props: CustomDataGridProps) => {
-  const { rows, columns, hidePagination = false } = props;
+  const {
+    rows = [],
+    columns,
+    hidePagination = false,
+    pagination,
+    onPageChange,
+  } = props;
 
   return (
     <>
@@ -14,9 +20,11 @@ const CustomDataGrid = (props: CustomDataGridProps) => {
         disableColumnFilter
         disableColumnMenu
         hideFooter
-        autoHeight={false} 
+        autoHeight={false}
       />
-      {!hidePagination && <CustomPagination />}
+      {(!hidePagination || rows.length === 0) && (
+        <CustomPagination pagination={pagination} onPageChange={onPageChange} />
+      )}
     </>
   );
 };
