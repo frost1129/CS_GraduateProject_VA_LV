@@ -34,7 +34,7 @@ public class Content {
     private Integer contentLevel;
 
     @ManyToOne
-    @JoinColumn(name = "school_year_id", nullable = false)
+    @JoinColumn(name = "school_year_id")
     private SchoolYear schoolYear;
 
     @ManyToOne

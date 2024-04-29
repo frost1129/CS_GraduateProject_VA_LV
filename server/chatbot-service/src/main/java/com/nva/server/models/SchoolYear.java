@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.List;
+
 @Entity
 @Table(name = "school_years")
 @Data
@@ -17,7 +19,7 @@ public class SchoolYear {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 4)
+    @Column(nullable = false, length = 4, unique = true)
     private String year;
 
     @Column(nullable = false)
@@ -32,6 +34,9 @@ public class SchoolYear {
 
     @Lob
     private String note;
+
+    @OneToMany(mappedBy = "schoolYear")
+    private List<Content> contents;
 
     @PrePersist
     protected void onCreate() {

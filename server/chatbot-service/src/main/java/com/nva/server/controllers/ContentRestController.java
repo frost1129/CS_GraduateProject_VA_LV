@@ -52,8 +52,8 @@ public class ContentRestController {
 
     @DeleteMapping("/{contentId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteContent(@PathVariable(name = "contentId") String contentId) {
+    public ResponseEntity<ContentResponseV3> deleteContent(@PathVariable(name = "contentId") String contentId) {
         contentService.deleteContent(Long.parseLong(contentId));
-        return ResponseEntity.ok(Collections.singletonMap("message", "Xóa nội dung thành công!"));
+        return ResponseEntity.ok(contentService.getContentsV2(Collections.emptyMap()));
     }
 }

@@ -96,6 +96,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    @Transactional
     public void deleteTopic(Long topicId) {
         try {
             topicRepository.deleteById(topicId);

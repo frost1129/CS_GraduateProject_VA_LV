@@ -256,11 +256,14 @@ public class ContentServiceImpl implements ContentService {
         contentResponse.setUuid(content.getUuid());
         contentResponse.setId(content.getId());
         contentResponse.setContentLevel(content.getContentLevel());
-        contentResponse.setSchoolYear(SchoolYearResponseV2.builder()
-                .id(content.getSchoolYear().getId())
-                .year(content.getSchoolYear().getYear())
-                .courseName(content.getSchoolYear().getCourseName())
-                .build());
+
+        if (content.getSchoolYear() != null) {
+            contentResponse.setSchoolYear(SchoolYearResponseV2.builder()
+                    .id(content.getSchoolYear().getId())
+                    .year(content.getSchoolYear().getYear())
+                    .courseName(content.getSchoolYear().getCourseName())
+                    .build());
+        } else contentResponse.setSchoolYear(null);
         contentResponse.setTopic(TopicResponseV2.builder()
                 .id(content.getTopic().getId())
                 .intentCode(content.getTopic().getIntentCode())
