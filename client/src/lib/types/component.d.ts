@@ -113,3 +113,7 @@ export interface CustomPaginationProps {
   };
   onPageChange?: any;
 }
+
+export interface CustomDrawerProps {
+  onClose?: any;
+}

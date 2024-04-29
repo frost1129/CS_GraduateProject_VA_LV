@@ -68,7 +68,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         {!isDesktop && !openDrawer && (
           <ClickAwayListener onClickAway={() => setOpenDrawer((prev) => !prev)}>
             <Stack sx={absoluteDrawerStyles}>
-              <CustomDrawer />
+              <CustomDrawer onClose={() => setOpenDrawer((prev) => !prev)} />
             </Stack>
           </ClickAwayListener>
         )}

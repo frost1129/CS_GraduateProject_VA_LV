@@ -15,8 +15,10 @@ import {
 } from "@mui/material";
 import { BookBookmark, BookOpenText, Club } from "@phosphor-icons/react";
 import { images } from "@/lib/assets/img";
+import { CustomDrawerProps } from "@/lib/types/component";
 
-const CustomDrawer = () => {
+const CustomDrawer = (props: CustomDrawerProps) => {
+  const { onClose } = props;
   const pathname = usePathname();
 
   return (
@@ -39,7 +41,7 @@ const CustomDrawer = () => {
           </Typography>
           <Stack direction="column" gap={0.5} sx={{ padding: "0px 8px" }}>
             {service.items.map((item) => (
-              <Link href={item.link} key={item.id}>
+              <Link href={item.link} key={item.id} onClick={onClose}>
                 <MenuItem
                   sx={{
                     ...drawerMenuItemStyles,
