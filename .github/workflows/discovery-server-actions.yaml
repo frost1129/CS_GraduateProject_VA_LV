@@ -1,4 +1,4 @@
-name: Dockerize Product Service
+name: Dockerize Discovery Server
 
 on:
   push:
