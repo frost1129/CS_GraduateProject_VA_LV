@@ -1,6 +1,5 @@
 package com.nva.server.controllers;
 
-import com.nva.server.configs.JwtAuthConverter;
 import com.nva.server.dtos.ConversationHistoryRequest;
 import com.nva.server.dtos.ConversationHistoryResponse;
 import com.nva.server.dtos.ConversationHistoryResponseV2;
@@ -9,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;

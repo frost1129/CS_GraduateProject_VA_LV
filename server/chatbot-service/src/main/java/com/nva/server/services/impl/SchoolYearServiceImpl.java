@@ -6,7 +6,6 @@ import com.nva.server.dtos.SchoolYearResponse;
 import com.nva.server.dtos.SchoolYearResponseV3;
 import com.nva.server.exceptions.EntityNotFound;
 import com.nva.server.exceptions.SaveDataException;
-import com.nva.server.models.Content;
 import com.nva.server.models.SchoolYear;
 import com.nva.server.repositories.SchoolYearRepository;
 import com.nva.server.services.SchoolYearService;
@@ -20,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;

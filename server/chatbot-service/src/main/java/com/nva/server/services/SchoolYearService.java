@@ -1,8 +1,9 @@
 package com.nva.server.services;
 
-import com.nva.server.dtos.*;
+import com.nva.server.dtos.SchoolYearRequest;
+import com.nva.server.dtos.SchoolYearResponse;
+import com.nva.server.dtos.SchoolYearResponseV3;
 
-import java.util.List;
 import java.util.Map;
 
 public interface SchoolYearService {
