@@ -30,7 +30,7 @@ public class SubjectClassController {
         return new ResponseEntity<>(this.classService.getAllClassByYearCode(yearCode), HttpStatus.OK);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/{year}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SubjectClassDTO>> uploadSubjectClasses(
             @RequestParam(name = "file") MultipartFile file,
