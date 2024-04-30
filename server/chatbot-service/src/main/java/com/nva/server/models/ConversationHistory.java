@@ -18,7 +18,7 @@ public class ConversationHistory {
     private Long id;
 
     @Column(nullable = false)
-    private String userId;
+    private String username;
 
     @Column(nullable = false, length = 1000)
     private String question;

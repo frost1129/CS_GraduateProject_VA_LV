@@ -1,7 +1,8 @@
 package com.nva.server.controllers;
 
-import com.nva.server.dtos.*;
-import com.nva.server.services.ContentService;
+import com.nva.server.dtos.SchoolYearRequest;
+import com.nva.server.dtos.SchoolYearResponse;
+import com.nva.server.dtos.SchoolYearResponseV3;
 import com.nva.server.services.SchoolYearService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

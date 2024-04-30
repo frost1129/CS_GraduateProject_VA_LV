@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchoolYearResponse {
+public class ConversationHistoryResponse {
     private Long id;
-    private String year;
-    private String courseName;
+    private String username;
+    private String question;
+    private String answer;
     private Long createdDate;
     private Long lastModifiedDate;
-    private String note;
 }
