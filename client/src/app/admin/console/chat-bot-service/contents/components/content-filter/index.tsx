@@ -167,7 +167,7 @@ const ContentFilter = () => {
           handleSearchByTopic(newValue);
         }}
         renderInput={(params) => (
-          <TextField {...params} placeholder="Chọn 1 danh mục" />
+          <TextField {...params} placeholder="Chọn 1 chủ đề" />
         )}
         renderOption={(props, option) => (
           <MenuItem
