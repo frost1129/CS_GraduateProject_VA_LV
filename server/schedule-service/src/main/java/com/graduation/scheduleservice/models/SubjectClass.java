@@ -27,11 +27,11 @@ public class SubjectClass {
     @JoinColumn(name = "year_code")
     private YearCode yearCode;
 
-    @OneToOne(mappedBy = "subjectClass")
+    @OneToOne(mappedBy = "subjectClass", cascade = CascadeType.ALL)
     @JsonIgnore
     private ScheduledExam scheduledExam;
 
-    @OneToOne(mappedBy = "subjectClass")
+    @OneToOne(mappedBy = "subjectClass", cascade = CascadeType.ALL)
     @JsonIgnore
     private SubjectClassSchedule subjectClassSchedule;
 

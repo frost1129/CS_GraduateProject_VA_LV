@@ -82,14 +82,14 @@ public class SubjectClassServiceImpl implements SubjectClassService {
             SubjectClass holder;
             SubjectClassSchedule scheduleHolder;
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu");
             LocalDate localDate;
 
             for (CSVRecord csvRecord : csvParser) {
                 holder = new SubjectClass();
                 scheduleHolder = new SubjectClassSchedule();
 
-                localDate = LocalDate.parse(csvRecord.get("startDate"), formatter);
+                localDate = LocalDate.parse(csvRecord.get("startDate").toString(), formatter);
 
                 scheduleHolder.setTeacherId(Long.parseLong(csvRecord.get("teacherId")));
                 scheduleHolder.setWeekday(Integer.parseInt(csvRecord.get("weekDay")));
@@ -97,6 +97,7 @@ public class SubjectClassServiceImpl implements SubjectClassService {
                 scheduleHolder.setStartTimeSlot(Integer.parseInt(csvRecord.get("sessionS")));
                 scheduleHolder.setEndTimeSlot(Integer.parseInt(csvRecord.get("sessionE")));
                 scheduleHolder.setStartDate(localDate);
+                scheduleHolder.setSubjectClass(holder);
                 scheduleHolder.setCreatedDate(System.currentTimeMillis());
 
                 holder.setSubject(subjectRepository.getBySubjectCode(csvRecord.get("subjectCode")));
