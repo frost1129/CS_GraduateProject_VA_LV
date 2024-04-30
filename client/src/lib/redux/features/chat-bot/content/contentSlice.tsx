@@ -36,11 +36,23 @@ const contentSlice = createSlice({
   initialState,
   reducers: {
     appendContentFirst: (state, action) => {
-      state.contents = [action.payload.topic, ...state.contents];
+      if (state.contentDataResponse) {
+        const updatedState = {
+          ...state.contentDataResponse,
+          data: [action.payload.content, ...state.contentDataResponse.data],
+        };
+        state.contentDataResponse = updatedState;
+      }
     },
 
     appendContentLast: (state, action) => {
-      state.contents = [...state.contents, action.payload.topic];
+      if (state.contentDataResponse) {
+        const updatedState = {
+          ...state.contentDataResponse,
+          data: [...state.contentDataResponse.data, action.payload.content],
+        };
+        state.contentDataResponse = updatedState;
+      }
     },
 
     removeContentById: (state, action) => {
@@ -53,7 +65,9 @@ const contentSlice = createSlice({
     removeContentByIdV2: (state, action) => {
       if (state.contentDataResponse) {
         const updatedContents = state.contentDataResponse.data.filter(
-          (c) => (c.id !== action.payload.contentId || c.parentContent?.id !== action.payload.contentId)
+          (c) =>
+            c.id !== action.payload.contentId ||
+            c.parentContent?.id !== action.payload.contentId
         );
 
         const newContentDataResponse = {
@@ -66,6 +80,7 @@ const contentSlice = createSlice({
 
     clearContentData: (state) => {
       state.contents = [];
+      state.contentDataResponse = null;
     },
 
     updateContent: (state, action) => {

@@ -34,6 +34,7 @@ import { getTopicsThunk } from "@/lib/redux/features/chat-bot/topic/topicActions
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { ISaveContentRequest } from "@/lib/types/backend";
 import { ToastInformation } from "@/lib/types/component";
+import { getSchoolYearsThunk } from "@/lib/redux/features/chat-bot/school-year/schoolYearActions";
 
 const contentCreateSchema = z.object({
   intentCode: z
@@ -62,7 +63,9 @@ const ContentCreator = () => {
   const { topics, listTopicLoading, listTopicError } = useAppSelector(
     (state) => state.topic
   );
-  const { saveContentLoading, savedContent, saveContentError, contents } =
+  const { schoolYearDataResponse, listSchoolYearLoading, listSchoolYearError } =
+    useAppSelector((state) => state.schoolYear);
+  const { saveContentLoading, savedContent, saveContentError, contentDataResponse } =
     useAppSelector((state) => state.content);
 
   const {
@@ -88,7 +91,7 @@ const ContentCreator = () => {
   const handleClickOpen = () => {
     setOpenCreateDialog(true);
   };
-  
+
   const handleClose = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input to allow another selection
@@ -164,7 +167,7 @@ const ContentCreator = () => {
         message: "Tạo mới chủ đề thành công!",
       });
 
-      dispatch(appendContentFirst({ topic: savedContent }));
+      dispatch(appendContentFirst({ content: savedContent }));
       dispatch(resetContentStatus({ keys: ["savedContent"] }));
       handleClose();
     } else if (saveContentError !== null) {
@@ -181,6 +184,11 @@ const ContentCreator = () => {
 
   useEffect(() => {
     if (topics.length === 0) dispatch(getTopicsThunk({}));
+    if (
+      !schoolYearDataResponse ||
+      (schoolYearDataResponse && schoolYearDataResponse.data.length === 0)
+    )
+      dispatch(getSchoolYearsThunk({}));
   }, []);
 
   return (
@@ -242,11 +250,11 @@ const ContentCreator = () => {
                     }) => (
                       <Autocomplete
                         id="school-year-select"
-                        options={[1, 2, 3, 4]}
+                        options={schoolYearDataResponse?.data || []}
                         autoHighlight
-                        getOptionLabel={(option) => option.toString()}
-                        value={[1, 2, 3, 4].find((y) => y === value) || null} // Set the initial value
-                        onChange={(_, data) => onChange(data)} // Pass the selected value's code
+                        getOptionLabel={(option) => option.year}
+                        value={schoolYearDataResponse?.data.find((y) => y.id === value) || null} // Set the initial value
+                        onChange={(_, data) => onChange(data?.id)} // Pass the selected value's code
                         onBlur={onBlur} // Notify when the input is touched
                         disabled={saveContentLoading}
                         renderInput={(params) => (
@@ -262,10 +270,10 @@ const ContentCreator = () => {
                           <MenuItem
                             {...props}
                             sx={{ marginX: 1, marginTop: 0.5 }}
-                            key={option}
+                            key={option.id}
                           >
                             <Stack direction="column" gap={0.25}>
-                              <Typography variant="body2">{option}</Typography>
+                              <Typography variant="body2">{option.year}</Typography>
                             </Stack>
                           </MenuItem>
                         )}
@@ -290,10 +298,10 @@ const ContentCreator = () => {
                     }) => (
                       <Autocomplete
                         id="parent-content-select"
-                        options={contents}
+                        options={contentDataResponse?.data || []}
                         autoHighlight
                         getOptionLabel={(option) => option.title}
-                        value={contents.find((c) => c.id === value) || null} // Set the initial value
+                        value={contentDataResponse?.data.find((c) => c.id === value) || null} // Set the initial value
                         onChange={(_, data) => {
                           onChange(data?.id || null);
                           data?.topic.id &&
