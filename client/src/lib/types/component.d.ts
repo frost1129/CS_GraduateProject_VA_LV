@@ -117,3 +117,15 @@ export interface CustomPaginationProps {
 export interface CustomDrawerProps {
   onClose?: any;
 }
+
+export interface SchoolYearActionsProps {
+  value: ISchoolYearResponse;
+}
+
+export interface SchoolYearEditorProps {
+  value: ISchoolYearResponse;
+}
+
+export interface SchoolYearDeleterProps {
+  value: ISchoolYearResponse;
+}

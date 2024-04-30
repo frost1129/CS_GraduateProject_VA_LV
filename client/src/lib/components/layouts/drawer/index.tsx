@@ -13,7 +13,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { BookBookmark, BookOpenText, Club } from "@phosphor-icons/react";
+import { At, BookBookmark, BookOpenText, Club } from "@phosphor-icons/react";
 import { images } from "@/lib/assets/img";
 import { CustomDrawerProps } from "@/lib/types/component";
 
@@ -106,6 +106,12 @@ const drawerData = [
         name: "Nội dung học vụ",
         link: "/admin/console/chat-bot-service/contents",
         icon: <BookOpenText size={iconSize} />,
+      },
+      {
+        id: "1-4",
+        name: "Năm học",
+        link: "/admin/console/chat-bot-service/school-years",
+        icon: <At size={iconSize} />,
       },
     ],
   },

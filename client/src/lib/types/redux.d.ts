@@ -2,6 +2,8 @@ import {
   ICategoryResponse,
   IContentResponse,
   IContentResponseV2,
+  ISchoolYearResponse,
+  ISchoolYearResponseV2,
   ITopicResponse,
   UserKeycloakResponse,
 } from "./backend";
@@ -52,6 +54,24 @@ export interface TopicState {
   deleteTopicError: any;
 }
 
+export interface SchoolYearState {
+  listSchoolYearLoading: boolean;
+  schoolYearDataResponse: ISchoolYearResponseV2 | null;
+  listSchoolYearError: any;
+
+  saveSchoolYearLoading: boolean;
+  savedSchoolYear: ISchoolYearResponse | null;
+  saveSchoolYearError: any;
+
+  updateSchoolYearLoading: boolean;
+  updatedSchoolYear: ISchoolYearResponse | null;
+  updateSchoolYearError: any;
+
+  deleteSchoolYearLoading: boolean;
+  deleteSchoolYearSuccess: any;
+  deleteSchoolYearError: any;
+}
+
 export interface ContentState {
   // Content V1
   listContentLoading: boolean;
@@ -88,6 +108,10 @@ export interface ResetContentStatusPayload {
   keys: Array<keyof ContentState>;
 }
 
+export interface ResetSchoolYearStatusPayload {
+  keys: Array<keyof SchoolYearState>;
+}
+
 export interface TopicRequestParams {
   keyword?: string;
   categoryId?: string;
@@ -98,4 +122,8 @@ export interface ContentRequestParams {
   topicId?: string;
   sYear?: string;
   page?: number;
+}
+
+export interface SchoolYearRequestParams {
+  keyword?: string;
 }

@@ -137,3 +137,25 @@ export interface IContentResponseV2 {
   pageSize: number;
   totalPages: number;
 }
+
+export interface ISchoolYearResponse {
+  id: number;
+  year: string;
+  courseName: string;
+  createdDate: number;
+  lastModifiedDate: number | null;
+  note: string | null;
+}
+
+export interface ISchoolYearResponseV2 {
+  data: ISchoolYearResponse[];
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface ISchoolYearRequest {
+  year: string;
+  courseName: string;
+  note: string | null;
+}

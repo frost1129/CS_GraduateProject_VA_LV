@@ -10,6 +10,7 @@ import authReducer from "../features/auth/authSlice";
 import contentReducer from "../features/chat-bot/content/contentSlice";
 import categoryReducer from "../features/chat-bot/category/categorySlice";
 import topicReducer from "../features/chat-bot/topic/topicSlice";
+import schoolYearReducer from "../features/chat-bot/school-year/schoolYearSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -18,6 +19,7 @@ export const makeStore = () => {
       content: contentReducer,
       category: categoryReducer,
       topic: topicReducer,
+      schoolYear: schoolYearReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
