@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +38,14 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
     }
 
     @Override
-    public List<Long> getAllStudentIdBySubjectClassId(Long subjectId) {
+    public List<String> getAllStudentIdBySubjectClassId(Long subjectId) {
         return this.joinClassRepository.getAllBySubjectClass_Id(subjectId)
                 .stream().map(StudentJoinClass::getStudentId)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<StudentJoinClassDTO> getAllByYearCodeAndStudentId(int yearCode, Long studentId) {
+    public List<StudentJoinClassDTO> getAllByYearCodeAndStudentId(int yearCode, String studentId) {
         return this.joinClassRepository.getAllBySubjectClass_YearCode_YearCodeAndStudentId(yearCode, studentId)
                 .stream().map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -65,14 +68,17 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
         try {
             InputStream inputStream = file.getInputStream();
             Reader reader = new BufferedReader(new InputStreamReader(inputStream));
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+            CSVFormat csvFormat = CSVFormat.DEFAULT
+                    .builder().setHeader().setSkipHeaderRecord(true).build();
+
+            CSVParser csvParser = new CSVParser(reader, csvFormat);
 
             List<StudentJoinClass> studentJoin = new ArrayList<>();
             StudentJoinClass holder;
 
             for (CSVRecord csvRecord : csvParser) {
                 holder = new StudentJoinClass();
-                holder.setStudentId(Long.parseLong(csvRecord.get("studentId")));
+                holder.setStudentId(csvRecord.get("studentId"));
                 holder.setSubjectClass(classRepository.getBySubject_SubjectCodeAndYearCode_YearCode(
                         csvRecord.get("subjectCode"), Integer.parseInt(csvRecord.get("yearCode"))
                 ));

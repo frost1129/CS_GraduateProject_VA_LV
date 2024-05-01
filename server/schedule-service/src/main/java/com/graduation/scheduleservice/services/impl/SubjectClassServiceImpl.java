@@ -1,12 +1,31 @@
 package com.graduation.scheduleservice.services.impl;
 
+import com.graduation.scheduleservice.constants.PagingSize;
+import com.graduation.scheduleservice.dtos.SCScheduleDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSaveDTO;
+import com.graduation.scheduleservice.dtos.SubjectClassSearchResponse;
+import com.graduation.scheduleservice.dtos.SubjectClassShortDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
+import com.graduation.scheduleservice.models.StudentJoinClass;
+import com.graduation.scheduleservice.models.Subject;
 import com.graduation.scheduleservice.models.SubjectClass;
 import com.graduation.scheduleservice.models.SubjectClassSchedule;
-import com.graduation.scheduleservice.repositories.*;
+import com.graduation.scheduleservice.models.YearCode;
+import com.graduation.scheduleservice.repositories.ScheduledExamRepository;
+import com.graduation.scheduleservice.repositories.SubjectClassRepository;
+import com.graduation.scheduleservice.repositories.SubjectClassScheduleRepository;
+import com.graduation.scheduleservice.repositories.SubjectRepository;
+import com.graduation.scheduleservice.repositories.YearCodeRepository;
 import com.graduation.scheduleservice.services.SubjectClassService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -15,11 +34,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,6 +56,75 @@ public class SubjectClassServiceImpl implements SubjectClassService {
     private final SubjectClassScheduleRepository classScheduleRepository;
     private final ScheduledExamRepository examRepository;
     private final YearCodeRepository yearCodeRepository;
+    private final EntityManager entityManager;
+
+    @Override
+    public SubjectClassSearchResponse getListSubjectClass(Map<String, String> params) {
+        SubjectClassSearchResponse response = new SubjectClassSearchResponse();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        // Search Criteria
+        CriteriaQuery<SubjectClass> query = cb.createQuery(SubjectClass.class);
+        Root<SubjectClass> root = query.from(SubjectClass.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Standard Paging
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        if (page <= 0) page = 1;
+        response.setCurrentPage(page);
+        response.setPageSize(PagingSize.GENERAL_PAGESIZE);
+
+        // Keyword Search
+        if (params.containsKey("kw") && !params.get("kw").isEmpty()) {
+            String keyword = params.get("kw");
+            Join<SubjectClass, Subject> subjectJoin = root.join("subject");
+            predicates.add(cb.or(
+                    cb.like(subjectJoin.get("subjectName"), "%" + keyword + "%"),
+                    cb.like(subjectJoin.get("subjectCode"), "%" + keyword + "%")
+            ));
+        }
+
+        // Year Code Search
+        if (params.containsKey("yearCode")) {
+            int searchYearCode = Integer.parseInt(params.get("yearCode"));
+            Join<SubjectClass, YearCode> yearCodeJoin = root.join("yearCode");
+            predicates.add(cb.equal(yearCodeJoin.get("yearCode"), searchYearCode));
+        }
+
+        query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        // Pagination
+        TypedQuery<SubjectClass> typedQuery = entityManager.createQuery(query);
+        int totalRecords = typedQuery.getResultList().size();
+        typedQuery.setFirstResult((page - 1) * PagingSize.GENERAL_PAGESIZE);
+        typedQuery.setMaxResults(PagingSize.GENERAL_PAGESIZE);
+
+        // Fetch Results & Map to DTOs
+        List<SubjectClassShortDTO> results = typedQuery.getResultList().stream()
+                .map(subjectClass -> {
+                    SubjectClassShortDTO dto = mapToShortDTO(subjectClass);
+                    dto.setNumberOfStudents(
+                            countSubjectClassStudent(cb, subjectClass.getId())
+                    );
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        response.setData(results);
+        response.setTotalPages((int) Math.ceil((double) totalRecords / PagingSize.GENERAL_PAGESIZE));
+
+        return response;
+    }
+
+    private int countSubjectClassStudent(CriteriaBuilder cb, Long subjectClassId) {
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+        Root<StudentJoinClass> studentJoinClassRoot = cq.from(StudentJoinClass.class);
+        cq.select(cb.count(studentJoinClassRoot));
+        cq.where(cb.equal(studentJoinClassRoot.get("subjectClass").get("id"), subjectClassId));
+
+        return entityManager.createQuery(cq).getSingleResult().intValue();
+    }
 
     @Override
     public SubjectClassDTO getClassById(Long id) {
@@ -45,13 +137,13 @@ public class SubjectClassServiceImpl implements SubjectClassService {
     }
 
     @Override
-    public List<SubjectClassDTO> getAllClassByYearCodeOfStudent(int yearCode, Long studentId) {
+    public List<SubjectClassDTO> getAllClassByYearCodeOfStudent(int yearCode, String studentId) {
         // get from student-join-class repo
         return null;
     }
 
     @Override
-    public List<SubjectClassDTO> getAllClassByYearCodeOfTeacher(int yearCode, Long teacherId) {
+    public List<SubjectClassDTO> getAllClassByYearCodeOfTeacher(int yearCode, String teacherId) {
         return this.classRepository.getAllByYearCode_YearCodeAndSubjectClassSchedule_TeacherId(yearCode, teacherId)
                 .stream().map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -74,7 +166,10 @@ public class SubjectClassServiceImpl implements SubjectClassService {
         try {
             InputStream inputStream = file.getInputStream();
             Reader reader = new BufferedReader(new InputStreamReader(inputStream));
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+            CSVFormat csvFormat = CSVFormat.DEFAULT
+                    .builder().setHeader().setSkipHeaderRecord(true).build();
+
+            CSVParser csvParser = new CSVParser(reader, csvFormat);
 
             List<SubjectClass> subjectClasses = new ArrayList<>();
             SubjectClass holder;
@@ -89,7 +184,7 @@ public class SubjectClassServiceImpl implements SubjectClassService {
 
                 localDate = LocalDate.parse(csvRecord.get("startDate").toString(), formatter);
 
-                scheduleHolder.setTeacherId(Long.parseLong(csvRecord.get("teacherId")));
+                scheduleHolder.setTeacherId(csvRecord.get("teacherId"));
                 scheduleHolder.setWeekday(Integer.parseInt(csvRecord.get("weekDay")));
                 scheduleHolder.setWeeks(Integer.parseInt(csvRecord.get("subjectLength")));
                 scheduleHolder.setStartTimeSlot(Integer.parseInt(csvRecord.get("sessionS")));
@@ -158,7 +253,25 @@ public class SubjectClassServiceImpl implements SubjectClassService {
         rs.setSubject(subjectClass.getSubject());
         rs.setSubjectClassSchedule(subjectClass.getSubjectClassSchedule());
         rs.setYearCode(subjectClass.getYearCode());
-        rs.setScheduledExam(subjectClass.getScheduledExam());
+        rs.setNote(subjectClass.getNote());
+        rs.setCreatedDate(subjectClass.getCreatedDate());
+        rs.setUpdatedDate(subjectClass.getUpdatedDate());
+        return rs;
+    }
+
+    private SubjectClassShortDTO mapToShortDTO(SubjectClass subjectClass) {
+        SubjectClassShortDTO rs = new SubjectClassShortDTO();
+        SubjectClassSchedule ref = subjectClass.getSubjectClassSchedule();
+        SCScheduleDTO scheduleDTO = new SCScheduleDTO(
+                ref.getStartDate(), ref.getWeeks(), ref.getWeekday(),
+                ref.getStartTimeSlot(), ref.getEndTimeSlot(),
+                ref.getTeacherId(), ref.getCreatedDate(), ref.getUpdatedDate()
+        );
+
+        rs.setId(subjectClass.getId());
+        rs.setSubject(subjectClass.getSubject().getSubjectName());
+        rs.setSubjectClassSchedule(scheduleDTO);
+        rs.setYearCode(subjectClass.getYearCode());
         rs.setNote(subjectClass.getNote());
         rs.setCreatedDate(subjectClass.getCreatedDate());
         rs.setUpdatedDate(subjectClass.getUpdatedDate());
