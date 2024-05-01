@@ -18,6 +18,33 @@ USE `schedule_service_db`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `post`
+--
+
+DROP TABLE IF EXISTS `post`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `post` (
+  `id` bigint NOT NULL,
+  `content` text,
+  `created_date` bigint NOT NULL,
+  `image` text,
+  `title` varchar(255) DEFAULT NULL,
+  `updated_date` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `post`
+--
+
+LOCK TABLES `post` WRITE;
+/*!40000 ALTER TABLE `post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `post` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `room`
 --
 
@@ -124,7 +151,7 @@ CREATE TABLE `student_join_class` (
   PRIMARY KEY (`id`),
   KEY `FKjrwte3b6w7a6bj6etk3loa6i6` (`subject_class`),
   CONSTRAINT `FKjrwte3b6w7a6bj6etk3loa6i6` FOREIGN KEY (`subject_class`) REFERENCES `subject_class` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,6 +160,7 @@ CREATE TABLE `student_join_class` (
 
 LOCK TABLES `student_join_class` WRITE;
 /*!40000 ALTER TABLE `student_join_class` DISABLE KEYS */;
+INSERT INTO `student_join_class` VALUES (12,1714533325047,2010001,NULL,NULL,1),(13,1714533325070,2010002,NULL,NULL,2),(14,1714533325072,2010003,NULL,NULL,3),(15,1714533325076,2010004,NULL,NULL,4),(16,1714533325079,2010005,NULL,NULL,5),(17,1714533325082,2010006,NULL,NULL,6),(18,1714533325085,2030099,NULL,NULL,4),(19,1714533325087,2030099,NULL,NULL,6),(20,1714533325090,2030098,NULL,NULL,6),(21,1714533325093,2030098,NULL,NULL,2),(22,1714533325094,2030099,NULL,NULL,2);
 /*!40000 ALTER TABLE `student_join_class` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,7 +212,7 @@ CREATE TABLE `subject_class` (
   KEY `FK4wcjsxgktb39ufisys7d63qhj` (`year_code`),
   CONSTRAINT `FK4wcjsxgktb39ufisys7d63qhj` FOREIGN KEY (`year_code`) REFERENCES `year_code` (`id`),
   CONSTRAINT `FKr1incb63r599a76i60vvgecvr` FOREIGN KEY (`subject`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,6 +221,7 @@ CREATE TABLE `subject_class` (
 
 LOCK TABLES `subject_class` WRITE;
 /*!40000 ALTER TABLE `subject_class` DISABLE KEYS */;
+INSERT INTO `subject_class` VALUES (1,1714532339368,NULL,NULL,73,1),(2,1714532339409,NULL,NULL,264,1),(3,1714532339417,NULL,NULL,265,1),(4,1714532339425,NULL,NULL,266,1),(5,1714532339432,NULL,NULL,267,1),(6,1714532339442,NULL,NULL,1,1);
 /*!40000 ALTER TABLE `subject_class` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,7 +246,7 @@ CREATE TABLE `subject_class_schedule` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_oxa4c4b3dp4x5b4kxifpisclb` (`subject_class_id`),
   CONSTRAINT `FKjje49l64wug75wsf5a9otouam` FOREIGN KEY (`subject_class_id`) REFERENCES `subject_class` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,6 +255,7 @@ CREATE TABLE `subject_class_schedule` (
 
 LOCK TABLES `subject_class_schedule` WRITE;
 /*!40000 ALTER TABLE `subject_class_schedule` DISABLE KEYS */;
+INSERT INTO `subject_class_schedule` VALUES (1,1714532339401,2,'2022-10-01',1,3010001,NULL,3,10,1),(2,1714532339413,4,'2022-10-01',3,3010002,NULL,3,10,2),(3,1714532339421,2,'2022-10-01',1,3010002,NULL,2,10,3),(4,1714532339428,2,'2022-10-01',1,3010003,NULL,4,10,4),(5,1714532339436,4,'2022-10-01',3,3010004,NULL,6,10,5),(6,1714532339446,2,'2022-10-01',1,3040001,NULL,5,10,6);
 /*!40000 ALTER TABLE `subject_class_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,4 +324,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-30 17:04:54
+-- Dump completed on 2024-05-01 10:25:55

@@ -81,7 +81,7 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
 
     @Override
     public int calcFitness(DNA dna) {
-        if (dna.getFitness() != 0)
+        if (dna.getFitness() != 1)
             return dna.getFitness();
 
         int point = 0;

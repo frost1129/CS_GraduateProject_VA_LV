@@ -2,9 +2,7 @@ package com.graduation.scheduleservice.services.impl;
 
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSaveDTO;
-import com.graduation.scheduleservice.dtos.SubjectSaveDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
-import com.graduation.scheduleservice.models.Subject;
 import com.graduation.scheduleservice.models.SubjectClass;
 import com.graduation.scheduleservice.models.SubjectClassSchedule;
 import com.graduation.scheduleservice.repositories.*;
