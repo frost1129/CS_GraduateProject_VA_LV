@@ -2,9 +2,7 @@ package com.graduation.scheduleservice.services.impl;
 
 import com.graduation.scheduleservice.constants.PagingSize;
 import com.graduation.scheduleservice.dtos.PostResponse;
-import com.graduation.scheduleservice.dtos.SubjectSearchResponse;
 import com.graduation.scheduleservice.models.Post;
-import com.graduation.scheduleservice.models.Subject;
 import com.graduation.scheduleservice.repositories.PostRepository;
 import com.graduation.scheduleservice.services.PostService;
 import jakarta.persistence.EntityManager;
@@ -17,10 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
