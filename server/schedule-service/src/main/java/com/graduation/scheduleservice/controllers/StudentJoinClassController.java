@@ -28,7 +28,7 @@ public class StudentJoinClassController {
     @PostMapping("/upload")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<StudentJoinClassDTO>> uploadEnrolments(@RequestParam(name = "file") MultipartFile file) {
-        List<String> expectedHeaders = List.of("studentId", "scheduleId");
+        List<String> expectedHeaders = List.of("subjectCode", "studentId", "yearCode");
 
         try (InputStreamReader reader = new InputStreamReader(file.getInputStream())) {
             CSVFormat csvFormat = CSVFormat.DEFAULT;

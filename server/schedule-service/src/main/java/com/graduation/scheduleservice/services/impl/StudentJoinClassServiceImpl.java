@@ -73,7 +73,9 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
             for (CSVRecord csvRecord : csvParser) {
                 holder = new StudentJoinClass();
                 holder.setStudentId(Long.parseLong(csvRecord.get("studentId")));
-                holder.setSubjectClass(classRepository.getReferenceById(Long.parseLong(csvRecord.get("scheduleId"))));
+                holder.setSubjectClass(classRepository.getBySubject_SubjectCodeAndYearCode_YearCode(
+                        csvRecord.get("subjectCode"), Integer.parseInt(csvRecord.get("yearCode"))
+                ));
                 studentJoin.add(holder);
             }
 
