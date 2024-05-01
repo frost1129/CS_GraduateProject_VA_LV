@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class StudentJoinClassDTO {
     private Long id;
-    private Long studentId;
+    private String studentId;
     private Float totalScore;
     private SubjectClass subjectClass;
     private Long createdDate;

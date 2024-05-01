@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface StudentJoinClassService {
     StudentJoinClassDTO getById(Long id);
-    List<Long> getAllStudentIdBySubjectClassId(Long subjectId);
-    List<StudentJoinClassDTO> getAllByYearCodeAndStudentId(int yearCode, Long studentId);
+    List<String> getAllStudentIdBySubjectClassId(Long subjectId);
+    List<StudentJoinClassDTO> getAllByYearCodeAndStudentId(int yearCode, String studentId);
     List<StudentJoinClassDTO> getAllByYearCodeAndSubjectClassId(int yearCode, Long subjectId);
     StudentJoinClassDTO addStudentJoinClass(StudentJoinClassSaveDTO saveDTO);
     List<StudentJoinClassDTO> importStudentJoinClassDataByYearCode(MultipartFile file);

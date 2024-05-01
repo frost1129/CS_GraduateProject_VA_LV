@@ -2,6 +2,7 @@ package com.graduation.scheduleservice.controllers;
 
 import com.graduation.scheduleservice.dtos.SubjectDTO;
 import com.graduation.scheduleservice.dtos.SubjectSaveDTO;
+import com.graduation.scheduleservice.dtos.SubjectSearchResponse;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
 import com.graduation.scheduleservice.services.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +12,20 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/schedule-service/subject")
@@ -26,7 +35,12 @@ public class SubjectController {
 
     private final SubjectService subjectService;
 
-    @GetMapping
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SubjectSearchResponse> getListSubject(@RequestParam Map<String, String> params) {
+        return new ResponseEntity<>(subjectService.getListSubject(params), HttpStatus.OK);
+    }
+
     public ResponseEntity<List<SubjectDTO>> getAllSubject() {
         return new ResponseEntity<>(subjectService.getAllSubject(), HttpStatus.OK);
     }
@@ -39,6 +53,8 @@ public class SubjectController {
         return new ResponseEntity<>(subjectService.getSubjectByCode(code), HttpStatus.OK);
     }
 
+    @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubjectDTO> addSubject(@RequestBody SubjectSaveDTO subject) {
         return new ResponseEntity<>(subjectService.addOrUpdateSubject(null, subject), HttpStatus.CREATED);
     }

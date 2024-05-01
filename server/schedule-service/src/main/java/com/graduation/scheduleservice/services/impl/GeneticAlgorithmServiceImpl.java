@@ -1,5 +1,6 @@
 package com.graduation.scheduleservice.services.impl;
 
+import com.graduation.scheduleservice.constants.FitnessPenalty;
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.TimeSlotDTO;
 import com.graduation.scheduleservice.models.*;
@@ -96,14 +97,14 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
                 if (exam1.getExamDate().equals(exam2.getExamDate())) {
 //                    Check sv nào thi 2 môn cùng lúc
                     if (exam1.getTimeSlot().equals(exam2.getTimeSlot())) {
-                        for (Long std1Id : this.joinClassService.getAllStudentIdBySubjectClassId(exam1.getSubjectClass().getId())) {
+                        for (String std1Id : this.joinClassService.getAllStudentIdBySubjectClassId(exam1.getSubjectClass().getId())) {
                             if (this.joinClassService.getAllStudentIdBySubjectClassId(exam2.getSubjectClass().getId()).contains(std1Id))
-                                point += FitnessPenalty.FIRST_CLASS.getPenaltyValue();
+                                point += FitnessPenalty.FIRST_CLASS;
                         }
                     }
 //                    Check sv nào thi 2 môn liên tiếp
                     else if (exam1.getTimeSlot().isRightAfter(exam2.getTimeSlot()))
-                        point += FitnessPenalty.SECOND_CLASS.getPenaltyValue();
+                        point += FitnessPenalty.SECOND_CLASS;
                 }
             }
         }
@@ -178,7 +179,6 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
         rs.setSubject(dto.getSubject());
         rs.setSubjectClassSchedule(dto.getSubjectClassSchedule());
         rs.setYearCode(dto.getYearCode());
-        rs.setScheduledExam(dto.getScheduledExam());
         rs.setNote(dto.getNote());
         return rs;
     }
