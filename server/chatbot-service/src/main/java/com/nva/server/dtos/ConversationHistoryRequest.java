@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConversationHistoryRequest {
-    private String username;
     private String question;
     private String answer;
 }

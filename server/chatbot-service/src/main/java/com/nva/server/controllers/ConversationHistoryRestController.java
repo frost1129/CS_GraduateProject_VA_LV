@@ -28,17 +28,24 @@ public class ConversationHistoryRestController {
 
     @GetMapping("/self")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<?> getSelfConversationHistories(
+    public ResponseEntity<ConversationHistoryResponseV2> getSelfConversationHistories(
             @RequestParam Map<String, String> params,
             @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
-        return ResponseEntity.ok(conversationHistoryService.getSelfConversationHistories(params, authorizationHeader.substring(7)));
+        params.put("username", authorizationHeader.substring(7));
+        return ResponseEntity.ok(conversationHistoryService.getSelfConversationHistories(params));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<ConversationHistoryResponse> addConversationHistory(@RequestBody ConversationHistoryRequest conversationHistoryRequest) {
-        return new ResponseEntity<>(conversationHistoryService.addConversationHistory(conversationHistoryRequest), HttpStatus.CREATED);
+    public ResponseEntity<ConversationHistoryResponse> addConversationHistory(
+            @RequestBody ConversationHistoryRequest conversationHistoryRequest,
+            @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
+        return new ResponseEntity<>(conversationHistoryService.addConversationHistory(
+                conversationHistoryRequest,
+                authorizationHeader.substring(7)),
+                HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{conversationHistoryId}")

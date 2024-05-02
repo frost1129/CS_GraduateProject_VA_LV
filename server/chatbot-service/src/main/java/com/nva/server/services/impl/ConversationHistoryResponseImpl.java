@@ -71,7 +71,7 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
     }
 
     @Override
-    public ConversationHistoryResponseV2 getSelfConversationHistories(Map<String, String> params, String accessToken) {
+    public ConversationHistoryResponseV2 getSelfConversationHistories(Map<String, String> params) {
         ConversationHistoryResponseV2 responseV2 = new ConversationHistoryResponseV2();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -86,7 +86,7 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
         responseV2.setCurrentPage(page);
         responseV2.setPageSize(CustomPageSize.CONVERSATION_HISTORY_PAGE_SIZE);
 
-        predicate = criteriaBuilder.or(criteriaBuilder.like(root.get("username"), "%" + getUsernameFromToken(accessToken) + "%"));
+        predicate = criteriaBuilder.or(criteriaBuilder.like(root.get("username"), "%" + getUsernameFromToken(params.getOrDefault("username", "")) + "%"));
 
 
         query.select(root).where(predicate);
@@ -111,10 +111,10 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
     }
 
     @Override
-    public ConversationHistoryResponse addConversationHistory(ConversationHistoryRequest conversationHistoryRequest) {
+    public ConversationHistoryResponse addConversationHistory(ConversationHistoryRequest conversationHistoryRequest, String accessToken) {
         try {
             ConversationHistory conversationHistory = new ConversationHistory();
-            conversationHistory.setUsername(conversationHistoryRequest.getUsername());
+            conversationHistory.setUsername(getUsernameFromToken(accessToken));
             conversationHistory.setQuestion(conversationHistoryRequest.getQuestion());
             conversationHistory.setAnswer(conversationHistoryRequest.getAnswer());
             conversationHistory.setCreatedDate(System.currentTimeMillis());

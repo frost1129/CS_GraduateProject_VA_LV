@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface ConversationHistoryService {
     ConversationHistoryResponseV2 getConversationHistories(Map<String, String> params);
-    ConversationHistoryResponseV2 getSelfConversationHistories(Map<String, String> params, String accessToken);
-    ConversationHistoryResponse addConversationHistory(ConversationHistoryRequest conversationHistoryRequest);
+    ConversationHistoryResponseV2 getSelfConversationHistories(Map<String, String> params);
+    ConversationHistoryResponse addConversationHistory(ConversationHistoryRequest conversationHistoryRequest, String accessToken);
     void deleteConversationHistory(Long deleteConversationHistory);
 }
