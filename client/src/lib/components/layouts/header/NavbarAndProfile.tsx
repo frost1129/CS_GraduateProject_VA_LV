@@ -18,6 +18,7 @@ import { List, SignOut, UserCircle } from "@phosphor-icons/react";
 
 import theme from "@/lib/theme";
 import Profile from "./Profile";
+import Routes from "@/lib/constants/Routes";
 
 const NavbarAndProfile = () => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -51,8 +52,10 @@ const NavbarAndProfile = () => {
             gap={2}
           >
             {navItems.map((item) => (
-              <Box key={item.id} sx={navItemStyles}>
-                <Typography variant="body2">{item.title}</Typography>
+              <Box key={item.id} sx={item.sx}>
+                <Link href={item.link}>
+                  <Typography variant="body2">{item.title}</Typography>
+                </Link>
               </Box>
             ))}
           </Stack>
@@ -87,11 +90,15 @@ const NavbarAndProfile = () => {
               </MenuItem>
             </Link>
             <Divider sx={{ marginY: 1 }} />
-            {navItems.map((item) => (
-              <Box key={item.id} sx={navItemStyles}>
-                <Typography variant="body2">{item.title}</Typography>
-              </Box>
-            ))}
+            <Stack direction="column" gap={0.5}>
+              {navItems.map((item) => (
+                <Box key={item.id} sx={item.sx}>
+                  <Link href={item.link}>
+                    <Typography variant="body2">{item.title}</Typography>
+                  </Link>
+                </Box>
+              ))}
+            </Stack>
             <Divider sx={{ marginY: 1 }} />
             <Link href="/auth/login">
               <MenuItem onClick={handleLogout} sx={logoutBtnStyles}>
@@ -117,6 +124,7 @@ const navItemStyles: SxProps<Theme> = {
     backgroundColor: "var(--primary)",
     color: "var(--white)",
     cursor: "pointer",
+    transition: "background-color 0.s, color 0.2s", // Added transition for background
   },
 };
 
@@ -140,22 +148,25 @@ const logoutBtnStyles: SxProps<Theme> = {
 const navItems = [
   {
     id: 1,
-    title: "Nav 1",
-    link: "#",
+    title: "Lịch thi",
+    link: Routes.EXAM_TIME_TABLE,
+    sx: { ...navItemStyles },
   },
   {
     id: 2,
-    title: "Nav 2",
-    link: "#",
+    title: "Lịch học",
+    link: Routes.TIME_TABLE,
+    sx: { ...navItemStyles },
   },
   {
     id: 3,
-    title: "Nav 3",
-    link: "#",
-  },
-  {
-    id: 4,
-    title: "Nav 4",
-    link: "#",
+    title: "Hỏi đáp",
+    link: Routes.ACADEMIC_Q_AND_A,
+    sx: {
+      ...navItemStyles,
+      background: "var(--gradient)",
+      color: "var(--white)",
+      ":hover": { background: "var(--gradient-active)" },
+    },
   },
 ];

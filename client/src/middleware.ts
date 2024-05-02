@@ -5,6 +5,9 @@ import Routes from "./lib/constants/Routes";
 const privateRoutes = [
   Routes.ROOT,
   Routes.PROFILE,
+  Routes.EXAM_TIME_TABLE,
+  Routes.TIME_TABLE,
+  Routes.ACADEMIC_Q_AND_A,
   Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CATEGORIES,
   Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.TOPICS,
   Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CONTENTS,
