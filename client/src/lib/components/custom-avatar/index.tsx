@@ -27,6 +27,7 @@ const CustomAvatar = (props: CustomAvatarProps) => {
           width={width}
           height={height}
           priority
+          quality={100}
         />
       )}
     </Stack>

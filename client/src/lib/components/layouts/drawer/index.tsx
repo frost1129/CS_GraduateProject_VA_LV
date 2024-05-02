@@ -13,9 +13,16 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { At, BookBookmark, BookOpenText, Club } from "@phosphor-icons/react";
+import {
+  At,
+  BookBookmark,
+  BookOpenText,
+  ClockCounterClockwise,
+  Club,
+} from "@phosphor-icons/react";
 import { images } from "@/lib/assets/img";
 import { CustomDrawerProps } from "@/lib/types/component";
+import Routes from "@/lib/constants/Routes";
 
 const CustomDrawer = (props: CustomDrawerProps) => {
   const { onClose } = props;
@@ -24,7 +31,9 @@ const CustomDrawer = (props: CustomDrawerProps) => {
   return (
     <Box sx={drawerStyles}>
       <Box sx={{ padding: "24px 0px 8px 24px" }}>
-        <Image src={images.logoOU} alt="logo-ou" width={70} priority />
+        <Link href={Routes.ROOT}>
+          <Image src={images.logoOU} alt="logo-ou" width={70} priority />
+        </Link>
       </Box>
       {drawerData.map((service) => (
         <Stack
@@ -112,6 +121,12 @@ const drawerData = [
         name: "Năm học",
         link: "/admin/console/chat-bot-service/school-years",
         icon: <At size={iconSize} />,
+      },
+      {
+        id: "1-5",
+        name: "Lịch sử hỏi đáp",
+        link: "/admin/console/chat-bot-service/conversation-histories",
+        icon: <ClockCounterClockwise size={iconSize} />,
       },
     ],
   },

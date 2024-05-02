@@ -4,6 +4,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import {
   ICategoryResponse,
   IContentResponse,
+  IConversationResponse,
   ITopicResponse,
 } from "./backend.d";
 
@@ -128,4 +129,16 @@ export interface SchoolYearEditorProps {
 
 export interface SchoolYearDeleterProps {
   value: ISchoolYearResponse;
+}
+
+export interface ConversationHistoryActionsProps {
+  value: IConversationResponse;
+}
+
+export interface ConversationHistoryDetailProps {
+  value: IConversationResponse;
+}
+
+export interface ConversationHistoryDeleterProps {
+  value: IConversationResponse;
 }

@@ -159,3 +159,24 @@ export interface ISchoolYearRequest {
   courseName: string;
   note: string | null;
 }
+
+export interface IConversationHistoryRequest {
+  question: string;
+  answer: string;
+}
+
+export interface IConversationResponse {
+  id: number;
+  username: string;
+  question: string;
+  answer: string;
+  createdDate: number;
+  lastModifiedDate: number | null;
+}
+
+export interface IConversationResponseV2 {
+  data: IConversationResponse[];
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}

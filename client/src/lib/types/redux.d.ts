@@ -2,6 +2,8 @@ import {
   ICategoryResponse,
   IContentResponse,
   IContentResponseV2,
+  IConversationResponse,
+  IConversationResponseV2,
   ISchoolYearResponse,
   ISchoolYearResponseV2,
   ITopicResponse,
@@ -96,6 +98,26 @@ export interface ContentState {
   deleteContentError: any;
 }
 
+export interface ConversationHistoryState {
+  // Conversation History by ADMIN
+  listConversationLoading: boolean;
+  conversationDataResponse: IConversationResponseV2 | null;
+  listConversationError: any;
+
+  // Conversation History by logged user
+  listSelfConversationLoading: boolean;
+  selfConversationDataResponse: IConversationResponseV2 | null;
+  listSelfConversationError: any;
+
+  saveConversationLoading: boolean;
+  savedConversation: IConversationResponse | null;
+  saveConversationError: any;
+
+  deleteConversationHistoryLoading: boolean;
+  deleteConversationHistorySuccess: any;
+  deleteConversationHistoryError: any;
+}
+
 export interface ResetCategoryStatusPayload {
   keys: Array<keyof CategoryState>;
 }
@@ -106,6 +128,10 @@ export interface ResetTopicStatusPayload {
 
 export interface ResetContentStatusPayload {
   keys: Array<keyof ContentState>;
+}
+
+export interface ResetConversationHistoryStatusPayload {
+  keys: Array<keyof ConversationHistoryState>;
 }
 
 export interface ResetSchoolYearStatusPayload {
@@ -126,4 +152,9 @@ export interface ContentRequestParams {
 
 export interface SchoolYearRequestParams {
   keyword?: string;
+}
+
+export interface ConversationHistoryRequestParams {
+  username?: string;
+  page?: number;
 }

@@ -92,14 +92,6 @@ const Profile = () => {
             </MenuItem>
           </Link>
         )}
-        <Link href={`${Routes.PROFILE}`}>
-          <MenuItem onClick={handleClose}>
-            <Stack direction="row" alignItems="center" gap={1}>
-              <UserCircle size={24} />
-              <Typography variant="body2">Trang cá nhân</Typography>
-            </Stack>
-          </MenuItem>
-        </Link>
         <Link href="/auth/login">
           <MenuItem onClick={handleLogout} sx={logoutBtnStyles}>
             <Stack direction="row" alignItems="center" gap={1}>
