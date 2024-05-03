@@ -12,4 +12,5 @@ public interface SubjectClassRepository extends JpaRepository<SubjectClass, Long
     List<SubjectClass> getAllByYearCode_YearCodeAndSubjectClassSchedule_TeacherId(int yearCode, String teacherId);
     List<SubjectClass> getAllByYearCode_YearCodeAndSubject_Id(int yearCode, Long subjectId);
     SubjectClass getBySubject_SubjectCodeAndYearCode_YearCode(String subjectCode, int yearCode);
+    List<SubjectClass> findByYearCode_YearCode(int yearCode);
 }
