@@ -1,9 +1,13 @@
 package com.graduation.scheduleservice.services.impl;
 
+import com.graduation.scheduleservice.constants.TimeSlotConstant;
 import com.graduation.scheduleservice.dtos.StudentJoinClassDTO;
 import com.graduation.scheduleservice.dtos.StudentJoinClassSaveDTO;
+import com.graduation.scheduleservice.dtos.TimeTableDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
 import com.graduation.scheduleservice.models.StudentJoinClass;
+import com.graduation.scheduleservice.models.SubjectClass;
+import com.graduation.scheduleservice.models.SubjectClassSchedule;
 import com.graduation.scheduleservice.repositories.StudentJoinClassRepository;
 import com.graduation.scheduleservice.repositories.SubjectClassRepository;
 import com.graduation.scheduleservice.services.StudentJoinClassService;
@@ -20,8 +24,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,6 +127,78 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
         } catch (Exception e) {
             throw new SaveDataException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<TimeTableDTO> getStudentTimeTable(String studentId, int yearCode) {
+        // 1. Find StudentJoinClass records based on studentId and yearCode
+        List<StudentJoinClass> joinClasses = joinClassRepository.findByStudentIdAndSubjectClass_YearCode_YearCode(studentId, yearCode);
+
+        // 2. Extract subjectClass IDs
+        List<Long> subjectClassIds = joinClasses.stream()
+                .map(StudentJoinClass::getSubjectClass)
+                .map(SubjectClass::getId)
+                .collect(Collectors.toList());
+
+        // 3. Find SubjectClass and associated SubjectClassSchedules
+        List<SubjectClass> subjectClasses = classRepository.findAllById(subjectClassIds);
+
+        // 4. Construct TimetableEntry objects
+        List<TimeTableDTO> timetableEntries = new ArrayList<>();
+        for (SubjectClass subjectClass : subjectClasses) {
+            SubjectClassSchedule schedule = subjectClass.getSubjectClassSchedule();
+
+            TimeTableDTO entry = new TimeTableDTO(
+                    subjectClass.getSubject().getSubjectCode(),
+                    subjectClass.getSubject().getSubjectName(),
+                    schedule.getStartDate(),
+                    schedule.getWeeks(),
+                    schedule.getWeekday(),
+                    TimeSlotConstant.getLocalTimeFromSlot(schedule.getStartTimeSlot()),
+                    TimeSlotConstant.getLocalTimeFromSlot(schedule.getEndTimeSlot())
+            );
+            timetableEntries.add(entry);
+        }
+
+        return timetableEntries;
+    }
+
+    public Map<String, Integer> countOverlappingStudentsPerClass(int yearCode) {
+        Map<String, Integer> classOverlapCounts = new HashMap<>();
+
+        // Get all SubjectClass entities
+        List<SubjectClass> subjectClasses = classRepository.findByYearCode_YearCode(yearCode);
+
+        for (SubjectClass currentClass : subjectClasses) {
+            int overlappingClasses = 0;
+
+            // Get students enrolled in the current class
+            Set<String> currentClassStudents = joinClassRepository
+                    .findAllBySubjectClass_IdAndSubjectClass_YearCode_YearCode(currentClass.getId(), yearCode)
+                    .stream()
+                    .map(StudentJoinClass::getStudentId)
+                    .collect(Collectors.toSet());
+
+            // Compare with students in other classes
+            for (SubjectClass otherClass : subjectClasses) {
+                if (!currentClass.equals(otherClass)) {
+                    Set<String> otherClassStudents = joinClassRepository
+                            .findAllBySubjectClass_IdAndSubjectClass_YearCode_YearCode(otherClass.getId(), yearCode)
+                            .stream()
+                            .map(StudentJoinClass::getStudentId)
+                            .collect(Collectors.toSet());
+
+                    // Check if there's any overlap
+                    if (!Collections.disjoint(currentClassStudents, otherClassStudents)) {
+                        overlappingClasses++;
+                    }
+                }
+            }
+
+            classOverlapCounts.put(currentClass.getSubject().getSubjectCode(), overlappingClasses);
+        }
+
+        return classOverlapCounts;
     }
 
     StudentJoinClassDTO mapToDTO(StudentJoinClass studentJoinClass) {

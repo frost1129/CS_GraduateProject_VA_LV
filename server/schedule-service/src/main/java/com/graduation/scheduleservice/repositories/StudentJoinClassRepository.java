@@ -11,4 +11,6 @@ public interface StudentJoinClassRepository extends JpaRepository<StudentJoinCla
     List<StudentJoinClass> getAllBySubjectClass_Id(Long subjectId);
     List<StudentJoinClass> getAllBySubjectClass_YearCode_YearCodeAndStudentId(int yearCode, String studentId);
     List<StudentJoinClass> getAllBySubjectClass_YearCode_YearCodeAndSubjectClass_Id(int yearCode, Long classId);
+    List<StudentJoinClass> findByStudentIdAndSubjectClass_YearCode_YearCode(String studentId, int yearCode);
+    List<StudentJoinClass> findAllBySubjectClass_IdAndSubjectClass_YearCode_YearCode(Long subjectClassId, int yearCode);
 }
