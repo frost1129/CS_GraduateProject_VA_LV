@@ -1,12 +1,29 @@
 "use client";
 
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 
 import { Button, Stack, SxProps, TextField, Theme } from "@mui/material";
 import { PaperPlaneTilt } from "@phosphor-icons/react";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
+import CustomLoadingButton from "@/lib/components/loading-button";
+import { addNewConversationHistoryThunk } from "@/lib/redux/features/chat-bot/conversation-history/conversationHistoryActions";
+import { IConversationResponse } from "@/lib/types/backend";
+import {
+  appendSelfConversationHistoryLast,
+  removeSelfConversationHistoryLast,
+  resetConversationHistoryStatus,
+} from "@/lib/redux/features/chat-bot/conversation-history/conversationHistorySlice";
+import { ToastInformation } from "@/lib/types/component";
 
 const ConversationInput = () => {
+  // Redux
+  const dispatch = useAppDispatch();
+  const { savedConversation, saveConversationLoading, saveConversationError } =
+    useAppSelector((state) => state.conversationHistory);
+
   const [question, setQuestion] = useState<string>("");
+  const [toastInfo, setToastInfo] = useState<ToastInformation>();
+  const [openToast, setOpenToast] = useState<boolean>(false);
 
   const handleQuestionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
@@ -14,7 +31,18 @@ const ConversationInput = () => {
 
   const handleSendQuestion = () => {
     if (question) {
-      console.log(question);
+      const newMessage: IConversationResponse = {
+        id: -1,
+        username: "",
+        question: question,
+        answer: "...",
+        imageLink: null,
+        createdDate: 0,
+        lastModifiedDate: null,
+      };
+
+      dispatch(addNewConversationHistoryThunk({ query: question }));
+      dispatch(appendSelfConversationHistoryLast({ selfConversationHistory: newMessage }));
       setQuestion("");
     }
   };
@@ -24,6 +52,23 @@ const ConversationInput = () => {
       handleSendQuestion();
     }
   };
+
+  useEffect(() => {
+    if (savedConversation) {
+      dispatch(removeSelfConversationHistoryLast());
+      dispatch(appendSelfConversationHistoryLast({ selfConversationHistory: savedConversation }));
+      dispatch(resetConversationHistoryStatus({ keys: ["savedConversation"] }));
+    } else if (saveConversationError) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "error",
+        title: "Thất bại",
+        message: saveConversationError,
+      });
+      dispatch(removeSelfConversationHistoryLast());
+      dispatch(resetConversationHistoryStatus({ keys: ["saveConversationError"] }));
+    }
+  }, [savedConversation, saveConversationError]);
 
   return (
     <Stack sx={containerStyles}>
@@ -35,13 +80,20 @@ const ConversationInput = () => {
         onKeyDown={handleKeyDown}
         InputProps={{
           endAdornment: (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSendQuestion}
-            >
-              <PaperPlaneTilt size={28} />
-            </Button>
+            <>
+              {saveConversationLoading ? (
+                <CustomLoadingButton sx={{ height: "42px" }} />
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSendQuestion}
+                  disabled={!question}
+                >
+                  <PaperPlaneTilt size={28} />
+                </Button>
+              )}
+            </>
           ),
         }}
       />

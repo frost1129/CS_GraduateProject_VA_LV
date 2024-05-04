@@ -1,5 +1,7 @@
 package com.nva.server.services;
 
+import com.nva.server.dtos.AnswerResponse;
+
 public interface DialogflowService {
-    String answerUserQuestion(String projectId, String sessionId, String questionText);
+    AnswerResponse answerUserQuestion(String projectId, String sessionId, String questionText);
 }

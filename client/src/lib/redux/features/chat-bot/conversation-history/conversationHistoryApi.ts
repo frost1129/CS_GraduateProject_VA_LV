@@ -12,13 +12,19 @@ const conversationHistoryApi = {
     if (params && params.page)
       queryParts.push(`page=${encodeURIComponent(params.page)}`);
     else queryParts.push(`page=${encodeURIComponent(1)}`);
-    
+
     queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
     return axiosChatbotService.get(`/conversation-histories${queryString}`);
   },
 
-  getSelfConversationHistories: (params?: ConversationHistoryRequestParams) => {
+  getSelfConversationHistories: () => {
+    return axiosChatbotService.get(`/conversation-histories/self`);
+  },
+
+  getSelfConversationHistoriesPrevious: (
+    params?: ConversationHistoryRequestParams
+  ) => {
     let queryString = "";
 
     const queryParts = [];
@@ -27,7 +33,9 @@ const conversationHistoryApi = {
 
     queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
-    return axiosChatbotService.get(`/conversation-histories/self`);
+    return axiosChatbotService.get(
+      `/conversation-histories/self${queryString}`
+    );
   },
 
   addNewConversationHistory: (conversation: IConversationHistoryRequest) =>

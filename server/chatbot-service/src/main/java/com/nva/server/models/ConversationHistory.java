@@ -26,6 +26,8 @@ public class ConversationHistory {
     @Column(nullable = false, length = 10000)
     private String answer;
 
+    private String imageLink;
+
     @CreatedDate
     @Column(nullable = false)
     private Long createdDate;

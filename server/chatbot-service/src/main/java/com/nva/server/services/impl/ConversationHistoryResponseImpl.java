@@ -1,6 +1,7 @@
 package com.nva.server.services.impl;
 
 import com.nva.server.constants.CustomPageSize;
+import com.nva.server.dtos.AnswerResponse;
 import com.nva.server.dtos.ConversationHistoryResponse;
 import com.nva.server.dtos.ConversationHistoryResponseV2;
 import com.nva.server.exceptions.SaveDataException;
@@ -95,12 +96,17 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
         query.select(root).where(predicate);
         query.orderBy(criteriaBuilder.asc(root.get("createdDate")));
 
+        // Calculate total data size
+        TypedQuery<ConversationHistory> countQuery = entityManager.createQuery(query);
+        int totalDataSize = countQuery.getResultList().size();
+
+        // Calculate start index for reverse pagination
+        long startIndex = totalDataSize - ((long) page * CustomPageSize.CONVERSATION_HISTORY_PAGE_SIZE);
+        if (startIndex < 0) startIndex = 0; // Handle the case when the start index goes negative
+
         // Pagination calculation
         TypedQuery<ConversationHistory> typedQuery = entityManager.createQuery(query);
-
-        long totalDataSize = typedQuery.getResultList().size();
-
-        typedQuery.setFirstResult((page - 1) * CustomPageSize.CONVERSATION_HISTORY_PAGE_SIZE);
+        typedQuery.setFirstResult((int) startIndex);
         typedQuery.setMaxResults(CustomPageSize.CONVERSATION_HISTORY_PAGE_SIZE);
 
         // Fetching results
@@ -119,10 +125,14 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
             ConversationHistory conversationHistory = new ConversationHistory();
             conversationHistory.setUsername(getUsernameFromToken(accessToken));
             conversationHistory.setQuestion(questionText);
+
+            AnswerResponse answerResponse = dialogflowService.answerUserQuestion(env.getProperty("dialogflow.project-name"),
+                    getUsernameFromToken(accessToken),
+                    questionText);
+
             conversationHistory.setAnswer(
-                    dialogflowService.answerUserQuestion(env.getProperty("dialogflow.project-name"),
-                            getUsernameFromToken(accessToken),
-                            questionText));
+                    answerResponse.getAnswer());
+            conversationHistory.setImageLink(answerResponse.getImageLink());
             conversationHistory.setCreatedDate(System.currentTimeMillis());
 
             return mapToConversationHistoryResponse(conversationHistoryRepository.save(conversationHistory));
@@ -146,6 +156,7 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
         response.setUsername(conversationHistory.getUsername());
         response.setQuestion(conversationHistory.getQuestion());
         response.setAnswer(conversationHistory.getAnswer());
+        response.setImageLink(conversationHistory.getImageLink());
         response.setCreatedDate(conversationHistory.getCreatedDate());
         response.setLastModifiedDate(conversationHistory.getLastModifiedDate());
 

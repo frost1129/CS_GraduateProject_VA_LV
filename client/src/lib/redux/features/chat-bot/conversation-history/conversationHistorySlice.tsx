@@ -8,8 +8,10 @@ import {
   addNewConversationHistoryThunk,
   deleteConversationHistoryThunk,
   getConversationHistoriesThunk,
+  getSelfConversationHistoriesPreviousThunk,
   getSelfConversationHistoriesThunk,
 } from "./conversationHistoryActions";
+import { IConversationResponse } from "@/lib/types/backend";
 
 const initialState: ConversationHistoryState = {
   listConversationLoading: false,
@@ -19,6 +21,11 @@ const initialState: ConversationHistoryState = {
   listSelfConversationLoading: false,
   selfConversationDataResponse: null,
   listSelfConversationError: null,
+
+  // List data previous
+  listPreviousLoading: false,
+  listPrevious: [],
+  listPreviousError: null,
 
   saveConversationLoading: false,
   savedConversation: null,
@@ -33,6 +40,27 @@ const conversationHistorySlice = createSlice({
   name: "conversationHistory",
   initialState,
   reducers: {
+    appendSelfPreviousConversationHistories: (state, action) => {
+      if (state.selfConversationDataResponse) {
+        const existingData = state.selfConversationDataResponse.data;
+
+        const newData = action.payload.listPrevious.filter(
+          (item: IConversationResponse) =>
+            !existingData.some(
+              (existingItem: IConversationResponse) =>
+                existingItem.id === item.id
+            )
+        );
+
+        const updatedData = [...newData, ...existingData];
+
+        const updatedState = {
+          ...state.selfConversationDataResponse,
+          data: updatedData,
+        };
+        state.selfConversationDataResponse = updatedState;
+      }
+    },
     appendConversationHistoryFirst: (state, action) => {
       if (state.conversationDataResponse) {
         const updatedState = {
@@ -57,6 +85,18 @@ const conversationHistorySlice = createSlice({
         state.conversationDataResponse = updatedState;
       }
     },
+    appendSelfConversationHistoryLast: (state, action) => {
+      if (state.selfConversationDataResponse) {
+        const updatedState = {
+          ...state.selfConversationDataResponse,
+          data: [
+            ...state.selfConversationDataResponse.data,
+            action.payload.selfConversationHistory,
+          ],
+        };
+        state.selfConversationDataResponse = updatedState;
+      }
+    },
     removeConversationHistoryById: (state, action) => {
       if (state.conversationDataResponse) {
         const updatedState = {
@@ -66,6 +106,20 @@ const conversationHistorySlice = createSlice({
           ),
         };
         state.conversationDataResponse = updatedState;
+      }
+    },
+    removeSelfConversationHistoryLast: (state) => {
+      if (
+        state.selfConversationDataResponse &&
+        state.selfConversationDataResponse.data.length > 0
+      ) {
+        const newData = state.selfConversationDataResponse.data.slice(0, -1);
+
+        const updatedState = {
+          ...state.selfConversationDataResponse,
+          data: newData,
+        };
+        state.selfConversationDataResponse = updatedState;
       }
     },
     clearConversationHistoryData: (state) => {
@@ -143,6 +197,32 @@ const conversationHistorySlice = createSlice({
       }
     );
 
+    // Get previous conversation history
+    builder.addCase(
+      getSelfConversationHistoriesPreviousThunk.pending,
+      (state) => {
+        state.listPreviousLoading = true;
+        state.listPrevious = [];
+        state.listPreviousError = null;
+      }
+    );
+    builder.addCase(
+      getSelfConversationHistoriesPreviousThunk.fulfilled,
+      (state, action) => {
+        state.listPreviousLoading = false;
+        state.listPrevious = action.payload.data.data;
+        state.listPreviousError = null;
+      }
+    );
+    builder.addCase(
+      getSelfConversationHistoriesPreviousThunk.rejected,
+      (state, action) => {
+        state.listPreviousLoading = false;
+        state.listPrevious = [];
+        state.listPreviousError = action.payload ? action.payload : null;
+      }
+    );
+
     // Add new category
     builder.addCase(addNewConversationHistoryThunk.pending, (state) => {
       state.saveConversationLoading = true;
@@ -199,5 +279,8 @@ export const {
   clearConversationHistoryData,
   updateConversationHistory,
   resetConversationHistoryStatus,
+  appendSelfConversationHistoryLast,
+  removeSelfConversationHistoryLast,
+  appendSelfPreviousConversationHistories,
 } = conversationHistorySlice.actions;
 export default conversationHistorySlice.reducer;

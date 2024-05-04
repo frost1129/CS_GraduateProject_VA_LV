@@ -12,6 +12,7 @@ public class ConversationHistoryResponse {
     private String username;
     private String question;
     private String answer;
+    private String imageLink;
     private Long createdDate;
     private Long lastModifiedDate;
 }

@@ -17,7 +17,7 @@ const containerStyles: SxProps<Theme> = {
   width: '100%',
   height: "calc(100vh - (var(--height-header) * 2))",
   margin: "auto",
-  gap: 1,
+  gap: 4,
   flexDirection: "column",
   marginTop: 4,
   justifyContent: 'space-between',

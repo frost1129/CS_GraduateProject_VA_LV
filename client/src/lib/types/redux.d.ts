@@ -109,6 +109,11 @@ export interface ConversationHistoryState {
   selfConversationDataResponse: IConversationResponseV2 | null;
   listSelfConversationError: any;
 
+  // List data previous
+  listPreviousLoading: boolean;
+  listPrevious: IConversationResponse[];
+  listPreviousError: any;
+
   saveConversationLoading: boolean;
   savedConversation: IConversationResponse | null;
   saveConversationError: any;

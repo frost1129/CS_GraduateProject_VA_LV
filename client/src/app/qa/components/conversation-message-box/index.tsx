@@ -5,10 +5,19 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Stack, SxProps, Theme } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
-import { getSelfConversationHistoriesThunk } from "@/lib/redux/features/chat-bot/conversation-history/conversationHistoryActions";
+import {
+  getSelfConversationHistoriesPreviousThunk,
+  getSelfConversationHistoriesThunk,
+} from "@/lib/redux/features/chat-bot/conversation-history/conversationHistoryActions";
 import ErrorRetrieveData from "@/lib/components/error-retrieve-data";
 import EmptyDataPlaceholder from "@/lib/components/empty-data";
 import LoadingData from "@/lib/components/loading-data";
+import {
+  appendSelfPreviousConversationHistories,
+  resetConversationHistoryStatus,
+} from "@/lib/redux/features/chat-bot/conversation-history/conversationHistorySlice";
+import { ToastInformation } from "@/lib/types/component";
+import CustomToast from "@/lib/components/toast";
 import MessageItem from "./MessageItem";
 
 const ConversationMessageBox = () => {
@@ -17,16 +26,21 @@ const ConversationMessageBox = () => {
     listSelfConversationLoading,
     listSelfConversationError,
     selfConversationDataResponse,
+    listPreviousLoading,
+    listPrevious,
+    listPreviousError,
   } = useAppSelector((state) => state.conversationHistory);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);
   const [action, setAction] = useState<"add" | "loadPrevious">("add");
+  const [toastInfo, setToastInfo] = useState<ToastInformation>();
+  const [openToast, setOpenToast] = useState<boolean>(false);
 
   const handleLoadPrevious = () => {
     setPage((prev) => prev + 1);
     setAction("loadPrevious");
-    // dispatch(getSelfConversationHistoriesThunk({ page }));
+    dispatch(getSelfConversationHistoriesPreviousThunk({ page: page + 1 }));
   };
 
   useEffect(() => {
@@ -44,10 +58,23 @@ const ConversationMessageBox = () => {
   }, [selfConversationDataResponse?.data, action]);
 
   useEffect(() => {
-    dispatch(getSelfConversationHistoriesThunk({}));
+    dispatch(getSelfConversationHistoriesThunk());
   }, []);
 
-  console.log("re-render");
+  useEffect(() => {
+    if (listPrevious.length > 0) {
+      dispatch(appendSelfPreviousConversationHistories({ listPrevious }));
+      dispatch(resetConversationHistoryStatus({ keys: ["listPrevious"] }));
+    } else if (listPreviousError) {
+      setOpenToast(true);
+      setToastInfo({
+        severity: "error",
+        title: "Thất bại",
+        message: listPreviousError,
+      });
+      dispatch(resetConversationHistoryStatus({ keys: ["listPreviousError"] }));
+    }
+  }, [listPrevious, listPreviousError]);
 
   if (listSelfConversationLoading)
     return (
@@ -68,35 +95,50 @@ const ConversationMessageBox = () => {
       </Stack>
     );
 
-  return (
-    <Stack direction='column' gap={2} ref={containerRef} sx={containerStyles}>
-      {selfConversationDataResponse?.data.map((cm, index) =>
-        index === 0 ? (
-          <Stack key={index}>
-            {page < selfConversationDataResponse.totalPages && (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleLoadPrevious}
-                sx={loadPreviousConversationMessagesBtnStyles}
-              >
-                Load previous
-              </Button>
-            )}
+    console.log(selfConversationDataResponse?.data)
 
-            <Stack direction="column" gap={2}>
-              <MessageItem type="question" content={cm.question} />
-              <MessageItem type="answer" content={cm.answer} />
+  return (
+    <>
+      <Stack direction="column" gap={2} ref={containerRef} sx={containerStyles}>
+        {selfConversationDataResponse?.data.map((cm, index) =>
+          index === 0 ? (
+            <Stack key={index}>
+              {(page < selfConversationDataResponse.totalPages) && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleLoadPrevious}
+                  sx={loadPreviousConversationMessagesBtnStyles}
+                  disabled={listPreviousLoading}
+                >
+                  {listPreviousLoading ? "Đang tải..." : "Tải thêm hội thoại"}
+                </Button>
+              )}
+
+              <Stack direction="column" gap={2}>
+                <MessageItem type="question" message={cm} />
+                <MessageItem type="answer" message={cm} />
+              </Stack>
             </Stack>
-          </Stack>
-        ) : (
-          <Stack direction="column" gap={2} key={index}>
-            <MessageItem type="question" content={cm.question} />
-            <MessageItem type="answer" content={cm.answer} />
-          </Stack>
-        )
+          ) : (
+            <Stack direction="column" gap={2} key={index}>
+              <MessageItem type="question" message={cm} />
+              <MessageItem type="answer" message={cm} />
+            </Stack>
+          )
+        )}
+      </Stack>
+      {openToast && (
+        <CustomToast
+          id="conversation-history-load-previous-toast"
+          open={openToast}
+          handleClose={() => setOpenToast(false)}
+          title={toastInfo?.title!}
+          message={toastInfo?.message!}
+          severity={toastInfo?.severity}
+        />
       )}
-    </Stack>
+    </>
   );
 };
 

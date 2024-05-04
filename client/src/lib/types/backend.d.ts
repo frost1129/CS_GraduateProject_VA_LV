@@ -161,8 +161,7 @@ export interface ISchoolYearRequest {
 }
 
 export interface IConversationHistoryRequest {
-  question: string;
-  answer: string;
+  query: string;
 }
 
 export interface IConversationResponse {
@@ -170,6 +169,7 @@ export interface IConversationResponse {
   username: string;
   question: string;
   answer: string;
+  imageLink: string | null;
   createdDate: number;
   lastModifiedDate: number | null;
 }

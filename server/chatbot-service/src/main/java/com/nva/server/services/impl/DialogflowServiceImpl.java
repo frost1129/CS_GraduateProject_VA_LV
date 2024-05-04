@@ -5,6 +5,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.dialogflow.v2.*;
 import com.google.protobuf.ListValue;
 import com.google.protobuf.Value;
+import com.nva.server.dtos.AnswerResponse;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.Content;
 import com.nva.server.services.ContentService;
@@ -37,9 +38,10 @@ public class DialogflowServiceImpl implements DialogflowService {
     }
 
     @Override
-    public String answerUserQuestion(String projectId, String sessionId, String questionText) {
+    public AnswerResponse answerUserQuestion(String projectId, String sessionId, String questionText) {
         try {
-            String result = "Không có dữ liệu về câu hỏi này. Vui lòng đặt lại câu hỏi!";
+            AnswerResponse result = new AnswerResponse();
+            result.setAnswer("Không có dữ liệu về câu hỏi này. Vui lòng đặt lại câu hỏi!");
 
             SessionName session = SessionName.of(projectId, sessionId);
             TextInput.Builder textInput = TextInput.newBuilder().setText(questionText).setLanguageCode("vi-VN");
@@ -55,7 +57,7 @@ public class DialogflowServiceImpl implements DialogflowService {
                     ));
 
             if (intent.equals("default-fallback") || intent.equals("default-welcome")) {
-                result = intentResponse.getQueryResult().getFulfillmentText();
+                result.setAnswer(intentResponse.getQueryResult().getFulfillmentText());
             } else {
                 List<String> intentParts = Arrays.asList(intent.split("\\."));
                 parameters.put("categoryIntent", intentParts.get(0));
@@ -72,16 +74,20 @@ public class DialogflowServiceImpl implements DialogflowService {
                         for (int i = 0; i < childContents.size(); i++) {
                             answer.append("\n").append(i + 1).append(". ").append(childContents.get(i).getTitle());
                         }
-                        result = answer.toString();
+                        result.setAnswer(answer.toString());
                     } else {
-                        result = content.getTitle() + " như sau:\n" + content.getText();
+                        result.setAnswer(content.getTitle() + " như sau:\n" + content.getText());
+                    }
+
+                    if (content.getImageLink() != null) {
+                        result.setImageLink(content.getImageLink());
                     }
                 }
             }
 
             return result;
         } catch (Exception e) {
-            throw new SaveDataException(e.getMessage());
+            throw new SaveDataException("Đã xảy ra lỗi, vui lòng thử lại sau!");
         }
     }
 

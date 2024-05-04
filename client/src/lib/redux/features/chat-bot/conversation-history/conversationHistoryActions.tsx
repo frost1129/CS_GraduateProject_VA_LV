@@ -19,9 +19,22 @@ export const getConversationHistoriesThunk = createAsyncThunk(
 
 export const getSelfConversationHistoriesThunk = createAsyncThunk(
     "getSelfConversationHistories",
-    async (params: ConversationHistoryRequestParams, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
       try {
-        return await conversationHistoryApi.getSelfConversationHistories(params);
+        return await conversationHistoryApi.getSelfConversationHistories();
+      } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message)
+          return rejectWithValue(error.response.data.message);
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const getSelfConversationHistoriesPreviousThunk = createAsyncThunk(
+    "getSelfConversationHistoriesPrevious",
+    async (param: ConversationHistoryRequestParams, { rejectWithValue }) => {
+      try {
+        return await conversationHistoryApi.getSelfConversationHistoriesPrevious(param);
       } catch (error: any) {
         if (error.response && error.response.data && error.response.data.message)
           return rejectWithValue(error.response.data.message);

@@ -160,7 +160,7 @@ const ContentEditor = (props: ContentEditorProps) => {
       setToastInfo({
         severity: "success",
         title: "Thành công",
-        message: "Chỉnh sửa chủ đề thành công!",
+        message: "Chỉnh sửa nội dung thành công!",
       });
 
       dispatch(updateContentV2({ content: updatedContent }));
