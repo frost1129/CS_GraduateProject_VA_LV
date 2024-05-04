@@ -10,7 +10,7 @@ const HomePage = () => {
 
   return (
     <ClientLayout>
-      <Box height={"10000px"}>
+      <Box>
         <Typography>{userProfile?.name}</Typography>
       </Box>
     </ClientLayout>

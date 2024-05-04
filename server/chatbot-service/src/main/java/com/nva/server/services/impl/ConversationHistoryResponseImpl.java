@@ -90,7 +90,7 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
 
 
         query.select(root).where(predicate);
-        query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+        query.orderBy(criteriaBuilder.asc(root.get("createdDate")));
 
         // Pagination calculation
         TypedQuery<ConversationHistory> typedQuery = entityManager.createQuery(query);

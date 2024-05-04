@@ -53,7 +53,9 @@ const Profile = () => {
       >
         <Stack direction="row" alignItems="center" gap={1.5}>
           <Stack direction="column" gap={0.5} alignItems="flex-end">
-            <Typography variant="label2">{userProfile?.name}</Typography>
+            <Typography variant="label2">
+              {userProfile?.family_name} {userProfile?.given_name}
+            </Typography>
             <Typography variant="body3">{userProfile?.email}</Typography>
           </Stack>
           <Stack>

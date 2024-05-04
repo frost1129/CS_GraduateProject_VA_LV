@@ -27,7 +27,7 @@ const conversationHistoryApi = {
 
     queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
 
-    return axiosChatbotService.get(`/conversation-histories${queryString}`);
+    return axiosChatbotService.get(`/conversation-histories/self`);
   },
 
   addNewConversationHistory: (conversation: IConversationHistoryRequest) =>

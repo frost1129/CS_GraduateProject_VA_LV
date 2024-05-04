@@ -4,6 +4,7 @@ import robotAvt from "./bot.png";
 import defaultCover from "./default-cover.jpg";
 import emptyIcon from "./emptyIcon.png";
 import errorIcon from "./error-icon.png";
+import robotAvatarV2 from "./robot-avatar.png";
 
 export const images = {
   logoOU,
@@ -12,4 +13,5 @@ export const images = {
   defaultCover,
   emptyIcon,
   errorIcon,
+  robotAvatarV2
 };
