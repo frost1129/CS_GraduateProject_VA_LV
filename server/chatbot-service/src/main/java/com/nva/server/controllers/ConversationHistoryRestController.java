@@ -1,10 +1,10 @@
 package com.nva.server.controllers;
 
-import com.nva.server.dtos.ConversationHistoryRequest;
 import com.nva.server.dtos.ConversationHistoryResponse;
 import com.nva.server.dtos.ConversationHistoryResponseV2;
 import com.nva.server.services.ConversationHistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +19,7 @@ import java.util.Map;
 @CrossOrigin
 public class ConversationHistoryRestController {
     private final ConversationHistoryService conversationHistoryService;
+    private final Environment env;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -39,11 +40,11 @@ public class ConversationHistoryRestController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<ConversationHistoryResponse> addConversationHistory(
-            @RequestBody ConversationHistoryRequest conversationHistoryRequest,
+            @RequestBody Map<String, String> requestBody,
             @RequestHeader(value = "Authorization") String authorizationHeader
     ) {
         return new ResponseEntity<>(conversationHistoryService.addConversationHistory(
-                conversationHistoryRequest,
+                requestBody.get("query"),
                 authorizationHeader.substring(7)),
                 HttpStatus.CREATED);
     }

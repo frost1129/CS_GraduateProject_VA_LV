@@ -15,6 +15,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ContentServiceImpl implements ContentService {
     private final ContentRepository contentRepository;
     private final SchoolYearRepository schoolYearRepository;
@@ -250,6 +252,46 @@ public class ContentServiceImpl implements ContentService {
             throw new SaveDataException("Xóa nội dung thất bại!");
         }
     }
+
+    @Override
+    public Content getContentByIntents(Map<String, String> params) {
+        String contentIntent = params.get("contentIntent");
+        String topicIntent = params.get("topicIntent");
+        String yearIntent = params.get("s-year");
+
+        log.warn("Content >>> " + contentIntent + " " + topicIntent + " " + yearIntent);
+
+        if (contentIntent != null && !contentIntent.isEmpty() &&
+                topicIntent != null && !topicIntent.isEmpty() &&
+                yearIntent != null && !yearIntent.isEmpty()) {
+
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Content> query = criteriaBuilder.createQuery(Content.class);
+            Root<Content> root = query.from(Content.class);
+
+            // Building the predicates for filtering
+            Predicate predicate = criteriaBuilder.conjunction();
+
+            // Adding conditions based on intentCode of Content
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("intentCode"), contentIntent));
+
+            // Join with Topic entity to filter on topic intent code
+            Join<Content, Topic> topicJoin = root.join("topic");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(topicJoin.get("intentCode"), topicIntent));
+
+            // Join with SchoolYear entity to filter on year
+            Join<Content, SchoolYear> schoolYearJoin = root.join("schoolYear");
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(schoolYearJoin.get("year"), yearIntent));
+
+            // Apply the predicate and perform the query
+            query.select(root).where(predicate);
+
+            List<Content> results = entityManager.createQuery(query).getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        }
+        return null;
+    }
+
 
     private ContentResponse mapToContentResponse(Content content) {
         ContentResponse contentResponse = new ContentResponse();

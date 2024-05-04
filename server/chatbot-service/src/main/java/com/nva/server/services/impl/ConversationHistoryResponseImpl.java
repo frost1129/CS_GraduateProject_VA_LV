@@ -1,13 +1,13 @@
 package com.nva.server.services.impl;
 
 import com.nva.server.constants.CustomPageSize;
-import com.nva.server.dtos.ConversationHistoryRequest;
 import com.nva.server.dtos.ConversationHistoryResponse;
 import com.nva.server.dtos.ConversationHistoryResponseV2;
 import com.nva.server.exceptions.SaveDataException;
 import com.nva.server.models.ConversationHistory;
 import com.nva.server.repositories.ConversationHistoryRepository;
 import com.nva.server.services.ConversationHistoryService;
+import com.nva.server.services.DialogflowService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -15,6 +15,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
     private final ConversationHistoryRepository conversationHistoryRepository;
     private final EntityManager entityManager;
     private final JwtDecoder jwtDecoder;
+    private final Environment env;
+    private final DialogflowService dialogflowService;
 
     @Override
     public ConversationHistoryResponseV2 getConversationHistories(Map<String, String> params) {
@@ -111,17 +114,20 @@ public class ConversationHistoryResponseImpl implements ConversationHistoryServi
     }
 
     @Override
-    public ConversationHistoryResponse addConversationHistory(ConversationHistoryRequest conversationHistoryRequest, String accessToken) {
+    public ConversationHistoryResponse addConversationHistory(String questionText, String accessToken) {
         try {
             ConversationHistory conversationHistory = new ConversationHistory();
             conversationHistory.setUsername(getUsernameFromToken(accessToken));
-            conversationHistory.setQuestion(conversationHistoryRequest.getQuestion());
-            conversationHistory.setAnswer(conversationHistoryRequest.getAnswer());
+            conversationHistory.setQuestion(questionText);
+            conversationHistory.setAnswer(
+                    dialogflowService.answerUserQuestion(env.getProperty("dialogflow.project-name"),
+                            getUsernameFromToken(accessToken),
+                            questionText));
             conversationHistory.setCreatedDate(System.currentTimeMillis());
 
             return mapToConversationHistoryResponse(conversationHistoryRepository.save(conversationHistory));
         } catch (Exception e) {
-            throw new SaveDataException("Có lỗi xảy ra! Vui lòng thử lại sau.");
+            throw new SaveDataException(e.getMessage());
         }
     }
 
