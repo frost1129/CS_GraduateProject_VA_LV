@@ -28,7 +28,9 @@ const MessageItem = (props: MessageItemProps) => {
           color: `${type === "answer" ? "var(--black)" : "var(--white)"}`,
         }}
       >
-        <Typography variant="body2">{content}</Typography>
+        <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+          {content}
+        </Typography>
       </Box>
 
       {type === "question" && (
