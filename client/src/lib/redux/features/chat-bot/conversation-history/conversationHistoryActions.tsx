@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { IConversationHistoryRequest, ISchoolYearRequest, ITopicRequest } from "@/lib/types/backend";
-import { ConversationHistoryRequestParams, SchoolYearRequestParams } from "@/lib/types/redux";
+import { IConversationHistoryRequest } from "@/lib/types/backend";
+import { ConversationHistoryRequestParams } from "@/lib/types/redux";
 import conversationHistoryApi from "./conversationHistoryApi";
 
 export const getConversationHistoriesThunk = createAsyncThunk(

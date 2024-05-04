@@ -16,8 +16,7 @@ const AddtionalInfo = () => {
         <Info size={26} />
       </Box>
       <Typography variant="body3">
-        Dữ liệu hiện tại chỉ có thể trả lời được các câu hỏi thuộc phạm vi tuyển
-        sinh của Khoa Công nghệ thông tin - Trường Đại học Mở TP.HCM
+        Tôi sẽ cung cấp các thông tin liên quan đến lĩnh vực học vụ, học bổng, thông tin về trường,...
       </Typography>
     </Stack>
   );

@@ -32,7 +32,7 @@ export const ClientHeader = () => {
         justifyContent="space-between"
         alignItems="center"
         className="header"
-        marginTop={2}
+        sx={{ position: "relative", top: 16 }}
       >
         <Stack
           direction="row"

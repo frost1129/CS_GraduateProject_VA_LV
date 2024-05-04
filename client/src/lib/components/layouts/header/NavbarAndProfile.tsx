@@ -14,11 +14,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { List, SignOut, UserCircle } from "@phosphor-icons/react";
+import { CalendarCheck, CalendarDots, List, SignOut, Sparkle, UserCircle } from "@phosphor-icons/react";
 
 import theme from "@/lib/theme";
-import Profile from "./Profile";
 import Routes from "@/lib/constants/Routes";
+import Profile from "./Profile";
 
 const NavbarAndProfile = () => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -54,7 +54,10 @@ const NavbarAndProfile = () => {
             {navItems.map((item) => (
               <Box key={item.id} sx={item.sx}>
                 <Link href={item.link}>
-                  <Typography variant="body2">{item.title}</Typography>
+                  <Stack direction="row" gap={1} alignItems="center">
+                    {item.id === 3 && item.icon}
+                    <Typography variant="body2">{item.title}</Typography>
+                  </Stack>
                 </Link>
               </Box>
             ))}
@@ -81,11 +84,11 @@ const NavbarAndProfile = () => {
             }}
             sx={popoverStyles}
           >
-            <Link href="/profile">
+            <Link href={Routes.ADMIN_ROUTES.CHAT_BOT_SERVICE.CATEGORIES}>
               <MenuItem onClick={handleClose}>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <UserCircle size={24} />
-                  <Typography variant="body2">Trang cá nhân</Typography>
+                  <Typography variant="body2">Bảng điều khiển</Typography>
                 </Stack>
               </MenuItem>
             </Link>
@@ -94,8 +97,11 @@ const NavbarAndProfile = () => {
               {navItems.map((item) => (
                 <Box key={item.id} sx={item.sx}>
                   <Link href={item.link}>
+                  <Stack direction="row" gap={1} alignItems="center">
+                    {item.icon}
                     <Typography variant="body2">{item.title}</Typography>
-                  </Link>
+                  </Stack>
+                </Link>
                 </Box>
               ))}
             </Stack>
@@ -150,12 +156,14 @@ const navItems = [
     id: 1,
     title: "Lịch thi",
     link: Routes.EXAM_TIME_TABLE,
+    icon: <CalendarCheck size={24} />,
     sx: { ...navItemStyles },
   },
   {
     id: 2,
     title: "Lịch học",
     link: Routes.TIME_TABLE,
+    icon: <CalendarDots size={24} />,
     sx: { ...navItemStyles },
   },
   {
@@ -168,5 +176,6 @@ const navItems = [
       color: "var(--white)",
       ":hover": { background: "var(--gradient-active)" },
     },
+    icon: <Sparkle size={24} />,
   },
 ];

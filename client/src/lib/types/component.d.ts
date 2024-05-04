@@ -142,3 +142,8 @@ export interface ConversationHistoryDetailProps {
 export interface ConversationHistoryDeleterProps {
   value: IConversationResponse;
 }
+
+export interface MessageItemProps {
+  type: "question" | "answer";
+  content: string;
+}
