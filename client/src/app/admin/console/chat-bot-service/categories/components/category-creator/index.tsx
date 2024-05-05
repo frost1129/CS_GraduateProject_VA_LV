@@ -30,7 +30,7 @@ import { ToastInformation } from "@/lib/types/component";
 import CustomToast from "@/lib/components/toast";
 
 const categoryCreateSchema = z.object({
-  intentCode: z.string().min(1, "Không được bỏ trống").max(255, "Không vượt quá 255 ký tự"),
+  intentCode: z.string().min(1, "Không được bỏ trống").max(30, "Không vượt quá 30 ký tự"),
   description: z.string().min(1, "Không được bỏ trống"),
   note: z.string().nullable(),
 });
@@ -63,7 +63,7 @@ const CategoryCreator = () => {
   const handleCreateCategory = (data: CategoryCreateForm) => {
     const categoryData: ICategoryRequest = {
       id: null,
-      intentCode: data.intentCode,
+      intentCode: data.intentCode.trim(),
       description: data.description,
       note: data.note,
     };

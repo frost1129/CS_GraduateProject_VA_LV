@@ -37,7 +37,7 @@ const topicCreateSchema = z.object({
   intentCode: z
     .string()
     .min(1, "Không được bỏ trống")
-    .max(255, "Không vượt quá 255 ký tự"),
+    .max(30, "Không vượt quá 30 ký tự"),
   description: z.string().min(1, "Không được bỏ trống"),
   categoryId: z.number(),
   note: z.string().nullable(),
@@ -75,7 +75,7 @@ const TopicCreator = () => {
   const handleCreateTopic = (data: TopicCreateForm) => {
     const topicData: ITopicRequest = {
       id: null,
-      intentCode: data.intentCode,
+      intentCode: data.intentCode.trim(),
       description: data.description,
       categoryId: data.categoryId,
       note: data.note,

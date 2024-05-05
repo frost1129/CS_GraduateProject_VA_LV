@@ -40,7 +40,7 @@ const contentCreateSchema = z.object({
   intentCode: z
     .string()
     .min(1, "Không được bỏ trống")
-    .max(255, "Không vượt quá 255 ký tự"),
+    .max(30, "Không vượt quá 30 ký tự"),
   title: z
     .string()
     .min(1, "Không được bỏ trống")
@@ -102,7 +102,7 @@ const ContentCreator = () => {
 
   const handleCreateContent = (data: ContentCreateForm) => {
     const contentData: ISaveContentRequest = {
-      intentCode: data.intentCode,
+      intentCode: data.intentCode.trim(),
       title: data.title,
       text: data.text,
       note: data.note,
