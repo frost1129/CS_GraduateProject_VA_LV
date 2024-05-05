@@ -4,7 +4,7 @@ const SubjectRenderTable = () => {
 
     return (
         <>
-            <h2>Post content table here</h2>
+            <h2>Subject table content here.</h2>
         </>
     )
 };
