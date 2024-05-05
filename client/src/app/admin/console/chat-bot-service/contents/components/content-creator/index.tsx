@@ -112,7 +112,6 @@ const ContentCreator = () => {
       schoolYearId: data.schoolYearId,
     };
     dispatch(addNewContentThunk(contentData));
-    console.log(data);
   };
 
   const handleOpenFileDialog = () => {

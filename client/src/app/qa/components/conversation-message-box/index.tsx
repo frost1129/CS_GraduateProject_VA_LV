@@ -95,15 +95,13 @@ const ConversationMessageBox = () => {
       </Stack>
     );
 
-    console.log(selfConversationDataResponse?.data)
-
   return (
     <>
       <Stack direction="column" gap={2} ref={containerRef} sx={containerStyles}>
         {selfConversationDataResponse?.data.map((cm, index) =>
           index === 0 ? (
             <Stack key={index}>
-              {(page < selfConversationDataResponse.totalPages) && (
+              {page < selfConversationDataResponse.totalPages && (
                 <Button
                   variant="contained"
                   color="secondary"

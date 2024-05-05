@@ -18,7 +18,6 @@ export const getRequestParams = (
   currentSearchParams: any
 ) => {
   const queryParts: string[] = [];
-  console.log("current search params >>", currentSearchParams);
 
   params.forEach((key) => {
     const value = queryParams.get(key);
