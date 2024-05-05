@@ -39,7 +39,10 @@ public class ContentServiceImpl implements ContentService {
         // CASE: Save new content
         if (contentRequest.getId() == null) {
             try {
-                if (contentRepository.findByIntentCode(contentRequest.getIntentCode()).isPresent())
+                Optional<Topic> existingTopic = topicRepository.findById(contentRequest.getTopicId());
+                Optional<Content> existingContent = contentRepository.findByIntentCode(contentRequest.getIntentCode());
+                if (existingTopic.isPresent() && existingContent.isPresent() &&
+                        existingTopic.get().getIntentCode().equals(existingContent.get().getTopic().getIntentCode()) )
                     throw new SaveDataException("Nội dung đã tồn tại!");
                 else {
                     Content content = new Content();
