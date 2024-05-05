@@ -33,7 +33,7 @@ public class StudentJoinClassController {
     private final StudentJoinClassService joinClassService;
 
     @GetMapping("/timetable")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<List<TimeTableDTO>> getStudentTimeTable(
             @RequestParam(name = "studentId") String studentId,
             @RequestParam(name = "yearCode") int yearCode
