@@ -41,7 +41,7 @@ public class Content {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @Column(nullable = false, unique = true, length = 30)
+    @Column(nullable = false, length = 30)
     private String intentCode;
 
     @Lob
