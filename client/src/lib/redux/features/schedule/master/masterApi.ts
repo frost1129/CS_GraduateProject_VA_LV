@@ -8,7 +8,7 @@ const masterApi = {
     axiosScheduleService.get("/master/time-slot"),
 
   getYearCodesByYear: (year: number) =>
-    axiosScheduleService.get(`/master/by-year/${year}`),
+    axiosScheduleService.get(`/master/year-code/by-year/${year}`),
 };
 
 export default masterApi;

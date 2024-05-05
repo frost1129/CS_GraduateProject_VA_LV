@@ -12,6 +12,8 @@ import categoryReducer from "../features/chat-bot/category/categorySlice";
 import topicReducer from "../features/chat-bot/topic/topicSlice";
 import schoolYearReducer from "../features/chat-bot/school-year/schoolYearSlice";
 import conversationHistoryReducer from "../features/chat-bot/conversation-history/conversationHistorySlice";
+import enrollReducer from "../features/schedule/enrollment/enrollSlice";
+import masterReducer from "../features/schedule/master/masterSlide";
 
 export const makeStore = () => {
   return configureStore({
@@ -22,6 +24,9 @@ export const makeStore = () => {
       topic: topicReducer,
       schoolYear: schoolYearReducer,
       conversationHistory: conversationHistoryReducer,
+
+      enroll: enrollReducer,
+      master: masterReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
