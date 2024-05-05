@@ -2,20 +2,19 @@ name: Dockerize Frontend (Nextjs)
 
 on:
   push:
-    branchs: [dev_linh]
+    branchs: [main]
     paths:
       - client/**  # Only trigger on changes within client folder
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest # Leave this as it is
-    defaults:
-      run:
-        working-directory: ./client # Path to the actual service you want to Dockerize
+    runs-on: ubuntu-latest # Leave this as it is# Path to the actual service you want to Dockerize
+    
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
+        id: builder
         uses: docker/setup-buildx-action@v3
       
       - name: Login to Docker Hub 
@@ -27,7 +26,10 @@ jobs:
       - name: Build and push to Dockerhub # Dockerize
         uses: docker/build-push-action@v5
         with: 
-          context: .
-          file: ./Dockerfile
+          builder: ${{ steps.builder.outputs.name }}
+          context: ./client
+          file: ./client/Dockerfile
           push: true
-          tags: user/app:latest
+          tags: ougraduation/client:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
