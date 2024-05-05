@@ -33,7 +33,7 @@ CREATE TABLE `categories` (
   `note` tinytext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_5tj3lcyy6e16uosnmovpotfb5` (`intent_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1714485173210,1,NULL,'category-1','Category Description 1',NULL),(1714485173254,2,NULL,'category-2','Category Description 2',NULL),(1714485173256,3,NULL,'category-3','Category Description 3',NULL);
+INSERT INTO `categories` VALUES (1714874049265,4,NULL,'gioi-thieu-khai-quat','Giới thiệu khái quát',''),(1714874080585,5,NULL,'noi-dung-hoat-dong-ctsv','Các nội dung hoạt động công tác sinh viên',''),(1714874096828,6,NULL,'cac-quy-che','Các quy chế',''),(1714874123164,7,NULL,'noi-quy-lop-hoc','Nội quy lớp học',''),(1714874140281,8,NULL,'dien-thoai-lien-lac-can-thiet','Điện thoại liên lạc cần thiết','');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +85,6 @@ CREATE TABLE `contents` (
 
 LOCK TABLES `contents` WRITE;
 /*!40000 ALTER TABLE `contents` DISABLE KEYS */;
-INSERT INTO `contents` VALUES (1,1714485173355,1,NULL,NULL,1,1,'Text 1',NULL,'content-1','6e1f9c38-0830-44d3-a22d-dc71f540f0b7',NULL,'Title 1'),(2,1714485173357,2,NULL,1,1,1,'Text 2',NULL,'content-1.content-2','4f7e6151-350c-471e-ba87-8dc416c049d2',NULL,'Title 2'),(2,1714485173360,3,NULL,1,1,2,'Text 3',NULL,'content-1.content-3','9825e7b5-5fe6-489f-9b8b-d07c3e8c8a9c',NULL,'Title 3'),(3,1714485173362,4,NULL,2,2,2,'Text 4',NULL,'content-2.content-4','3b54d8e4-fc69-4b58-88bd-3559fe2aec2d',NULL,'Title 4'),(3,1714485173365,5,NULL,2,3,2,'Text 5',NULL,'content-2.content-5','b89f3a7a-cdfd-43f1-9a9b-f2d60c467564',NULL,'Title 5');
 /*!40000 ALTER TABLE `contents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,6 +101,7 @@ CREATE TABLE `conversation_histories` (
   `last_modified_date` bigint DEFAULT NULL,
   `question` varchar(1000) NOT NULL,
   `answer` varchar(10000) NOT NULL,
+  `image_link` varchar(255) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -113,7 +113,6 @@ CREATE TABLE `conversation_histories` (
 
 LOCK TABLES `conversation_histories` WRITE;
 /*!40000 ALTER TABLE `conversation_histories` DISABLE KEYS */;
-INSERT INTO `conversation_histories` VALUES (1714485173390,1,NULL,'Question 1','Answer 1','2051012004'),(1714485173392,2,NULL,'Question 2','Answer 2','2051012004'),(1714485173394,3,NULL,'Question 3','Answer 3','2051012004'),(1714485173397,4,NULL,'Question 4','Answer 4','2051012054'),(1714485173399,5,NULL,'Question 5','Answer 5','2051012054'),(1714485173403,6,NULL,'Question 6','Answer 6','2051012054');
 /*!40000 ALTER TABLE `conversation_histories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +141,7 @@ CREATE TABLE `school_years` (
 
 LOCK TABLES `school_years` WRITE;
 /*!40000 ALTER TABLE `school_years` DISABLE KEYS */;
-INSERT INTO `school_years` VALUES ('2022',1714485173326,1,NULL,'K22',NULL),('2023',1714485173328,2,NULL,'K23',NULL),('2024',1714485173331,3,NULL,'K24',NULL);
+INSERT INTO `school_years` VALUES ('2022',1714873657296,1,NULL,'K22',NULL),('2023',1714873657298,2,NULL,'K23',NULL),('2024',1714873657300,3,NULL,'K24',NULL);
 /*!40000 ALTER TABLE `school_years` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +164,7 @@ CREATE TABLE `topics` (
   UNIQUE KEY `UK_fnv5p525unrtuoh4rti6s29yo` (`intent_code`),
   KEY `FK3mind1ka66asw07vi2t2gxalm` (`category_id`),
   CONSTRAINT `FK3mind1ka66asw07vi2t2gxalm` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +173,7 @@ CREATE TABLE `topics` (
 
 LOCK TABLES `topics` WRITE;
 /*!40000 ALTER TABLE `topics` DISABLE KEYS */;
-INSERT INTO `topics` VALUES (1,1714485173286,1,NULL,'topic-1','Topic Description 1',NULL),(1,1714485173288,2,NULL,'topic-2','Topic Description 2',NULL),(1,1714485173291,3,NULL,'topic-3','Topic Description 3',NULL),(2,1714485173293,4,NULL,'topic-4','Topic Description 4',NULL),(2,1714485173295,5,NULL,'topic-5','Topic Description 5',NULL),(2,1714485173297,6,NULL,'topic-6','Topic Description 6',NULL),(3,1714485173299,7,NULL,'topic-7','Topic Description 7',NULL),(3,1714485173301,8,NULL,'topic-8','Topic Description 8',NULL),(3,1714485173304,9,NULL,'topic-9','Topic Description 9',NULL);
+INSERT INTO `topics` VALUES (4,1714874263257,10,NULL,'so-do-to-chuc-bo-may','Sơ đồ tổ chức bộ máy',''),(4,1714874288910,11,NULL,'hoi-dong-truong','Hội đồng trường',''),(4,1714874304695,12,NULL,'ban-giam-hieu','Ban giám hiệu',''),(4,1714874335971,13,NULL,'don-vi-quan-ly-dao-tao','Đơn vị quản lý đào tạo',''),(4,1714874360600,14,NULL,'khoa-va-nganh-dao-tao','Khoa và các ngành đào tạo',''),(4,1714874378312,15,NULL,'noi-sinh-vien-lien-he','Nơi sinh viên liên hệ',''),(4,1714874397147,16,NULL,'lich-tiep-cong-dan','Lịch tiếp công dân',''),(4,1714874416118,17,NULL,'thoi-gian-ra-vao-lop','Khung thời gian ra vào lớp',''),(4,1714874448658,18,NULL,'gioi-thieu-httt-cho-sinh-vien','Giới thiệu về hệ thống thông tin dành cho sinh viên ',''),(4,1714874667897,19,NULL,'muc-tieu-ke-hoach-hoc-tap','Mục tiêu và kế hoạch học tập ',''),(5,1714875481809,20,NULL,'che-do-chinh-sach','Chế độ chính sách',''),(5,1714875502205,21,NULL,'hanh-chinh-sinh-vien','Hành chính sinh viên',''),(5,1714875561334,22,NULL,'cong-tt-chu-nhiem-lop-cvht','Cổng thông tin \"chủ nhiệm lớp - cố vấn học tập\"',''),(5,1714875597634,23,NULL,'danh-gia-kqrl-online','Đánh giá kết quả rèn luyện online',''),(5,1714875616571,24,NULL,'ngoai-tru','Ngoại trú',''),(5,1714875660442,25,NULL,'hd-ngoai-khoa-website-nha-tro',' Hoạt động ngoại khóa – Website nhà trọ ',''),(5,1714875699630,26,NULL,'khen-thuong-nk-ck','Khen thưởng ngoại khóa - khen thưởng cuối khóa',''),(5,1714875723013,27,NULL,'hoat-dong-dich-vu-ho-tro','Hoạt động dịch vụ hỗ trợ',''),(5,1714875757361,28,NULL,'huong-nghiep-tu-van-viec-lam','Hoạt động hướng nghiệp, tư vấn việc làm ',''),(6,1714875805628,29,NULL,'dao-tao-dai-hoc-chinh-quy',' Quy chế đào tạo trình độ đại học hình thức đào tạo chính quy',''),(6,1714875832888,30,NULL,'dao-tao-ngoai-ngu-khong-chuyen','Quy định đào tạo ngoại ngữ không chuyên',''),(6,1714875864968,31,NULL,'dao-tao-gdqp-an-ninh','Quy định tổ chức dạy, học đánh giá kết quả học tập GDQP và an ninh',''),(6,1714875881717,32,NULL,'mien-giam-mon-hoc','Quy định miễn, giảm môn học',''),(6,1714875915982,33,NULL,'dao-tao-tin-hoc-vp-nang-cao','Quy định đào tọa môn Tin học văn phòng nâng cao',''),(6,1714876548562,34,NULL,'dang-ky-mon-hoc','Quy định đăng ký môn học ',''),(6,1714876564100,35,NULL,'dieu-chinh-lich-thi','Quy định điều chỉnh lịch thi ',''),(6,1714876590372,36,NULL,'chuyen-vao-ra-clc','Chuyển vào/ra chương trình chất lượng cao',''),(6,1714876619220,37,NULL,'quy-che-ctsv-ctdt-dai-hoc','Quy chế CTSV đối với chương trình đào tạo đại học',''),(6,1714876656129,38,NULL,'su-dung-thu-dien-tu-dich-vu-tt',' Quy định sử dụng hệ thống thư điện tử và các dịch vụ trực tuyến',''),(6,1714876672050,39,NULL,'van-hoa-ung-xu','Quy định về văn hóa ứng xử người học ','');
 /*!40000 ALTER TABLE `topics` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -187,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-30 20:53:39
+-- Dump completed on 2024-05-05  9:39:56
