@@ -17,8 +17,12 @@ import {
   At,
   BookBookmark,
   BookOpenText,
+  ChalkboardTeacher,
   ClockCounterClockwise,
   Club,
+  Exam,
+  Note,
+  Notebook,
 } from "@phosphor-icons/react";
 import { images } from "@/lib/assets/img";
 import { CustomDrawerProps } from "@/lib/types/component";
@@ -127,6 +131,36 @@ const drawerData = [
         name: "Lịch sử hỏi đáp",
         link: "/admin/console/chat-bot-service/conversation-histories",
         icon: <ClockCounterClockwise size={iconSize} />,
+      },
+    ],
+  },
+  {
+    id: "2",
+    serviceName: "Quản lý chung",
+    items: [
+      {
+        id: "2-1",
+        name: "Bài đăng",
+        link: "/admin/console/schedule-service/posts",
+        icon: <Note size={iconSize} />,
+      },
+      {
+        id: "2-2",
+        name: "Môn học",
+        link: "/admin/console/schedule-service/subjects",
+        icon: <Notebook size={iconSize} />,
+      },
+      {
+        id: "2-3",
+        name: "Lớp môn học",
+        link: "/admin/console/schedule-service/subject-classes",
+        icon: <ChalkboardTeacher size={iconSize} />,
+      },
+      {
+        id: "2-4",
+        name: "Lịch thi",
+        link: "/admin/console/schedule-service/exams",
+        icon: <Exam size={iconSize} />,
       },
     ],
   },

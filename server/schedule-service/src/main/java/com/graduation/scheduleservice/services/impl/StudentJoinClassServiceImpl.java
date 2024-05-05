@@ -3,6 +3,7 @@ package com.graduation.scheduleservice.services.impl;
 import com.graduation.scheduleservice.constants.TimeSlotConstant;
 import com.graduation.scheduleservice.dtos.StudentJoinClassDTO;
 import com.graduation.scheduleservice.dtos.StudentJoinClassSaveDTO;
+import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.TimeTableDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
 import com.graduation.scheduleservice.models.StudentJoinClass;
@@ -205,10 +206,22 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
         StudentJoinClassDTO rs = new StudentJoinClassDTO();
         rs.setId(studentJoinClass.getId());
         rs.setStudentId(studentJoinClass.getStudentId());
-        rs.setSubjectClass(studentJoinClass.getSubjectClass());
+        rs.setSubjectClass(this.mapToSCDTO(studentJoinClass.getSubjectClass()));
         rs.setTotalScore(studentJoinClass.getTotalScore());
         rs.setCreatedDate(studentJoinClass.getCreatedDate());
         rs.setUpdatedDate(studentJoinClass.getUpdatedDate());
+        return rs;
+    }
+
+    private SubjectClassDTO mapToSCDTO(SubjectClass subjectClass) {
+        SubjectClassDTO rs = new SubjectClassDTO();
+        rs.setId(subjectClass.getId());
+        rs.setSubject(subjectClass.getSubject());
+        rs.setSubjectClassSchedule(subjectClass.getSubjectClassSchedule());
+        rs.setYearCode(subjectClass.getYearCode());
+        rs.setNote(subjectClass.getNote());
+        rs.setCreatedDate(subjectClass.getCreatedDate());
+        rs.setUpdatedDate(subjectClass.getUpdatedDate());
         return rs;
     }
 

@@ -27,7 +27,7 @@ public class ExamScheduleController {
     private final GeneticAlgorithmService gaService;
     private final ExamScheduleService examScheduleService;
 
-    @GetMapping("/ga")
+    @PostMapping("/ga")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DNA> generateSchedule(@RequestBody ScheduleRequest request) {
         this.gaService.initAlgorithm(request.getYearCode(), request.getDate(), request.getLength(), request.getSize());
