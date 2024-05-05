@@ -30,11 +30,11 @@ public class ChatBotServiceApplication {
     @Bean
     public CommandLineRunner loadData() {
         return args -> {
-            loadCategoryData();
-            loadTopicData();
-            loadSchoolYearData();
-            loadContentData();
-            loadConversationHistoryData();
+//            loadCategoryData();
+//            loadTopicData();
+//            loadSchoolYearData();
+//            loadContentData();
+//            loadConversationHistoryData();
         };
     }
 
