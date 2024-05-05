@@ -25,7 +25,7 @@ import { FilePlus, Plus, X } from "@phosphor-icons/react";
 
 import CustomLoadingButton from "@/lib/components/loading-button";
 import CustomToast from "@/lib/components/toast";
-import { addNewContentThunk } from "@/lib/redux/features/chat-bot/content/contentActions";
+import { addNewContentThunk, getContentsV2Thunk } from "@/lib/redux/features/chat-bot/content/contentActions";
 import {
   appendContentFirst,
   resetContentStatus,
@@ -35,6 +35,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { ISaveContentRequest } from "@/lib/types/backend";
 import { ToastInformation } from "@/lib/types/component";
 import { getSchoolYearsThunk } from "@/lib/redux/features/chat-bot/school-year/schoolYearActions";
+import CustomPagination from "@/lib/components/data-grid/CustomPagination";
 
 const contentCreateSchema = z.object({
   intentCode: z
@@ -156,6 +157,10 @@ const ContentCreator = () => {
       fileInputRef.current.value = ""; // Reset file input to allow re-selecting the same file if needed
     }
   };
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    dispatch(getContentsV2Thunk({ page: value }));
+  }
 
   useEffect(() => {
     if (savedContent !== null) {
@@ -319,21 +324,32 @@ const ContentCreator = () => {
                             }
                           />
                         )}
-                        renderOption={(props, option) => (
-                          <MenuItem
-                            {...props}
-                            sx={{ marginX: 1, marginTop: 0.5 }}
-                            key={option.id}
-                          >
-                            <Stack direction="column" gap={0.25}>
-                              <Typography variant="caption">
-                                {option.intentCode}
-                              </Typography>
-                              <Typography variant="body2">
-                                {option.title}
-                              </Typography>
-                            </Stack>
-                          </MenuItem>
+                        renderOption={(props, option, state) => (
+                          <>
+                            <MenuItem
+                              {...props}
+                              sx={{ marginX: 1, marginTop: 0.5 }}
+                              key={option.id}
+                            >
+                              <Stack direction="column" gap={0.25}>
+                                <Typography variant="caption">
+                                  {option.intentCode}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {option.title}
+                                </Typography>
+                              </Stack>
+                            </MenuItem>
+                            {state.index === contentDataResponse?.data.length! - 1 && (
+                              <Stack marginTop={1}>
+                                <CustomPagination pagination={{
+                                  currentPage: contentDataResponse?.currentPage || null,
+                                  pageSize: contentDataResponse?.pageSize || null,
+                                  totalPages: contentDataResponse?.totalPages || null
+                                }} onPageChange={handlePageChange} />
+                              </Stack>
+                            )}
+                          </>
                         )}
                       />
                     )}
