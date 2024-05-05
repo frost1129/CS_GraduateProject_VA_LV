@@ -1,6 +1,7 @@
 package com.graduation.scheduleservice.controllers;
 
 import com.graduation.scheduleservice.dtos.ScheduleRequest;
+import com.graduation.scheduleservice.dtos.TimeTableDTO;
 import com.graduation.scheduleservice.models.DNA;
 import com.graduation.scheduleservice.models.ScheduledExam;
 import com.graduation.scheduleservice.services.ExamScheduleService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,6 +29,15 @@ public class ExamScheduleController {
     private final GeneticAlgorithmService gaService;
     private final ExamScheduleService examScheduleService;
 
+    @GetMapping("/timetable")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<List<TimeTableDTO>> getStudentExam(
+            @RequestParam(name = "studentId") String studentId,
+            @RequestParam(name = "yearCode") int yearCode
+    ) {
+        return new ResponseEntity<>(this.examScheduleService.getStudentExam(studentId, yearCode), HttpStatus.OK);
+    }
+
     @PostMapping("/ga")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DNA> generateSchedule(@RequestBody ScheduleRequest request) {
@@ -39,9 +50,6 @@ public class ExamScheduleController {
 //            if (generation++ == 100)
 //                break;
         }
-
-//        List<ScheduledExam> scheduledExams = new ArrayList<>(this.GA.getBestResult().getExamSchedules().values());
-//        this.examService.saveAllScheduledExams(scheduledExams);
 
         return new ResponseEntity<>(this.gaService.getBestResult(), HttpStatus.OK);
     }

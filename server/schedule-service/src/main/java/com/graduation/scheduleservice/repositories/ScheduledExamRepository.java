@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ScheduledExamRepository extends JpaRepository<ScheduledExam, Long> {
+    ScheduledExam getScheduledExamBySubjectClass_Id(Long id);
 }
