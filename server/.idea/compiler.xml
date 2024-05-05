@@ -9,12 +9,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="chatbot-service" />
-        <module name="product-service" />
         <module name="auth-service" />
         <module name="discovery-server" />
         <module name="schedule-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="product-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
