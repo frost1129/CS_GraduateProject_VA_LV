@@ -99,6 +99,20 @@ services:
     networks:
       - keycloak-and-mysql-network
 
+  client-frontend:
+    image: ougraduation/client:latest
+    container_name: client-frontend
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - keycloak-and-mysql-network
+
 networks:
   keycloak-and-mysql-network:
 
