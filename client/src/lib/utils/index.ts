@@ -36,3 +36,20 @@ export const getRequestParams = (
     currentSearchParams,
   };
 };
+
+export function convertTime24to12(time24: string): string {
+  // Extract hours and minutes from the time string
+  const [hours24, minutes] = time24.split(':');
+
+  // Convert hours part to number
+  const hours = parseInt(hours24, 10);
+
+  // Determine AM or PM suffix based on the hour
+  const suffix = hours >= 12 ? 'PM' : 'AM';
+
+  // Convert 24-hour time to 12-hour format
+  const hours12 = ((hours + 11) % 12 + 1);
+
+  // Return the formatted time string in 12-hour format
+  return `${hours12}:${minutes} ${suffix}`;
+}
