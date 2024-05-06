@@ -14,6 +14,7 @@ import schoolYearReducer from "../features/chat-bot/school-year/schoolYearSlice"
 import conversationHistoryReducer from "../features/chat-bot/conversation-history/conversationHistorySlice";
 import enrollReducer from "../features/schedule/enrollment/enrollSlice";
 import masterReducer from "../features/schedule/master/masterSlide";
+import examReducer from "../features/schedule/exam/examSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -27,6 +28,7 @@ export const makeStore = () => {
 
       enroll: enrollReducer,
       master: masterReducer,
+      exam: examReducer
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

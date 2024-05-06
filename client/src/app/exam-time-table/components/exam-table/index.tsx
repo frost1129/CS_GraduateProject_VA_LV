@@ -10,7 +10,7 @@ import theme from "@/lib/theme";
 import { ITimeTableDTO } from "@/lib/types/backend-schedule";
 import { IReactSchedulerData } from "@/lib/types/component";
 
-const TimeTableMain = () => {
+const ExamTimeTableMain = () => {
   const { timeTables, getTimeTableError, getTimeTableLoading } = useAppSelector(
     (state) => state.enroll
   );
@@ -67,7 +67,7 @@ const TimeTableMain = () => {
   );
 };
 
-export default TimeTableMain;
+export default ExamTimeTableMain;
 
 const containerStyles: SxProps<Theme> = {
   paddingTop: 2,
