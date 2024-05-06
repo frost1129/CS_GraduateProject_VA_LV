@@ -1,5 +1,6 @@
 package com.graduation.scheduleservice.models;
 
+import com.graduation.scheduleservice.dtos.EvaluateDNAResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class DNA {
     private LocalDate startDate;
     private int totalDays;
     private int totalClass;
+    private EvaluateDNAResponse evaluate;
 
     private Random random = new Random();
 

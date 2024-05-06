@@ -1,6 +1,7 @@
 package com.graduation.scheduleservice.services.impl;
 
 import com.graduation.scheduleservice.constants.FitnessPenalty;
+import com.graduation.scheduleservice.dtos.EvaluateDNAResponse;
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.TimeSlotDTO;
 import com.graduation.scheduleservice.models.*;
@@ -86,6 +87,8 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
             return dna.getFitness();
 
         int point = 0;
+        int overlap = 0;
+        int overSchedule = 0;
 
         for (int i = 0; i < this.schedules.size() - 1; i++) {
             ScheduledExam exam1 = dna.getExamSchedules().get(this.schedules.get(i).getId());
@@ -93,23 +96,29 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
             for (int j = i + 1; j < this.schedules.size(); j++) {
                 ScheduledExam exam2 = dna.getExamSchedules().get(this.schedules.get(j).getId());
 
-//                Check sv có 2 môn thi cùng 1 ngày
+//              Check sv có 2 môn thi cùng 1 ngày
                 if (exam1.getExamDate().equals(exam2.getExamDate())) {
-//                    Check sv nào thi 2 môn cùng lúc
+//                  Check sv nào thi 2 môn cùng lúc
                     if (exam1.getTimeSlot().equals(exam2.getTimeSlot())) {
                         for (String std1Id : this.joinClassService.getAllStudentIdBySubjectClassId(exam1.getSubjectClass().getId())) {
-                            if (this.joinClassService.getAllStudentIdBySubjectClassId(exam2.getSubjectClass().getId()).contains(std1Id))
+                            if (this.joinClassService.getAllStudentIdBySubjectClassId(exam2.getSubjectClass().getId()).contains(std1Id)) {
                                 point += FitnessPenalty.FIRST_CLASS;
+                                overlap++;
+                            }
                         }
                     }
-//                    Check sv nào thi 2 môn liên tiếp
-                    else if (exam1.getTimeSlot().isRightAfter(exam2.getTimeSlot()))
+//                  Check sv nào thi 2 môn liên tiếp
+                    else if (exam1.getTimeSlot().isRightAfter(exam2.getTimeSlot())) {
                         point += FitnessPenalty.SECOND_CLASS;
+                        overSchedule++;
+                    }
                 }
             }
         }
 
+        EvaluateDNAResponse evaluation = new EvaluateDNAResponse(overlap, overSchedule, point);
         dna.setFitness(point);
+        dna.setEvaluate(evaluation);
         return point;
     }
 
@@ -160,9 +169,8 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
     }
 
     @Override
-    public DNA doMutation(DNA dna, Float mulRate) {
+    public void doMutation(DNA dna, Float mulRate) {
         dna.mutate(mulRate, timeslots, schedules);
-        return dna;
     }
 
     private TimeSlot mapToTimeSlot(TimeSlotDTO dto) {
