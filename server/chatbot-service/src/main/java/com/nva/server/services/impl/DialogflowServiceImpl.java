@@ -44,7 +44,7 @@ public class DialogflowServiceImpl implements DialogflowService {
             result.setAnswer("Không có dữ liệu về câu hỏi này. Vui lòng đặt lại câu hỏi!");
 
             SessionName session = SessionName.of(projectId, sessionId);
-            TextInput.Builder textInput = TextInput.newBuilder().setText(questionText).setLanguageCode("vi-VN");
+            TextInput.Builder textInput = TextInput.newBuilder().setText(questionText + " năm 2023").setLanguageCode("vi-VN");
             QueryInput queryInput = QueryInput.newBuilder().setText(textInput).build();
             DetectIntentResponse intentResponse = sessionsClient.detectIntent(session, queryInput);
 
