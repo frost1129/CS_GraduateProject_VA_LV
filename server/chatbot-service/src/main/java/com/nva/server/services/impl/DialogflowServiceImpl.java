@@ -60,6 +60,9 @@ public class DialogflowServiceImpl implements DialogflowService {
                 result.setAnswer(intentResponse.getQueryResult().getFulfillmentText());
             } else {
                 List<String> intentParts = Arrays.asList(intent.split("\\."));
+
+                log.warn("intent >>> " + intentParts);
+
                 parameters.put("categoryIntent", intentParts.get(0));
                 parameters.put("topicIntent", intentParts.get(1));
                 parameters.put("contentIntent", String.join(".", intentParts.subList(2, intentParts.size())));

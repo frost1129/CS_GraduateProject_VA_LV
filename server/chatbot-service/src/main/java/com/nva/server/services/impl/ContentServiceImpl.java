@@ -42,7 +42,7 @@ public class ContentServiceImpl implements ContentService {
                 Optional<Topic> existingTopic = topicRepository.findById(contentRequest.getTopicId());
                 Optional<Content> existingContent = contentRepository.findByIntentCode(contentRequest.getIntentCode());
                 if (existingTopic.isPresent() && existingContent.isPresent() &&
-                        existingTopic.get().getIntentCode().equals(existingContent.get().getTopic().getIntentCode()) )
+                        existingTopic.get().getIntentCode().equals(existingContent.get().getTopic().getIntentCode()))
                     throw new SaveDataException("Nội dung đã tồn tại!");
                 else {
                     Content content = new Content();
@@ -262,18 +262,15 @@ public class ContentServiceImpl implements ContentService {
         String topicIntent = params.get("topicIntent");
         String yearIntent = params.get("s-year");
 
-        log.warn("Content >>> " + contentIntent + " " + topicIntent + " " + yearIntent);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Content> query = criteriaBuilder.createQuery(Content.class);
+        Root<Content> root = query.from(Content.class);
+
+        // Building the predicates for filtering
+        Predicate predicate = criteriaBuilder.conjunction();
 
         if (contentIntent != null && !contentIntent.isEmpty() &&
-                topicIntent != null && !topicIntent.isEmpty() &&
-                yearIntent != null && !yearIntent.isEmpty()) {
-
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Content> query = criteriaBuilder.createQuery(Content.class);
-            Root<Content> root = query.from(Content.class);
-
-            // Building the predicates for filtering
-            Predicate predicate = criteriaBuilder.conjunction();
+                topicIntent != null && !topicIntent.isEmpty()) {
 
             // Adding conditions based on intentCode of Content
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("intentCode"), contentIntent));
@@ -281,18 +278,17 @@ public class ContentServiceImpl implements ContentService {
             // Join with Topic entity to filter on topic intent code
             Join<Content, Topic> topicJoin = root.join("topic");
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(topicJoin.get("intentCode"), topicIntent));
-
+        }
+        if (yearIntent != null && !yearIntent.isEmpty()) {
             // Join with SchoolYear entity to filter on year
             Join<Content, SchoolYear> schoolYearJoin = root.join("schoolYear");
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(schoolYearJoin.get("year"), yearIntent));
-
-            // Apply the predicate and perform the query
-            query.select(root).where(predicate);
-
-            List<Content> results = entityManager.createQuery(query).getResultList();
-            return results.isEmpty() ? null : results.get(0);
         }
-        return null;
+        // Apply the predicate and perform the query
+        query.select(root).where(predicate);
+
+        List<Content> results = entityManager.createQuery(query).getResultList();
+        return results.isEmpty() ? null : results.get(0);
     }
 
 
