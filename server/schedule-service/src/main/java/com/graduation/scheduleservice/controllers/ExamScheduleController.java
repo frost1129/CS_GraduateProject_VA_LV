@@ -1,5 +1,6 @@
 package com.graduation.scheduleservice.controllers;
 
+import com.graduation.scheduleservice.dtos.DNAResponse;
 import com.graduation.scheduleservice.dtos.ScheduleRequest;
 import com.graduation.scheduleservice.dtos.TimeTableDTO;
 import com.graduation.scheduleservice.models.DNA;
@@ -40,7 +41,7 @@ public class ExamScheduleController {
 
     @PostMapping("/ga")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<DNA> generateSchedule(@RequestBody ScheduleRequest request) {
+    public ResponseEntity<DNAResponse> generateSchedule(@RequestBody ScheduleRequest request) {
         this.gaService.initAlgorithm(request.getYearCode(), request.getDate(), request.getLength(), request.getSize());
         int generation = 1;
 
@@ -51,13 +52,25 @@ public class ExamScheduleController {
 //                break;
         }
 
-        return new ResponseEntity<>(this.gaService.getBestResult(), HttpStatus.OK);
+        return new ResponseEntity<>(mapDNAToResponse(this.gaService.getBestResult()), HttpStatus.OK);
     }
 
     @PostMapping("/schedule")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ScheduledExam>> saveSchedule(@RequestBody DNA dna) {
-        List<ScheduledExam> examList = dna.getExamSchedules().values().stream().toList();
+    public ResponseEntity<List<ScheduledExam>> saveSchedule(@RequestBody DNAResponse dna) {
+        List<ScheduledExam> examList = dna.getExamList();
         return new ResponseEntity<>(this.examScheduleService.saveExamSchedule(examList), HttpStatus.CREATED);
+    }
+
+    private DNAResponse mapDNAToResponse(DNA dna) {
+        DNAResponse response = new DNAResponse();
+        List<ScheduledExam> examList = dna.getExamSchedules().values().stream().toList();
+
+        response.setExamList(examList);
+        response.setEvaluate(dna.getEvaluate());
+        response.setStartDate(dna.getStartDate());
+        response.setTotalDays(dna.getTotalDays());
+        response.setTotalClass(dna.getTotalClass());
+        return response;
     }
 }

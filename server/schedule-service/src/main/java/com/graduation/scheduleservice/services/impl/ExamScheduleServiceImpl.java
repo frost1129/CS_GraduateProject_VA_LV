@@ -28,6 +28,11 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
     }
 
     @Override
+    public List<ScheduledExam> getExamScheduleByYearCode(int yearCode) {
+        return this.examRepository.getScheduledExamsBySubjectClass_YearCode_YearCode(yearCode);
+    }
+
+    @Override
     public List<TimeTableDTO> getStudentExam(String studentId, int yearCode) {
         // 1. Find StudentJoinClass records based on studentId and yearCode
         List<StudentJoinClass> joinClasses = joinClassRepository.findByStudentIdAndSubjectClass_YearCode_YearCode(studentId, yearCode);

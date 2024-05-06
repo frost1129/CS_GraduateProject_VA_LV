@@ -15,5 +15,5 @@ public interface GeneticAlgorithmService {
     void calcProb(int worstFitness);
     DNA randomParent();
     void doCrossOver(Float mulRate);
-    DNA doMutation(DNA dna, Float mulRate);
+    void doMutation(DNA dna, Float mulRate);
 }
