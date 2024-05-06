@@ -7,6 +7,12 @@ const ADMIN_ROUTES = {
     CONVERSATION_HISTORIES:
       "/admin/console/chat-bot-service/conversation-histories",
   },
+  SCHEDULE_SERVICE: {
+    POSTS: "/admin/console/schedule-service/posts",
+    SUBJECTS: "/admin/console/schedule-service/subjects",
+    SUBJECT_CLASSES: "/admin/console/schedule-service/subject-classes",
+    EXAMS:"/admin/console/schedule-service/exams",
+  },
 };
 
 const ROOT = "/";

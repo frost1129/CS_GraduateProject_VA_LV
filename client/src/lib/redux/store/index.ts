@@ -14,6 +14,9 @@ import schoolYearReducer from "../features/chat-bot/school-year/schoolYearSlice"
 import conversationHistoryReducer from "../features/chat-bot/conversation-history/conversationHistorySlice";
 import enrollReducer from "../features/schedule/enrollment/enrollSlice";
 import masterReducer from "../features/schedule/master/masterSlide";
+import postReducer from "../features/schedule/post/postSlice";
+import subjectReducer from "../features/schedule/subject/subjectSlice";
+import subjectClassReducer from "../features/schedule/subject-class/subjectClassSlice";
 import examReducer from "../features/schedule/exam/examSlice";
 
 export const makeStore = () => {
@@ -25,10 +28,12 @@ export const makeStore = () => {
       topic: topicReducer,
       schoolYear: schoolYearReducer,
       conversationHistory: conversationHistoryReducer,
-
       enroll: enrollReducer,
       master: masterReducer,
-      exam: examReducer
+      post: postReducer,
+      subject: subjectReducer, 
+      subjectClass: subjectClassReducer,
+      exam: examReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

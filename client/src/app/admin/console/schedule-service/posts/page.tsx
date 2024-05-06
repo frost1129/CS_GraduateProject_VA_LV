@@ -8,7 +8,7 @@ const PostPage = () => {
             <PostHeader />
             <PostRenderTable />
         </Stack>
-    )
+    );
 };
 
 export default PostPage;
