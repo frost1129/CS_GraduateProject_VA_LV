@@ -35,7 +35,7 @@ const TimeTableHeader = () => {
     getSchoolYearError,
   } = useAppSelector((state) => state.master);
   const { userProfile } = useAppSelector((state) => state.auth);
-  const { timeTables, getTimeTableLoading, getTimeTableError } = useAppSelector((state) => state.enroll);
+  const { timeTables, getTimeTableError } = useAppSelector((state) => state.enroll);
 
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
 
@@ -61,7 +61,7 @@ const TimeTableHeader = () => {
     if (yearCode) {
       const params: TimetableRequestParams = {
         // NEED_TO_DO_NEXT
-        studentId: userProfile?.preferred_username || undefined, // hard code test: "2030099"
+        studentId: "2030099" || undefined, // hard code test: "2030099"
         yearCode,
       };
       dispatch(getTimeTableThunk(params));
@@ -88,7 +88,7 @@ const TimeTableHeader = () => {
         Lịch học cá nhân
       </Typography>
       <Stack
-        direction={isTablet ? "row" : "column-reverse"}
+        direction={isTablet ? "row" : "column"}
         alignItems="center"
         gap={2}
       >

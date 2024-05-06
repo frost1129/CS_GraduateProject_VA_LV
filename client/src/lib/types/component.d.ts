@@ -147,3 +147,10 @@ export interface MessageItemProps {
   type: "question" | "answer";
   message: IConversationResponse;
 }
+
+export interface IReactSchedulerData {
+  event_id: number;
+  title: string;
+  start: Date;
+  end: Date;
+}
