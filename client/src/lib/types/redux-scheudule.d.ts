@@ -47,6 +47,10 @@ export interface SubjectClassState {
     uploadSubjectClassLoading: boolean;
     uploadedSubjectClass: ISubjectClassDTO[];
     uploadSubjectClassError: any;
+
+    getAssignedYearCodeLoading: boolean;
+    assignedYearCode: IYearCodeDTO[];
+    getAssignedYearCodeError: any;
 }
 
 export interface EnrollmentState {
@@ -67,6 +71,14 @@ export interface ExamScheduleState {
     saveExamScheduleLoading: boolean;
     savedExamSchedule: IExamSchedule[];
     saveExamScheduleError: any;
+
+    getStudentExamsLoading: boolean;
+    studentExams: ITimeTableDTO[];
+    getStudentExamsError: any;
+
+    getYearCodeExamsLoading: boolean;
+    yearCodeExams: ITimeTableDTO[];
+    getYearCodeExamsError: any;
 }
 
 export interface SearchRequestParams {

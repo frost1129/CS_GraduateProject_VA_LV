@@ -1,6 +1,6 @@
 import { ExamScheduleState, ResetExamScheduleStatusPayload } from "@/lib/types/redux-scheudule";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { generateExamScheduleThunk, saveExamScheduleThunk } from "./examActions";
+import { generateExamScheduleThunk, getStudentExamTimeTableThunk, getYearCodeExamTimeTableThunk, saveExamScheduleThunk } from "./examActions";
 
 const initialState: ExamScheduleState = {
     generateExamScheduleLoading: false,
@@ -10,6 +10,14 @@ const initialState: ExamScheduleState = {
     saveExamScheduleLoading: false,
     savedExamSchedule: [],
     saveExamScheduleError: null,
+
+    getStudentExamsLoading: false,
+    studentExams: [],
+    getStudentExamsError: null,
+
+    getYearCodeExamsLoading: false, 
+    yearCodeExams: [],
+    getYearCodeExamsError: null,
 };
 
 const examSlice = createSlice({
@@ -59,6 +67,38 @@ const examSlice = createSlice({
             state.saveExamScheduleLoading = false;
             state.savedExamSchedule = [];
             state.saveExamScheduleError = action.payload ? action.payload : null;
+        });
+
+        builder.addCase(getStudentExamTimeTableThunk.pending, (state) => {
+            state.getStudentExamsLoading = true;
+            state.studentExams = [];
+            state.getStudentExamsError = null;
+        });
+        builder.addCase(getStudentExamTimeTableThunk.fulfilled, (state, action) => {
+            state.getStudentExamsLoading = false;
+            state.studentExams = action.payload.data;
+            state.getStudentExamsError = null;
+        });
+        builder.addCase(getStudentExamTimeTableThunk.rejected, (state, action) => {
+            state.getStudentExamsLoading = false;
+            state.studentExams = [];
+            state.getStudentExamsError = action.payload ? action.payload : null;
+        });
+
+        builder.addCase(getYearCodeExamTimeTableThunk.pending, (state) => {
+            state.getYearCodeExamsLoading = true;
+            state.yearCodeExams = [];
+            state.getYearCodeExamsError = null;
+        });
+        builder.addCase(getYearCodeExamTimeTableThunk.fulfilled, (state, action) => {
+            state.getYearCodeExamsLoading = false;
+            state.yearCodeExams = action.payload.data;
+            state.getYearCodeExamsError = null;
+        });
+        builder.addCase(getYearCodeExamTimeTableThunk.rejected, (state, action) => {
+            state.getYearCodeExamsLoading = false;
+            state.yearCodeExams = [];
+            state.getYearCodeExamsError = action.payload ? action.payload : null;
         });
     },
 });
