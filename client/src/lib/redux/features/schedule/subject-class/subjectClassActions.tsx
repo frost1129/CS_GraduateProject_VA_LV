@@ -28,3 +28,16 @@ export const uploadSubjectClassThunk = createAsyncThunk (
         }
     }
 );
+
+export const getAssignedYearCodeThunk = createAsyncThunk (
+    "getAssignedYearCode",
+    async (_, { rejectWithValue }) => {
+        try {
+            return await subjectClassApi.getAssignedYearCode();
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message)
+                return rejectWithValue(error.response.data.message);
+            return rejectWithValue(error.message);
+        }
+    }
+);

@@ -185,17 +185,15 @@ export interface IExamSchedule {
 }
 
 export interface DNA {
-    examSchedules: {
-        [key: string]: IExamSchedule; 
-    };
-    fitness: number | null;
-    prob: number | null;
+    examSchedules: IExamSchedule[];
     startDate: LocalDate;
     totalDays: number;
     totalClass: number;
-    random: {
-        deprecated: boolean;
-    };
+    evaluate: {
+        overlapStudent: number;
+        overSchedule: number;
+        overallScore: number;
+    }
 }
 
 export interface IExamScheduleRequest {
@@ -204,6 +202,7 @@ export interface IExamScheduleRequest {
     length: number;
     size: number;
     multationRate: number;
+    minFitness: number;
 }
 
 export interface IUploadFormData {

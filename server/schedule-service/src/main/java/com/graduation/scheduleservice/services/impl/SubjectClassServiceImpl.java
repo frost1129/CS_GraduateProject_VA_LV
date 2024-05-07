@@ -182,7 +182,7 @@ public class SubjectClassServiceImpl implements SubjectClassService {
                 holder = new SubjectClass();
                 scheduleHolder = new SubjectClassSchedule();
 
-                localDate = LocalDate.parse(csvRecord.get("startDate").toString(), formatter);
+                localDate = LocalDate.parse(csvRecord.get("startDate"), formatter);
 
                 scheduleHolder.setTeacherId(csvRecord.get("teacherId"));
                 scheduleHolder.setWeekday(Integer.parseInt(csvRecord.get("weekDay")));

@@ -6,6 +6,7 @@ import com.graduation.scheduleservice.models.StudentJoinClass;
 import com.graduation.scheduleservice.models.SubjectClass;
 import com.graduation.scheduleservice.repositories.ScheduledExamRepository;
 import com.graduation.scheduleservice.repositories.StudentJoinClassRepository;
+import com.graduation.scheduleservice.repositories.SubjectClassRepository;
 import com.graduation.scheduleservice.services.ExamScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
 
     private final ScheduledExamRepository examRepository;
     private final StudentJoinClassRepository joinClassRepository;
+    private final SubjectClassRepository classRepository;
 
     @Override
     public List<ScheduledExam> saveExamSchedule(List<ScheduledExam> exams) {
@@ -29,12 +31,9 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
 
     @Override
     public List<TimeTableDTO> getExamScheduleByYearCode(int yearCode) {
-        List<StudentJoinClass> joinClasses = joinClassRepository.getAllBySubjectClass_YearCode_YearCode(yearCode);
-        List<SubjectClass> subjectClasses = joinClasses.stream()
-                .map(StudentJoinClass::getSubjectClass)
-                .toList();
-
+        List<SubjectClass> subjectClasses = classRepository.findByYearCode_YearCode(yearCode);
         List<TimeTableDTO> timetableEntries = new ArrayList<>();
+
         for (SubjectClass subjectClass : subjectClasses) {
             ScheduledExam scheduledExam = examRepository.getScheduledExamBySubjectClass_Id(subjectClass.getId());
 

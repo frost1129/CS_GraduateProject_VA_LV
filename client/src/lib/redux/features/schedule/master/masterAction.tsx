@@ -38,4 +38,4 @@ export const getYearCodeByYearsThunk = createAsyncThunk (
             return rejectWithValue(error.message);
         }
     }
-)
+);

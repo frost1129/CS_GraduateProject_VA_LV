@@ -26,8 +26,12 @@ const subjectClassApi = {
     uploadSubjectClasses: (requestObj: IUploadFormData) => {
         return axiosScheduleService.post("/subject-class/upload", {
             ...requestObj,
-        })
+        });
     }, 
+
+    getAssignedYearCode: () => {
+        return axiosScheduleService.get("/subject-class/assigned");
+    },
 };
 
 export default subjectClassApi;

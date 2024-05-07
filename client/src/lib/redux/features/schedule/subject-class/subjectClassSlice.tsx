@@ -1,6 +1,6 @@
 import { ResetSubjectClassStatusPayload, SubjectClassState } from "@/lib/types/redux-scheudule";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getSubjectClassesThunk, uploadSubjectClassThunk } from "./subjectClassActions";
+import { getAssignedYearCodeThunk, getSubjectClassesThunk, uploadSubjectClassThunk } from "./subjectClassActions";
 
 const initialState: SubjectClassState = {
     getSubjectClassLoading: false,
@@ -10,6 +10,10 @@ const initialState: SubjectClassState = {
     uploadSubjectClassLoading: false,
     uploadedSubjectClass: [],
     uploadSubjectClassError: null,
+
+    getAssignedYearCodeLoading: false,
+    assignedYearCode: [],
+    getAssignedYearCodeError: null,
 };
 
 const subjectClassSlice = createSlice({
@@ -71,6 +75,22 @@ const subjectClassSlice = createSlice({
             state.uploadSubjectClassLoading = false;
             state.uploadedSubjectClass = [];
             state.uploadSubjectClassError = action.payload ? action.payload : null;
+        });
+
+        builder.addCase(getAssignedYearCodeThunk.pending, (state) => {
+            state.getAssignedYearCodeLoading = true;
+            state.assignedYearCode = [];
+            state.getAssignedYearCodeError = null;
+        });
+        builder.addCase(getAssignedYearCodeThunk.fulfilled, (state, action) => {
+            state.getAssignedYearCodeLoading = false;
+            state.assignedYearCode = action.payload.data;
+            state.getAssignedYearCodeError = null;
+        });
+        builder.addCase(getAssignedYearCodeThunk.rejected, (state, action) => {
+            state.getAssignedYearCodeLoading = false;
+            state.assignedYearCode = [];
+            state.getAssignedYearCodeError = action.payload ? action.payload : null;
         });
     },
 });
