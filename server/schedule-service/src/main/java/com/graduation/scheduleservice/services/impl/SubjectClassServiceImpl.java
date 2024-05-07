@@ -6,6 +6,7 @@ import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSaveDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSearchResponse;
 import com.graduation.scheduleservice.dtos.SubjectClassShortDTO;
+import com.graduation.scheduleservice.dtos.YearCodeDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
 import com.graduation.scheduleservice.models.StudentJoinClass;
 import com.graduation.scheduleservice.models.Subject;
@@ -25,7 +26,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -247,6 +247,15 @@ public class SubjectClassServiceImpl implements SubjectClassService {
         }
     }
 
+    @Override
+    public List<YearCodeDTO> getAssignedYearCode() {
+        List<YearCode> subjectClasses = classRepository.findDistinctYearCodes();
+
+        return subjectClasses.stream()
+                .map(this::mapToYearCodeDTO)
+                .collect(Collectors.toList());
+    }
+
     private SubjectClassDTO mapToDTO(SubjectClass subjectClass) {
         SubjectClassDTO rs = new SubjectClassDTO();
         rs.setId(subjectClass.getId());
@@ -285,6 +294,16 @@ public class SubjectClassServiceImpl implements SubjectClassService {
         rs.setYearCode(saveDTO.getYearCode());
         rs.setScheduledExam(saveDTO.getScheduledExam());
         rs.setNote(saveDTO.getNote());
+        return rs;
+    }
+
+    private YearCodeDTO mapToYearCodeDTO(YearCode yearCode) {
+        YearCodeDTO rs = new YearCodeDTO();
+        rs.setId(yearCode.getId());
+        rs.setYearCode(yearCode.getYearCode());
+        rs.setSemester(yearCode.getSemester());
+        rs.setCreatedDate(yearCode.getCreatedDate());
+        rs.setSchoolYear(yearCode.getSchoolYear());
         return rs;
     }
 }

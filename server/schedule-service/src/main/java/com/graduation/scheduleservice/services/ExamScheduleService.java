@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ExamScheduleService {
     List<ScheduledExam> saveExamSchedule(List<ScheduledExam> exams);
-    List<ScheduledExam> getExamScheduleByYearCode(int yearCode);
+    List<TimeTableDTO> getExamScheduleByYearCode(int yearCode);
     List<TimeTableDTO> getStudentExam(String studentId, int yearCode);
 }

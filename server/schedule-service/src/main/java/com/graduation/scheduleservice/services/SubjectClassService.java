@@ -3,6 +3,7 @@ package com.graduation.scheduleservice.services;
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSaveDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSearchResponse;
+import com.graduation.scheduleservice.dtos.YearCodeDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface SubjectClassService {
     List<SubjectClassDTO> importSubjectClasses(MultipartFile file, int yearCode);
     SubjectClassDTO updateSubjectClass(Long classId, SubjectClassSaveDTO saveDTO);
     void deleteSubjectClass(Long id);
+    List<YearCodeDTO> getAssignedYearCode();
 }
