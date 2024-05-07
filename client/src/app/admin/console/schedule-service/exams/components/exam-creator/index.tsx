@@ -8,15 +8,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const examCreateSchema = z.object({
-    title: z
+    yearCode: z
         .string()
         .min(1, "Không được bỏ trống")
         .max(255, "Không vượt quá 255 ký tự"),
-    content: z
+    date: z
         .string()
         .min(1, "Không được bỏ trống")
         .max(10000, "Không vượt quá 10000 kí tự"),
-    imageBase64: z.string().nullable().default(null),
+    length: z.string().min(1, "Không được bỏ trống"),
+    size: z.string().min(1, "Không được bỏ trống"),
+    multationRate: z.string().min(1, "Không được bỏ trống"), 
+    minFitness: z.string().min(1, "Không được bỏ trống"),
 });
 
 type ExamCreateForm = z.infer<typeof examCreateSchema>;
@@ -56,51 +59,8 @@ const ExamCreator = () => {
         setOpenCreateDialog(false);
     };
 
-    const handleCreatePost = (data: ExamCreateForm) => {
+    const handleCreateSchedule = (data: ExamCreateForm) => {
         console.log(data);
-    };
-
-    const handleOpenFileDialog = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
-
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            // Check if the file size exceeds 5MB (5 * 1024 * 1024 bytes)
-            if (file.size > 5242880) {
-                setToastInfo({
-                    severity: "error",
-                    title: "Ảnh quá lớn",
-                    message: "Kích thước của ảnh phải dưới 5MB",
-                });
-                setOpenToast(true);
-                setValue("imageBase64", null); // Resetting the imageBase64 value if file is too large
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = ""; // Reset file input to allow another selection
-                }
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (typeof reader.result === "string") {
-                    setValue("imageBase64", reader.result);
-                }
-            };
-            reader.readAsDataURL(file);
-        } else {
-            setValue("imageBase64", null);
-        }
-    };
-
-    const handleRemoveDemoFile = () => {
-        setValue("imageBase64", null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
     };
 
     return (
@@ -113,7 +73,7 @@ const ExamCreator = () => {
             >
                 <Stack direction="row" gap={1} alignItems="center">
                     <Plus size={20} />
-                    <Typography variant="button1">Tạo mới</Typography>
+                    <Typography variant="button1">Tạo lịch thi</Typography>
                 </Stack>
             </Button>
         </>
