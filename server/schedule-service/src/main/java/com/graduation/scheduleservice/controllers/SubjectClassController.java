@@ -2,6 +2,7 @@ package com.graduation.scheduleservice.controllers;
 
 import com.graduation.scheduleservice.dtos.SubjectClassDTO;
 import com.graduation.scheduleservice.dtos.SubjectClassSearchResponse;
+import com.graduation.scheduleservice.dtos.YearCodeDTO;
 import com.graduation.scheduleservice.exceptions.SaveDataException;
 import com.graduation.scheduleservice.services.SubjectClassService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ import java.util.Map;
 public class SubjectClassController {
 
     private final SubjectClassService classService;
+
+    @GetMapping("/assigned")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<YearCodeDTO>> getAssignedYearCode() {
+        return new ResponseEntity<>(classService.getAssignedYearCode(), HttpStatus.OK);
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

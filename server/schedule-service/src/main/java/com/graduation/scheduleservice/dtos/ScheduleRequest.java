@@ -13,4 +13,5 @@ public class ScheduleRequest {
     private int length;
     private int size;
     private Float mutationRate;
+    private int minFitness;
 }

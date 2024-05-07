@@ -28,8 +28,31 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
     }
 
     @Override
-    public List<ScheduledExam> getExamScheduleByYearCode(int yearCode) {
-        return this.examRepository.getScheduledExamsBySubjectClass_YearCode_YearCode(yearCode);
+    public List<TimeTableDTO> getExamScheduleByYearCode(int yearCode) {
+        List<StudentJoinClass> joinClasses = joinClassRepository.getAllBySubjectClass_YearCode_YearCode(yearCode);
+        List<SubjectClass> subjectClasses = joinClasses.stream()
+                .map(StudentJoinClass::getSubjectClass)
+                .toList();
+
+        List<TimeTableDTO> timetableEntries = new ArrayList<>();
+        for (SubjectClass subjectClass : subjectClasses) {
+            ScheduledExam scheduledExam = examRepository.getScheduledExamBySubjectClass_Id(subjectClass.getId());
+
+            if (scheduledExam == null) {
+                continue;
+            }
+
+            TimeTableDTO dto = new TimeTableDTO();
+            dto.setSubjectCode(subjectClass.getSubject().getSubjectCode());
+            dto.setSubjectName(subjectClass.getSubject().getSubjectName());
+            dto.setStartDate(scheduledExam.getExamDate());
+            dto.setStartTime(scheduledExam.getTimeSlot().getStartHour());
+            dto.setEndTime(scheduledExam.getTimeSlot().getEndHour());
+
+            timetableEntries.add(dto);
+        }
+
+        return timetableEntries;
     }
 
     @Override

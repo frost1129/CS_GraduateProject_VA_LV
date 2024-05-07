@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface StudentJoinClassRepository extends JpaRepository<StudentJoinClass, Long> {
     List<StudentJoinClass> getAllBySubjectClass_Id(Long subjectId);
+    List<StudentJoinClass> getAllBySubjectClass_YearCode_YearCode(int yearCode);
     List<StudentJoinClass> getAllBySubjectClass_YearCode_YearCodeAndStudentId(int yearCode, String studentId);
     List<StudentJoinClass> getAllBySubjectClass_YearCode_YearCodeAndSubjectClass_Id(int yearCode, Long classId);
     List<StudentJoinClass> findByStudentIdAndSubjectClass_YearCode_YearCode(String studentId, int yearCode);
