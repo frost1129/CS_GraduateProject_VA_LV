@@ -9,6 +9,7 @@ import { IYearCodeDTO } from "@/lib/types/backend-schedule";
 import { useEffect, useState } from "react";
 import { getYearCodeExamTimeTableThunk } from "@/lib/redux/features/schedule/exam/examActions";
 import { getAssignedYearCodeThunk } from "@/lib/redux/features/schedule/subject-class/subjectClassActions";
+import { resetExamScheduleStatus } from "@/lib/redux/features/schedule/exam/examSlice";
 
 const ExamHeader = () => {
     const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -25,12 +26,15 @@ const ExamHeader = () => {
     const handleGetExamScheduleByYearCode = (yearCode: number | undefined) => {
         if (yearCode) {
             dispatch(getYearCodeExamTimeTableThunk(yearCode));
+        } else {
+            dispatch(resetExamScheduleStatus({ keys: ["yearCodeExams"] }));
         }
     };
 
     useEffect(() => {
         assignedYearCode.length === 0 && dispatch(getAssignedYearCodeThunk());
     }, []);
+
 
     return (
         <Stack
@@ -52,7 +56,7 @@ const ExamHeader = () => {
                     id="year-code-select"
                     options={assignedYearCode}
                     autoHighlight
-                    sx={{ minWidth: "250px" }}
+                    sx={{ minWidth: "200px" }}
                     getOptionLabel={(option: IYearCodeDTO) =>
                         "Học kì " + option.yearCode.toString()
                     }
@@ -79,7 +83,7 @@ const ExamHeader = () => {
                         </MenuItem>
                     )}
                 />
-                <ExamCreator />
+                <ExamCreator selectedYearCode={selectedYearCode} />
             </Stack>
         </Stack>
     );
