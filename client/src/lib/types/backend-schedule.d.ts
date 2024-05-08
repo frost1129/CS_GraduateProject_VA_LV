@@ -1,33 +1,33 @@
-class Time {
+export interface Time {
     hour: number;
     minute: number;
     second: number;
 
-    constructor(hour: number, minute: number, second: number = 0) {
-        this.hour = hour;
-        this.minute = minute;
-        this.second = second;
-    }
+    // constructor(hour: number, minute: number, second: number = 0) {
+    //     this.hour = hour;
+    //     this.minute = minute;
+    //     this.second = second;
+    // }
 
-    toString(): string {
-        return `${this.hour.toString().padStart(2, '0')}:${this.minute.toString().padStart(2, '0')}:${this.second.toString().padStart(2, '0')}`;
-    }
+    // toString(): string {
+    //     return `${this.hour.toString().padStart(2, '0')}:${this.minute.toString().padStart(2, '0')}:${this.second.toString().padStart(2, '0')}`;
+    // }
 }
 
-class LocalDate {
+export interface LocalDate {
     day: number;
     month: number;
     year: number;
+    dateString: string;
+    // constructor(day: number, month: number, year: number) {
+    //     this.day = day;
+    //     this.month = month;
+    //     this.year = year;
+    // }
 
-    constructor(day: number, month: number, year: number) {
-        this.day = day;
-        this.month = month;
-        this.year = year;
-    }
-
-    toString(): string {
-        return `${this.day.toString().padStart(2, '0')}-${this.month.toString().padStart(2, '0')}-${this.year}`;
-    }
+    // toString(): string {
+    //     return `${this.day.toString().padStart(2, '0')}-${this.month.toString().padStart(2, '0')}-${this.year}`;
+    // }
 }
 
 export interface ISchoolYearDTO {
@@ -103,7 +103,7 @@ export interface ISubjectSearchResponse {
 
 export interface ISubjectClassScheduleDTO {
     id: number;
-    startDate: LocalDate;
+    startDate: string;
     weeks: number;
     weekday: number;
     startTimeSlot: number;
@@ -115,7 +115,7 @@ export interface ISubjectClassScheduleDTO {
 }
 
 export interface ISCScheduleDTO {
-    startDate: LocalDate;
+    startDate: string;
     weeks: number;
     weekday: number;
     startTimeSlot: number;
@@ -157,7 +157,7 @@ export interface ISubjectClassResponse {
 export interface ITimeTableDTO {
     subjectCode: string;
     subjectName: string;
-    startDate: LocalDate;
+    startDate: string;
     weeks: number;
     weekday: number;
     startTime: Time;
@@ -185,8 +185,8 @@ export interface IExamSchedule {
 }
 
 export interface DNA {
-    examSchedules: IExamSchedule[];
-    startDate: LocalDate;
+    examList: IExamSchedule[];
+    startDate: string;
     totalDays: number;
     totalClass: number;
     evaluate: {
@@ -198,10 +198,10 @@ export interface DNA {
 
 export interface IExamScheduleRequest {
     yearCode: number;
-    date: LocalDate;
+    date: string;
     length: number;
     size: number;
-    multationRate: number;
+    mutationRate: number;
     minFitness: number;
 }
 
