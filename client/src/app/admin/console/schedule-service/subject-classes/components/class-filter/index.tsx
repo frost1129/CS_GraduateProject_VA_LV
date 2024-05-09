@@ -18,7 +18,7 @@ const ClassFilter = () => {
                 width="100%"
             >
                 <TextField
-                    sx={{ minWidth: "250px" }}
+                    sx={{ minWidth: "200px" }}
                     placeholder="Nhập từ khóa..."
                     // value={keyword}
                     // onChange={handleKeywordChange}

@@ -154,3 +154,8 @@ export interface IReactSchedulerData {
   start: Date;
   end: Date;
 }
+
+export interface SelectedYearCodeProps {
+  selectedYearCode: IYearCodeDTO | null;
+  setSelectedYearCode: (newYearCode: IYearCodeDTO | null) => void;
+}

@@ -24,8 +24,14 @@ const subjectClassApi = {
     }, 
 
     uploadSubjectClasses: (requestObj: IUploadFormData) => {
-        return axiosScheduleService.post("/subject-class/upload", {
-            ...requestObj,
+        const formData = new FormData();
+        formData.append('file', requestObj.file);
+        formData.append('year', requestObj.year!.toString()); // If year is present
+
+        return axiosScheduleService.post("/subject-class/upload", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data' // Important for file uploads
+            }
         });
     }, 
 

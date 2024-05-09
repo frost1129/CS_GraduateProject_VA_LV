@@ -1,12 +1,26 @@
+"use client"
+
 import { Stack, SxProps, Theme } from "@mui/material"
 import ClassHeader from "./components/class-header";
 import ClassRenderTable from "./components/class-render-table";
+import { useState } from "react";
+import { IYearCodeDTO } from "@/lib/types/backend-schedule";
 
 const PostPage = () => {
+
+    const [selectedYearCode, setSelectedYearCode] =
+        useState<IYearCodeDTO | null>(null);
+
     return (
         <Stack direction="column" sx={pageContainerStyles}>
-            <ClassHeader />
-            <ClassRenderTable />
+            <ClassHeader 
+                selectedYearCode={selectedYearCode}
+                setSelectedYearCode={setSelectedYearCode} 
+            />
+            <ClassRenderTable 
+                selectedYearCode={selectedYearCode}
+                setSelectedYearCode={setSelectedYearCode} 
+            />
         </Stack>
     )
 };
