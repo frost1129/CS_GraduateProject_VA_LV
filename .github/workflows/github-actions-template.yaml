@@ -3,7 +3,8 @@
 name: Action name # Change name here
 
 on:
-  push:
+  pull_request: # only on pull request to main
+    types: [opened]
     branchs: [main] # Targeted branch to listen on --> Default is main
     paths:
       - server/product-service/**  # Only trigger on changes within product-service

@@ -3,7 +3,8 @@
 name: Dockerize Schedule Service
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main] # Targeted branch to listen on --> Default is main
     paths:
       - server/schedule-service/** 

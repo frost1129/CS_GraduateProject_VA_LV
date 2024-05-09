@@ -1,7 +1,8 @@
 name: Dockerize Discovery Server
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main]
     paths:
       - server/discovery-server/**  # Only trigger on changes within discovery-server

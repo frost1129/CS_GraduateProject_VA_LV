@@ -1,7 +1,8 @@
 name: Dockerize API Gateway
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main]
     paths:
       - server/api-gateway/**  # Only trigger on changes within api-gateway
