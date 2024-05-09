@@ -8,12 +8,14 @@ import Routes from "@/lib/constants/Routes";
 import { getSubjectClassesThunk } from "@/lib/redux/features/schedule/subject-class/subjectClassActions";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/store";
 import { ISubjectClassShortDTO } from "@/lib/types/backend-schedule";
+import { SelectedYearCodeProps } from "@/lib/types/component";
 import { SubjectClassRequestParams } from "@/lib/types/redux-scheudule";
 import { GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ClassActions from "../class-action";
 
-const ClassRenderTable = () => {
+const ClassRenderTable = ({ selectedYearCode, setSelectedYearCode }: SelectedYearCodeProps) => {
 
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -35,9 +37,12 @@ const ClassRenderTable = () => {
             searchParams = { ...searchParams, kw: kw };
         }
 
-        //TODO
-        queryParts.push(`yearCode=${encodeURIComponent(221)}`);
-        searchParams = { ...searchParams, yearCode: 221 };
+        if (selectedYearCode === null) {
+            return;
+        }
+
+        queryParts.push(`yearCode=${encodeURIComponent(selectedYearCode.yearCode)}`);
+        searchParams = { ...searchParams, yearCode: selectedYearCode.yearCode };
 
         queryParts.push(`page=${encodeURIComponent(value)}`);
 
@@ -47,15 +52,6 @@ const ClassRenderTable = () => {
         searchParams = { ...searchParams, page: value };
         dispatch(getSubjectClassesThunk(searchParams));
     };
-
-    useEffect(() => {
-        const initialSearchParams = { 
-            page: 1,
-            yearCode: 221, 
-        };
-
-        dispatch(getSubjectClassesThunk(initialSearchParams)); 
-    }, [dispatch]);
 
     useEffect(() => {
         const columns: GridColDef<ISubjectClassShortDTO[][number]>[] = [
@@ -114,12 +110,21 @@ const ClassRenderTable = () => {
                 headerAlign: "center",
                 align: "center",
             },
+            {
+                field: "actions",
+                headerName: "Tác vụ",
+                width: 150,
+                editable: false,
+                headerAlign: "center",
+                sortable: false,
+                renderCell: () => <ClassActions />,
+            },
         ];
         setNewColumns(columns);
     }, []);
 
     if (getSubjectClassLoading) return <LoadingData />;
-    else if (subjectClasses?.data.length === null) return <NoData />;
+    else if (selectedYearCode === null || subjectClasses?.totalPages === 0) return <NoData />;
     else if (getSubjectClassError !== null) return <ErrorRetrieveData />;
 
 
