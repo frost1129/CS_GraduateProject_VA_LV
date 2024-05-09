@@ -1,7 +1,8 @@
 name: Dockerize Frontend (Nextjs)
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main]
     paths:
       - client/**  # Only trigger on changes within client folder

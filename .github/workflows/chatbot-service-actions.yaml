@@ -1,7 +1,8 @@
 name: Dockerize Chatbot Service
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main]
     paths:
       - server/chatbot-service/**  # Only trigger on changes within chatbot-service

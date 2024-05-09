@@ -1,7 +1,8 @@
 name: Dockerize Auth Service
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branchs: [main]
     paths:
       - server/auth-service/**  # Only trigger on changes within auth-service
