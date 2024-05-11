@@ -50,13 +50,13 @@ public class ExamScheduleController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DNAResponse> generateSchedule(@RequestBody ScheduleRequest request) {
         this.gaService.initAlgorithm(request.getYearCode(), request.getDate(), request.getLength(), request.getSize());
-//        int generation = 1;
+        int generation = 1;
 
         while (this.gaService.getBestResult().getFitness() > request.getMinFitness()) {
             this.gaService.doCrossOver(request.getMutationRate());
-//            generation++;
-//            if (generation++ == 100)
-//                break;
+            generation++;
+            if (generation++ == 1000)
+                break;
         }
 
         return new ResponseEntity<>(mapDNAToResponse(this.gaService.getBestResult()), HttpStatus.OK);
