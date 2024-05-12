@@ -14,14 +14,23 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { CalendarCheck, CalendarDots, List, SignOut, Sparkle, UserCircle } from "@phosphor-icons/react";
+import {
+  CalendarCheck,
+  CalendarDots,
+  List,
+  SignOut,
+  Sparkle,
+  UserCircle,
+} from "@phosphor-icons/react";
 
 import theme from "@/lib/theme";
 import Routes from "@/lib/constants/Routes";
 import Profile from "./Profile";
+import { usePathname } from "next/navigation";
 
 const NavbarAndProfile = () => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+  const pathname = usePathname();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -52,14 +61,26 @@ const NavbarAndProfile = () => {
             gap={2}
           >
             {navItems.map((item) => (
-              <Box key={item.id} sx={item.sx}>
-                <Link href={item.link}>
+              <Link href={item.link} key={item.id}>
+                <Box
+                  sx={{
+                    ...item.sx,
+                    background: `${
+                      pathname === item.link
+                        ? "var(--primary)"
+                        : item.sx.background
+                    }`,
+                    color: `${
+                      pathname === item.link ? "var(--white)" : item.sx.color
+                    }`,
+                  }}
+                >
                   <Stack direction="row" gap={1} alignItems="center">
                     {item.id === 3 && item.icon}
                     <Typography variant="body2">{item.title}</Typography>
                   </Stack>
-                </Link>
-              </Box>
+                </Box>
+              </Link>
             ))}
           </Stack>
           <Profile />
@@ -95,14 +116,26 @@ const NavbarAndProfile = () => {
             <Divider sx={{ marginY: 1 }} />
             <Stack direction="column" gap={0.5}>
               {navItems.map((item) => (
-                <Box key={item.id} sx={item.sx}>
-                  <Link href={item.link}>
-                  <Stack direction="row" gap={1} alignItems="center">
-                    {item.icon}
-                    <Typography variant="body2">{item.title}</Typography>
-                  </Stack>
+                <Link href={item.link} key={item.id}>
+                  <Box
+                    sx={{
+                      ...item.sx,
+                      background: `${
+                        pathname === item.link
+                          ? "var(--primary)"
+                          : item.sx.background
+                      }`,
+                      color: `${
+                        pathname === item.link ? "var(--white)" : item.sx.color
+                      }`,
+                    }}
+                  >
+                    <Stack direction="row" gap={1} alignItems="center">
+                      {item.icon}
+                      <Typography variant="body2">{item.title}</Typography>
+                    </Stack>
+                  </Box>
                 </Link>
-                </Box>
               ))}
             </Stack>
             <Divider sx={{ marginY: 1 }} />
@@ -149,6 +182,10 @@ const logoutBtnStyles: SxProps<Theme> = {
     backgroundColor: "var(--alert)",
     color: "var(--white)",
   },
+};
+
+const activeNavItem: SxProps<Theme> = {
+  backgroundColor: "var(--primary)",
 };
 
 const navItems = [
