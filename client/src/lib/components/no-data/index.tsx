@@ -20,7 +20,7 @@ const NoData = () => {
         height={120}
         priority
       />
-      <Typography variant="body2">No data</Typography>
+      <Typography variant="body2">Không có dữ liệu</Typography>
     </Stack>
   );
 };

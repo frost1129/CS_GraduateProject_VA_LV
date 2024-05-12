@@ -114,7 +114,7 @@ const layoutStyles: SxProps<Theme> = {
 const contentStyles: SxProps<Theme> = {
   position: "relative",
   width: "fit-content",
-  maxWidth: 400,
+  maxWidth: 900,
   padding: 2,
   borderRadius: 1.5,
   backgroundColor: "var(--primary)",
