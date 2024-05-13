@@ -41,4 +41,7 @@ public class Post {
 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "link", columnDefinition = "TEXT")
+    private String link;
 }

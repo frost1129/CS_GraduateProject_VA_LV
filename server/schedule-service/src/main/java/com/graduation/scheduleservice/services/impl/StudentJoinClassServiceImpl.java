@@ -24,6 +24,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -148,11 +151,12 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
         List<TimeTableDTO> timetableEntries = new ArrayList<>();
         for (SubjectClass subjectClass : subjectClasses) {
             SubjectClassSchedule schedule = subjectClass.getSubjectClassSchedule();
+            LocalDate actualStartDate = getFirstWeekDay(schedule.getStartDate(), schedule.getWeekday());
 
             TimeTableDTO entry = new TimeTableDTO(
                     subjectClass.getSubject().getSubjectCode(),
                     subjectClass.getSubject().getSubjectName(),
-                    schedule.getStartDate(),
+                    actualStartDate,
                     schedule.getWeeks(),
                     schedule.getWeekday(),
                     TimeSlotConstant.getLocalTimeFromSlot(schedule.getStartTimeSlot()),
@@ -202,7 +206,12 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
         return classOverlapCounts;
     }
 
-    StudentJoinClassDTO mapToDTO(StudentJoinClass studentJoinClass) {
+    private LocalDate getFirstWeekDay(LocalDate startDate, int weekDay) {
+        DayOfWeek desiredDayOfWeek = DayOfWeek.of(weekDay);
+        return startDate.with(TemporalAdjusters.nextOrSame(desiredDayOfWeek));
+    }
+
+    private StudentJoinClassDTO mapToDTO(StudentJoinClass studentJoinClass) {
         StudentJoinClassDTO rs = new StudentJoinClassDTO();
         rs.setId(studentJoinClass.getId());
         rs.setStudentId(studentJoinClass.getStudentId());
