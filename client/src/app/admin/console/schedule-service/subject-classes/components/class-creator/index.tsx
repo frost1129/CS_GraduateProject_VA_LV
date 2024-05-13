@@ -114,7 +114,7 @@ const ClassCreator = ({ selectedYearCode }: { selectedYearCode: IYearCodeDTO | n
     };
 
     useEffect(() => {
-        if (uploadedSubjectClass !== null) {
+        if (uploadedSubjectClass.length > 0) {
             setOpenToast(true);
             setToastInfo({
                 severity: "success",

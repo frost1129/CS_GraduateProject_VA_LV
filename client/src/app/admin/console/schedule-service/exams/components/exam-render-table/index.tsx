@@ -34,6 +34,9 @@ const ExamRenderTable = () => {
     const { examSchedules } = 
         useAppSelector((state) => state.exam);
 
+    const { savedExamSchedule } = 
+        useAppSelector((state) => state.exam);
+
     const [newColumns, setNewColumns] = useState<any>();
     const [examList, setExamList] = useState<ITimeTableDTO[]>([]);
 
@@ -87,13 +90,14 @@ const ExamRenderTable = () => {
                 newExamList.push(convertExamScheduleToTimeTableDTO(element))
             }
             setExamList(newExamList);
+            console.log("reloaded");
         } else {
             setExamList([]);
         }
     }, [examSchedules]);
 
     if (getYearCodeExamsLoading) return <LoadingData />;
-    else if (yearCodeExams?.length === 0) return <NoData />;
+    else if (yearCodeExams?.length === 0 && examSchedules === null) return <NoData />;
     else if (getYearCodeExamsError !== null) return <ErrorRetrieveData />;
 
     return (

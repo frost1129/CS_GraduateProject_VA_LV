@@ -21,6 +21,7 @@ import { ISchoolYearDTO, IYearCodeDTO } from "@/lib/types/backend-schedule";
 import { getTimeTableThunk } from "@/lib/redux/features/schedule/enrollment/enrollActions";
 import { TimetableRequestParams } from "@/lib/types/redux-scheudule";
 import { resetMasterStatus } from "@/lib/redux/features/schedule/master/masterSlide";
+import { resetEnrollStatus } from "@/lib/redux/features/schedule/enrollment/enrollSlice";
 
 const TimeTableHeader = () => {
   // Redux
@@ -60,8 +61,7 @@ const TimeTableHeader = () => {
   const handleGetStudentTimeTable = (yearCode: number | undefined) => {
     if (yearCode) {
       const params: TimetableRequestParams = {
-        // NEED_TO_DO_NEXT
-        studentId: "2030099" || undefined, // hard code test: "2030099"
+        studentId: userProfile?.preferred_username || undefined, // hard code test: "2030099"
         yearCode,
       };
       dispatch(getTimeTableThunk(params));
@@ -73,8 +73,13 @@ const TimeTableHeader = () => {
   }, []);
 
   useEffect(() => {
-    // NEED_TO_DO_NEXT
-    console.log(timeTables);
+    if (timeTables !== null) {
+      // NEED_TO_DO_NEXT
+    } 
+    
+    if (getTimeTableError !== null) {
+      dispatch(resetEnrollStatus({ keys: ["getTimeTableError"] }));
+    }
   }, [timeTables, getTimeTableError]);
 
   return (

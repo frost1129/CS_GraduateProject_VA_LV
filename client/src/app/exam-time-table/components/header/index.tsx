@@ -21,6 +21,8 @@ import { ISchoolYearDTO, IYearCodeDTO } from "@/lib/types/backend-schedule";
 import { getTimeTableThunk } from "@/lib/redux/features/schedule/enrollment/enrollActions";
 import { TimetableRequestParams } from "@/lib/types/redux-scheudule";
 import { resetMasterStatus } from "@/lib/redux/features/schedule/master/masterSlide";
+import { getStudentExamTimeTableThunk } from "@/lib/redux/features/schedule/exam/examActions";
+import { resetExamScheduleStatus } from "@/lib/redux/features/schedule/exam/examSlice";
 
 const ExamTimeTableHeader = () => {
   // Redux
@@ -34,8 +36,9 @@ const ExamTimeTableHeader = () => {
     getSchoolYearError,
   } = useAppSelector((state) => state.master);
   const { userProfile } = useAppSelector((state) => state.auth);
-  const { timeTables, getTimeTableLoading, getTimeTableError } = useAppSelector(
-    (state) => state.enroll
+
+  const { studentExams, getStudentExamsLoading, getStudentExamsError } = useAppSelector(
+    (state) => state.exam
   );
 
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -61,11 +64,10 @@ const ExamTimeTableHeader = () => {
   const handleGetStudentExamTimeTable = (yearCode: number | undefined) => {
     if (yearCode) {
       const params: TimetableRequestParams = {
-        // NEED_TO_DO_NEXT
         studentId: userProfile?.preferred_username || undefined, // hard code test: "2030099"
         yearCode,
       };
-      dispatch(getTimeTableThunk(params));
+      dispatch(getStudentExamTimeTableThunk(params));
     }
   };
 
@@ -74,9 +76,14 @@ const ExamTimeTableHeader = () => {
   }, []);
 
   useEffect(() => {
-    // NEED_TO_DO_NEXT
-    console.log(timeTables);
-  }, [getTimeTableLoading, getTimeTableError]);
+    if (studentExams !== null) {
+      // NEED_TO_DO_NEXT
+    } 
+
+    if (getStudentExamsError !== null) {
+      dispatch(resetExamScheduleStatus({ keys: ["getStudentExamsError"] }));
+    } 
+  }, [studentExams, getStudentExamsError]);
 
   return (
     <Stack

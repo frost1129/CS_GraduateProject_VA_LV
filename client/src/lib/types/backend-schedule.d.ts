@@ -68,6 +68,7 @@ export interface IPostDTO {
     image: string;
     imageFile: null;
     content: string;
+    link: string | null;
 }
 
 export interface IPostResponse {
