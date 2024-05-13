@@ -140,7 +140,7 @@ const ExamCreator = ({ selectedYearCode }: { selectedYearCode: IYearCodeDTO | nu
                     variant="contained"
                     color="primary"
                     onClick={handleClickOpen}
-                    // disabled={selectedYearCode === null || yearCodeExams !== null}
+                    disabled={selectedYearCode === null && yearCodeExams.length > 0}
                     fullWidth
                 >
                     <Stack direction="row" gap={1} alignItems="center">

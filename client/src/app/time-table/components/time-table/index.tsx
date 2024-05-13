@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Scheduler } from "@aldabil/react-scheduler";
 
@@ -9,11 +9,14 @@ import { useAppSelector } from "@/lib/redux/store";
 import theme from "@/lib/theme";
 import { ITimeTableDTO } from "@/lib/types/backend-schedule";
 import { IReactSchedulerData } from "@/lib/types/component";
+import { SchedulerRef } from "@aldabil/react-scheduler/types";
 
 const TimeTableMain = () => {
   const { timeTables, getTimeTableError, getTimeTableLoading } = useAppSelector(
     (state) => state.enroll
   );
+
+  const calendarRef = useRef<SchedulerRef>(null);
 
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
   const [events, setEvents] = useState<IReactSchedulerData[]>([]);
@@ -38,7 +41,17 @@ const TimeTableMain = () => {
         }))
       );
       setEvents(updatedEvents);
+      calendarRef.current?.scheduler.handleGotoDay(updatedEvents[0].start);
+      
+    } else {
+      setEvents([]);
+      calendarRef.current?.scheduler.handleGotoDay(new Date());
     }
+    
+    if (getTimeTableError) {
+      calendarRef.current?.scheduler.handleGotoDay(new Date());
+    }
+    
   }, [timeTables, getTimeTableError]);
 
   return (
@@ -49,19 +62,30 @@ const TimeTableMain = () => {
       }}
     >
       <Scheduler
+        ref={calendarRef}
         view="week"
         loading={getTimeTableLoading}
         week={{
           weekDays: [0, 1, 2, 3, 4, 5, 6],
           weekStartOn: 1,
-          startHour: 0,
+          startHour: 6,
           endHour: 24,
           step: 60,
           navigation: true,
           disableGoToDay: false,
         }}
+        day={{
+          startHour: 6,
+          endHour: 24,
+          step: 60,
+          navigation: true,
+          
+        }}
         dialogMaxWidth="oversize"
         events={events}
+        agenda={false}
+        stickyNavigation={true}
+        editable={false}
       />
     </Stack>
   );

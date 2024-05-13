@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Scheduler } from "@aldabil/react-scheduler";
 
@@ -9,37 +9,42 @@ import { useAppSelector } from "@/lib/redux/store";
 import theme from "@/lib/theme";
 import { ITimeTableDTO } from "@/lib/types/backend-schedule";
 import { IReactSchedulerData } from "@/lib/types/component";
+import { SchedulerRef } from "@aldabil/react-scheduler/types";
 
 const ExamTimeTableMain = () => {
-  const { timeTables, getTimeTableError, getTimeTableLoading } = useAppSelector(
-    (state) => state.enroll
+
+  const { studentExams, getStudentExamsLoading, getStudentExamsError } = useAppSelector(
+    (state) => state.exam
   );
+
+  const calendarRef = useRef<SchedulerRef>(null);
 
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
   const [events, setEvents] = useState<IReactSchedulerData[]>([]);
 
   useEffect(() => {
-    if (timeTables.length > 0) {
-      // NEED_TO_DO_NEXT
-      const updatedEvents = timeTables.flatMap((time: ITimeTableDTO, index) =>
-        Array.from({ length: time.weeks }, (_, i) => ({
-          event_id: Number(`${index}${i}`),
-          title: `[${time.subjectCode}] ${time.subjectName}`,
-          start: new Date(
-            formatDateTime(
-              `${addDays(time.startDate.toString(), i * 7)} ${time.startTime}`
-            )
-          ),
-          end: new Date(
-            formatDateTime(
-              `${addDays(time.startDate.toString(), i * 7)} ${time.endTime}`
-            )
-          ),
-        }))
-      );
+    if (studentExams.length > 0) {
+      const updatedEvents = studentExams.map((time, index) => ({
+        event_id: index,
+        title: `[${time.subjectCode}] ${time.subjectName}`,
+        start: new Date(formatDateTime(`${time.startDate} ${time.startTime}`)),
+        end: new Date(formatDateTime(`${time.startDate} ${time.endTime}`)),
+      }));
+
+      console.log(updatedEvents);
+      
       setEvents(updatedEvents);
+      calendarRef.current?.scheduler.handleGotoDay(updatedEvents[0].start);
+    } else {
+      setEvents([]);
+      calendarRef.current?.scheduler.handleGotoDay(new Date());
     }
-  }, [timeTables, getTimeTableError]);
+
+    if (getStudentExamsError !== null) {
+      calendarRef.current?.scheduler.handleGotoDay(new Date());
+    }
+
+  }, [studentExams, getStudentExamsError]);
 
   return (
     <Stack
@@ -49,19 +54,30 @@ const ExamTimeTableMain = () => {
       }}
     >
       <Scheduler
+        ref={calendarRef}
         view="week"
-        loading={getTimeTableLoading}
+        loading={getStudentExamsLoading}
         week={{
           weekDays: [0, 1, 2, 3, 4, 5, 6],
           weekStartOn: 1,
-          startHour: 0,
+          startHour: 6,
           endHour: 24,
           step: 60,
           navigation: true,
           disableGoToDay: false,
         }}
+        day={{
+          startHour: 6,
+          endHour: 24,
+          step: 60,
+          navigation: true,
+          
+        }}
         dialogMaxWidth="oversize"
         events={events}
+        agenda={false}
+        stickyNavigation={true}
+        editable={false}
       />
     </Stack>
   );

@@ -86,7 +86,7 @@ const Posts = () => {
               </Stack>
 
               {/* See detail button */}
-              <Link href="#" style={{ width: "100%" }}>
+              <Link href={listPost.data[0].link ? listPost.data[0].link : "#"} target="_blank" style={{ width: "100%" }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -117,7 +117,7 @@ const Posts = () => {
               {listPost.data.map((item, index) => {
                 if (index !== 0) {
                   return (
-                    <Link href="#" key={index}>
+                    <Link href={item.link ? item.link : "#"} target="_blank" key={index}>
                       <Grid container sx={postItemStyles} columnSpacing={2}>
                         <Grid
                           item
