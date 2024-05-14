@@ -55,7 +55,7 @@ public class ExamScheduleController {
         while (this.gaService.getBestResult().getFitness() > request.getMinFitness()) {
             this.gaService.doCrossOver(request.getMutationRate());
             generation++;
-            if (generation++ == 1000)
+            if (generation++ == 5000)
                 break;
         }
 
