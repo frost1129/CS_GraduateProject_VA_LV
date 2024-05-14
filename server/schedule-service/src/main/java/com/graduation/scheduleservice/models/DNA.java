@@ -30,7 +30,7 @@ public class DNA {
         this.startDate = startD;
         this.totalDays = totalDays;
         this.totalClass = scheduleList.size();
-        this.fitness = 1;
+        this.fitness = -1;
         this.examSchedules = new HashMap<Long, ScheduledExam>();
 
         ScheduledExam exam;
@@ -51,7 +51,7 @@ public class DNA {
         this.startDate = p1.startDate;
         this.totalDays = p1.getTotalDays();
         this.totalClass = p1.getTotalClass();
-        this.fitness = 1;
+        this.fitness = -1;
         this.examSchedules = new HashMap<Long, ScheduledExam>();
 
         int crossOverPoint = random.nextInt(this.totalClass);

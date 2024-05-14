@@ -13,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +35,7 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
     private int totalFitness;
     private List<TimeSlot> timeslots;
     private List<SubjectClass> schedules;
+    private Map<Long, List<String>> studentIdCache;
 
 
     @Override
@@ -42,6 +47,10 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
                 .stream().map(this::mapToTimeSlot)
                 .collect(Collectors.toList());
         this.population = new ArrayList<>(populationSize);
+        this.studentIdCache = new HashMap<>();
+        for (SubjectClass subjectClass : this.schedules) {
+            this.studentIdCache.put(subjectClass.getId(), joinClassService.getAllStudentIdBySubjectClassId(subjectClass.getId()));
+        }
 
         for (int i = 0; i < populationSize; i++) {
             DNA newDNA = new DNA(startDay, totalDay, timeslots, schedules);
@@ -83,34 +92,57 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
 
     @Override
     public int calcFitness(DNA dna) {
-        if (dna.getFitness() != 1)
+        if (dna.getFitness() != -1)
             return dna.getFitness();
 
         int point = 0;
         int overlap = 0;
         int overSchedule = 0;
 
-        for (int i = 0; i < this.schedules.size() - 1; i++) {
-            ScheduledExam exam1 = dna.getExamSchedules().get(this.schedules.get(i).getId());
+        Map<LocalDate, Set<TimeSlot>> dateToTimeSlots = new HashMap<>();
+        for (ScheduledExam exam : dna.getExamSchedules().values()) {
+            dateToTimeSlots.computeIfAbsent(exam.getExamDate(), k -> new HashSet<>()).add(exam.getTimeSlot());
+        }
 
-            for (int j = i + 1; j < this.schedules.size(); j++) {
-                ScheduledExam exam2 = dna.getExamSchedules().get(this.schedules.get(j).getId());
+        for (Map.Entry<LocalDate, Set<TimeSlot>> entry : dateToTimeSlots.entrySet()) {
+            LocalDate date = entry.getKey();
+            Set<TimeSlot> timeSlots = entry.getValue();
 
-//              Check sv có 2 môn thi cùng 1 ngày
-                if (exam1.getExamDate().equals(exam2.getExamDate())) {
-//                  Check sv nào thi 2 môn cùng lúc
-                    if (exam1.getTimeSlot().equals(exam2.getTimeSlot())) {
-                        for (String std1Id : this.joinClassService.getAllStudentIdBySubjectClassId(exam1.getSubjectClass().getId())) {
-                            if (this.joinClassService.getAllStudentIdBySubjectClassId(exam2.getSubjectClass().getId()).contains(std1Id)) {
+            if (timeSlots.size() > 1) {
+                // Check for same-day conflicts
+                for (TimeSlot timeSlot1 : timeSlots) {
+                    for (TimeSlot timeSlot2 : timeSlots) {
+                        if (timeSlot1 != timeSlot2) {
+                            boolean overlapFlg = false;
+                            boolean consecutive = timeSlot1.isRightAfter(timeSlot2);
+
+                            for (ScheduledExam exam1 : dna.getExamSchedules().values()) {
+                                if (exam1.getExamDate().equals(date) && exam1.getTimeSlot().equals(timeSlot1)) {
+                                    for (ScheduledExam exam2 : dna.getExamSchedules().values()) {
+                                        if (exam2.getExamDate().equals(date) && exam2.getTimeSlot().equals(timeSlot2)) {
+                                            List<String> studentIds1 = studentIdCache.get(exam1.getSubjectClass().getId());
+                                            List<String> studentIds2 = studentIdCache.get(exam2.getSubjectClass().getId());
+                                            for (String studentId : studentIds1) {
+                                                if (studentIds2.contains(studentId)) {
+                                                    overlapFlg = true;
+                                                    break; // No need to check further if overlap found
+                                                }
+                                            }
+                                            if (overlapFlg) break; // No need to check further if overlap found
+                                        }
+                                    }
+                                }
+                                if (overlapFlg) break; // No need to check further if overlap found
+                            }
+
+                            if (overlapFlg) {
                                 point += FitnessPenalty.FIRST_CLASS;
                                 overlap++;
+                            } else if (consecutive) {
+                                point += FitnessPenalty.SECOND_CLASS;
+                                overSchedule++;
                             }
                         }
-                    }
-//                  Check sv nào thi 2 môn liên tiếp
-                    else if (exam1.getTimeSlot().isRightAfter(exam2.getTimeSlot())) {
-                        point += FitnessPenalty.SECOND_CLASS;
-                        overSchedule++;
                     }
                 }
             }
