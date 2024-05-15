@@ -109,39 +109,24 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
             Set<TimeSlot> timeSlots = entry.getValue();
 
             if (timeSlots.size() > 1) {
-                // Check for same-day conflicts
+                // Check for same-day & same-time-slot conflicts
                 for (TimeSlot timeSlot1 : timeSlots) {
                     for (TimeSlot timeSlot2 : timeSlots) {
-                        if (timeSlot1 != timeSlot2) {
-                            boolean overlapFlg = false;
-                            boolean consecutive = timeSlot1.isRightAfter(timeSlot2);
+                        boolean overlapFlg = false;
+                        boolean consecutive = false;
+                        if (timeSlot1 == timeSlot2) {
+                            overlapFlg = isOverlap(dna, date, timeSlot1, timeSlot2);
+                        } else if (timeSlot1.isRightAfter(timeSlot2)) {
+                            consecutive = isOverlap(dna, date, timeSlot1, timeSlot2);
+                        }
 
-                            for (ScheduledExam exam1 : dna.getExamSchedules().values()) {
-                                if (exam1.getExamDate().equals(date) && exam1.getTimeSlot().equals(timeSlot1)) {
-                                    for (ScheduledExam exam2 : dna.getExamSchedules().values()) {
-                                        if (exam2.getExamDate().equals(date) && exam2.getTimeSlot().equals(timeSlot2)) {
-                                            List<String> studentIds1 = studentIdCache.get(exam1.getSubjectClass().getId());
-                                            List<String> studentIds2 = studentIdCache.get(exam2.getSubjectClass().getId());
-                                            for (String studentId : studentIds1) {
-                                                if (studentIds2.contains(studentId)) {
-                                                    overlapFlg = true;
-                                                    break; // No need to check further if overlap found
-                                                }
-                                            }
-                                            if (overlapFlg) break; // No need to check further if overlap found
-                                        }
-                                    }
-                                }
-                                if (overlapFlg) break; // No need to check further if overlap found
-                            }
-
-                            if (overlapFlg) {
-                                point += FitnessPenalty.FIRST_CLASS;
-                                overlap++;
-                            } else if (consecutive) {
-                                point += FitnessPenalty.SECOND_CLASS;
-                                overSchedule++;
-                            }
+                        if (overlapFlg) {
+                            point += FitnessPenalty.FIRST_CLASS;
+                            overlap++;
+                        }
+                        if (consecutive) {
+                            point += FitnessPenalty.SECOND_CLASS;
+                            overSchedule++;
                         }
                     }
                 }
@@ -152,6 +137,29 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
         dna.setFitness(point);
         dna.setEvaluate(evaluation);
         return point;
+    }
+
+    private boolean isOverlap(DNA dna, LocalDate date, TimeSlot timeSlot1, TimeSlot timeSlot2) {
+        for (ScheduledExam exam1 : dna.getExamSchedules().values()) {
+            if (!exam1.getExamDate().equals(date) || !exam1.getTimeSlot().equals(timeSlot1)) {
+                continue;
+            }
+
+            for (ScheduledExam exam2 : dna.getExamSchedules().values()) {
+                if (!exam2.getExamDate().equals(date) || !exam2.getTimeSlot().equals(timeSlot2)) {
+                    continue;
+                }
+
+                List<String> studentIds1 = studentIdCache.get(exam1.getSubjectClass().getId());
+                List<String> studentIds2 = studentIdCache.get(exam2.getSubjectClass().getId());
+                for (String studentId : studentIds1) {
+                    if (studentIds2.contains(studentId)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
