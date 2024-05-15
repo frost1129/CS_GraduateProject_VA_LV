@@ -30,6 +30,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -170,39 +171,29 @@ public class StudentJoinClassServiceImpl implements StudentJoinClassService {
 
     public Map<String, Integer> countOverlappingStudentsPerClass(int yearCode) {
         Map<String, Integer> classOverlapCounts = new HashMap<>();
+        Map<String, Set<String>> studentClassMap = new HashMap<>(); // Classes per student
+        Map<String, String> classSubjectCodeMap = new HashMap<>();
 
-        // Get all SubjectClass entities
-        List<SubjectClass> subjectClasses = classRepository.findByYearCode_YearCode(yearCode);
+        List<Object[]> data = joinClassRepository.findStudentAndSubjectCodesByYearCode(yearCode);
 
-        for (SubjectClass currentClass : subjectClasses) {
-            int overlappingClasses = 0;
+        for (Object[] row : data) {
+            String studentId = row[0].toString();
+            String classId = row[1].toString();
+            String subjectCode = row[2].toString();
 
-            // Get students enrolled in the current class
-            Set<String> currentClassStudents = joinClassRepository
-                    .findAllBySubjectClass_IdAndSubjectClass_YearCode_YearCode(currentClass.getId(), yearCode)
-                    .stream()
-                    .map(StudentJoinClass::getStudentId)
-                    .collect(Collectors.toSet());
-
-            // Compare with students in other classes
-            for (SubjectClass otherClass : subjectClasses) {
-                if (!currentClass.equals(otherClass)) {
-                    Set<String> otherClassStudents = joinClassRepository
-                            .findAllBySubjectClass_IdAndSubjectClass_YearCode_YearCode(otherClass.getId(), yearCode)
-                            .stream()
-                            .map(StudentJoinClass::getStudentId)
-                            .collect(Collectors.toSet());
-
-                    // Check if there's any overlap
-                    if (!Collections.disjoint(currentClassStudents, otherClassStudents)) {
-                        overlappingClasses++;
-                    }
-                }
-            }
-
-            classOverlapCounts.put(currentClass.getSubject().getSubjectCode(), overlappingClasses);
+            studentClassMap.computeIfAbsent(studentId, k -> new HashSet<>()).add(classId);
+            classSubjectCodeMap.put(classId, subjectCode);
         }
 
+        for (Set<String> classIds : studentClassMap.values()) {
+            if (classIds.size() > 1) { // Student is in multiple classes
+                for (String classId : classIds) {
+                    classOverlapCounts.compute(classSubjectCodeMap.get(classId), (k, v) -> (v == null) ? 1 : v + 1);
+                }
+            }
+        }
+
+        classOverlapCounts.entrySet().removeIf(entry -> entry.getValue() == 0);
         return classOverlapCounts;
     }
 

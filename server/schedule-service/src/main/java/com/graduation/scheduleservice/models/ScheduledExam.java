@@ -20,7 +20,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "scheduled-exam")
+@Table(name = "scheduled_exam")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
