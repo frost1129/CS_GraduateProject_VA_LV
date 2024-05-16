@@ -43,6 +43,7 @@ public class TimeSlot {
     }
 
     public boolean isRightAfter(TimeSlot slot2) {
-        return Objects.equals(this.id, slot2.getId() + 1L) || Objects.equals(this.id + 1L, slot2.getId());
+        return Objects.equals(this.id + 1L, slot2.getId());
+//        return Objects.equals(this.id, slot2.getId() + 1L) || Objects.equals(this.id + 1L, slot2.getId());
     }
 }

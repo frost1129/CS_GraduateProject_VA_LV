@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +33,6 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
 
     @Getter
     private List<DNA> population;
-    private int totalFitness;
     private List<TimeSlot> timeslots;
     private List<SubjectClass> schedules;
     private Map<Long, List<String>> studentIdCache;
@@ -72,9 +72,8 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
 
     @Override
     public void evaluatePopulation() {
-        this.totalFitness = 0;
         for (DNA dna : this.population) {
-            this.totalFitness += this.calcFitness(dna);
+            this.calcFitness(dna);
         }
 
         this.sortByFitness();
@@ -107,27 +106,24 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
         for (Map.Entry<LocalDate, Set<TimeSlot>> entry : dateToTimeSlots.entrySet()) {
             LocalDate date = entry.getKey();
             Set<TimeSlot> timeSlots = entry.getValue();
+            if (timeSlots.isEmpty()) continue;
 
-            if (timeSlots.size() > 1) {
-                // Check for same-day & same-time-slot conflicts
-                for (TimeSlot timeSlot1 : timeSlots) {
-                    for (TimeSlot timeSlot2 : timeSlots) {
-                        boolean overlapFlg = false;
-                        boolean consecutive = false;
-                        if (timeSlot1 == timeSlot2) {
-                            overlapFlg = isOverlap(dna, date, timeSlot1, timeSlot2);
-                        } else if (timeSlot1.isRightAfter(timeSlot2)) {
-                            consecutive = isOverlap(dna, date, timeSlot1, timeSlot2);
-                        }
+            // Check for same-day & same-time-slot conflicts
+            for (TimeSlot timeSlot1 : timeSlots) {
+                if (isOverlap(dna, date, timeSlot1, timeSlot1)) {
+                    point += FitnessPenalty.FIRST_CLASS;
+                    overlap++;
+                }
 
-                        if (overlapFlg) {
-                            point += FitnessPenalty.FIRST_CLASS;
-                            overlap++;
-                        }
-                        if (consecutive) {
-                            point += FitnessPenalty.SECOND_CLASS;
-                            overSchedule++;
-                        }
+                if (timeSlots.size() == 1) continue;
+
+                for (TimeSlot timeSlot2 : timeSlots) {
+                    if (!timeSlot2.isRightAfter(timeSlot1)) continue;
+
+                    if (isOverlap(dna, date, timeSlot1, timeSlot2)) {
+                        point += FitnessPenalty.SECOND_CLASS;
+                        overSchedule++;
+                        break;
                     }
                 }
             }
@@ -140,26 +136,56 @@ public class GeneticAlgorithmServiceImpl implements GeneticAlgorithmService {
     }
 
     private boolean isOverlap(DNA dna, LocalDate date, TimeSlot timeSlot1, TimeSlot timeSlot2) {
-        for (ScheduledExam exam1 : dna.getExamSchedules().values()) {
-            if (!exam1.getExamDate().equals(date) || !exam1.getTimeSlot().equals(timeSlot1)) {
-                continue;
+        Map<Long, ScheduledExam> examSchedules = dna.getExamSchedules();
+        List<ExamPair> examPairs = generateExamPairs(examSchedules.values(), date, timeSlot1, timeSlot2);
+
+        for (ExamPair pair : examPairs) {
+            if (pair.exam1.getSubjectClass().equals(pair.exam2.getSubjectClass())) {
+                continue; // Skip if same subject class
             }
 
-            for (ScheduledExam exam2 : dna.getExamSchedules().values()) {
-                if (!exam2.getExamDate().equals(date) || !exam2.getTimeSlot().equals(timeSlot2)) {
-                    continue;
-                }
+            List<String> studentIds1 = studentIdCache.get(pair.exam1.getSubjectClass().getId());
+            List<String> studentIds2 = studentIdCache.get(pair.exam2.getSubjectClass().getId());
 
-                List<String> studentIds1 = studentIdCache.get(exam1.getSubjectClass().getId());
-                List<String> studentIds2 = studentIdCache.get(exam2.getSubjectClass().getId());
-                for (String studentId : studentIds1) {
-                    if (studentIds2.contains(studentId)) {
-                        return true;
+            if (studentIds1 == null || studentIds1.isEmpty() || studentIds2 == null || studentIds2.isEmpty()) {
+                continue; // Skip if no students
+            }
+
+            // Optimized overlap check using sets
+            Set<String> studentIdsSet1 = new HashSet<>(studentIds1);
+            studentIdsSet1.retainAll(studentIds2); // Keep only common elements
+
+            if (!studentIdsSet1.isEmpty()) {
+                return true; // Overlap found!
+            }
+        }
+
+        return false; // No overlap found
+    }
+
+    private List<ExamPair> generateExamPairs(Collection<ScheduledExam> exams, LocalDate date, TimeSlot timeSlot1, TimeSlot timeSlot2) {
+        List<ExamPair> pairs = new ArrayList<>();
+        for (ScheduledExam exam1 : exams) {
+            if (exam1.getExamDate().equals(date) && exam1.getTimeSlot().equals(timeSlot1)) {
+                for (ScheduledExam exam2 : exams) {
+                    if (exam2.getExamDate().equals(date) && exam2.getTimeSlot().equals(timeSlot2)) {
+                        pairs.add(new ExamPair(exam1, exam2));
                     }
                 }
             }
         }
-        return false;
+        return pairs;
+    }
+
+    // Helper class to represent exam pairs
+    private static class ExamPair {
+        ScheduledExam exam1;
+        ScheduledExam exam2;
+
+        ExamPair(ScheduledExam exam1, ScheduledExam exam2) {
+            this.exam1 = exam1;
+            this.exam2 = exam2;
+        }
     }
 
     @Override
