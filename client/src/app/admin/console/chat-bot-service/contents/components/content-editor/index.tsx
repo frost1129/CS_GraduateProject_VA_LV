@@ -340,7 +340,10 @@ const ContentEditor = (props: ContentEditorProps) => {
               {/* Intent code field */}
               <Stack direction="column" gap={1}>
                 <Typography variant="label3">Chuỗi xác định</Typography>
-                <TextField disabled value={value.intentCode} />
+                <TextField
+                  disabled
+                  value={`${value.topic.category.intentCode}.${value.topic.intentCode}.${value.intentCode}`}
+                />
               </Stack>
 
               {/* Title field */}
