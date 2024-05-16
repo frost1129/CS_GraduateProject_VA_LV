@@ -8,8 +8,8 @@ import "./globals.scss";
 import "./App.scss";
 
 export const metadata: Metadata = {
-  title: "OU Graduation",
-  description: "OU Graduation",
+  title: "Hệ thống hỗ trợ học vụ | Trường Đại học Mở Thành phố Hồ Chí Minh",
+  description: "Hệ thống hỗ trợ học vụ | Trường Đại học Mở Thành phố Hồ Chí Minh",
 };
 
 export default function RootLayout({
