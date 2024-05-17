@@ -66,7 +66,11 @@ public class ExamScheduleController {
                 previousFitness = this.gaService.getBestResult().getFitness();
             }
 
-            if (stagnationCount >= 150 || generation++ == 5000) {
+            // if (stagnationCount >= 150) {
+            //     break;
+            // }
+            
+            if (generation++ == 5000) {
                 break;
             }
         }
