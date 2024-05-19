@@ -16,7 +16,7 @@ const AddtionalInfo = () => {
         <Info size={26} />
       </Box>
       <Typography variant="body3">
-        Tôi sẽ cung cấp các thông tin liên quan đến lĩnh vực học vụ, học bổng, thông tin về trường,...
+        Tôi sẽ cung cấp các thông tin liên quan về trường và các nội dung hoạt động công tác sinh viên.
       </Typography>
     </Stack>
   );
